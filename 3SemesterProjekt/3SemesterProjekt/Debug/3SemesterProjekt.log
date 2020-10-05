@@ -1,0 +1,44 @@
+﻿  3SemesterProjekt.cpp
+  DTMF.cpp
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(8,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(18,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(28,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(37,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(47,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(57,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(67,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(77,37): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+  Generating Code...
+  3SemesterProjekt.vcxproj -> C:\Users\Philip\Documents\Project\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\Debug\3SemesterProjekt.exe

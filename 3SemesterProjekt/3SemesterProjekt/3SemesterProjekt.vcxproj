@@ -154,6 +154,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3SemesterProjekt.cpp" />
+    <ClCompile Include="DTMF.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\DTMF.h" />
+    <ClInclude Include="DTMF.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

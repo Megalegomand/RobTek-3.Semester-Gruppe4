@@ -1,9 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include<iostream>
+#include"DTMF.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    
+    /*sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
 
@@ -41,7 +44,11 @@ int main()
         while (1) {
             sf::sleep(sf::milliseconds(100));
         }
-    }
+    
+
+    }*/
+    DTMF s;
+    s.playDTMF(1);
 
     return 0;
 }

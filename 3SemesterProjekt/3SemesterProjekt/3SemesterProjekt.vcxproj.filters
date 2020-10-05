@@ -18,5 +18,16 @@
     <ClCompile Include="3SemesterProjekt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DTMF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\DTMF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DTMF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
