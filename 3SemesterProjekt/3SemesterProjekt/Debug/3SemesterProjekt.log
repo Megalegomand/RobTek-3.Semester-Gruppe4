@@ -1,8 +1,0 @@
-﻿  3SemesterProjekt.cpp
-D:\OneDrive\Uni\3. Semester\PRO3\Git\3SemesterProjekt\3SemesterProjekt\3SemesterProjekt.cpp(29,41): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=sf::Int16
-          ]
-  LINK : D:\OneDrive\Uni\3. Semester\PRO3\Git\3SemesterProjekt\Debug\3SemesterProjekt.exe not found or not built by the last incremental link; performing full link
-  3SemesterProjekt.vcxproj -> D:\OneDrive\Uni\3. Semester\PRO3\Git\3SemesterProjekt\Debug\3SemesterProjekt.exe
