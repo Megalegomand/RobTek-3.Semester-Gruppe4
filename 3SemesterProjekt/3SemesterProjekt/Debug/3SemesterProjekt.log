@@ -1,9 +1,0 @@
-﻿  3SemesterProjekt.cpp
-  DTMF.cpp
-C:\Users\scdoc\OneDrive\Uni\3. Semester\PRO3\Git\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(13,48): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=sf::Int16
-          ]
-  Generating Code...
-  3SemesterProjekt.vcxproj -> C:\Users\scdoc\OneDrive\Uni\3. Semester\PRO3\Git\3SemesterProjekt\Debug\3SemesterProjekt.exe

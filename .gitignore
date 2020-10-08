@@ -5,6 +5,8 @@
 [Bb]uild/
 [Bb]uilds/
 [Dd]ebug/
+x64/
+/x64/
 /[Dd]ebug/
 .vs/
 Assets/AssetStoreTools*
