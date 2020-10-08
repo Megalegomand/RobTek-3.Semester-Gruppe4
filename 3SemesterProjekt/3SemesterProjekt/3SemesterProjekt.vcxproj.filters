@@ -23,9 +23,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\DTMF.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DTMF.h">
       <Filter>Header Files</Filter>
     </ClInclude>

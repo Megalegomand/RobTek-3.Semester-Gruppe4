@@ -11,10 +11,10 @@ public:
 	~DTMF();
 
 private:
-	const unsigned AMPLITUDE = 30000;
+	const unsigned AMPLITUDE = 3000;
 	const double TWO_PI = 6.28318;
-	vector<vector<sf::Int16>> tonesL;
-	vector<vector<sf::Int16>> tonesH;
+	const double tonesL[4] = { 697,770,852,941 };
+	const double tonesH[4] = { 1209,1336,1477,1633 };
 	
 };
 
