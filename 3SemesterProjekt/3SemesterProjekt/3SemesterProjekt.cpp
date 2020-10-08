@@ -48,7 +48,9 @@ int main()
 
     }*/
     DTMF s;
-    s.playDTMF(1);
+    for (int i = 0; i < 16; i++) {
+        s.playDTMF(i);
+    }
 
     return 0;
 }
