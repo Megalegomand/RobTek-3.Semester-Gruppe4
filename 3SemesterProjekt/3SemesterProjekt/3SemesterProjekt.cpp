@@ -48,9 +48,17 @@ int main()
 
     }*/
     DTMF s;
-    for (int i = 0; i < 16; i++) {
+    s.receiveDTMF();
+    /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
-    }
+    }*/
+    // Kode til list af input devices !!!!!!!!//
+    //std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
+
+    //for (unsigned int i = 0; i < availableDevices.size(); i++)
+    //{
+    //    cout << availableDevices[i] << endl;
+    //}
 
     return 0;
 }
