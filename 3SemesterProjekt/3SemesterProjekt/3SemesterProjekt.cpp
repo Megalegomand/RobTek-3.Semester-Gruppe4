@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include<iostream>
-#include"DTMF.h"
+//#include"DTMF.h"
 
 int main()
 {
@@ -47,8 +47,8 @@ int main()
     
 
     }*/
-    DTMF s;
-    s.receiveDTMF();
+    //DTMF s;
+    //s.receiveDTMF();
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
     }*/

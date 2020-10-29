@@ -56,9 +56,9 @@ void DTMF::receiveDTMF()
 
    for (int k = 0; k < count / 2; k++)
     {
-        Complex t = polar(1.0, -2 * PI * k / count) * odd[k];
-        samples[k] = even[k] + t;
-        samples[k + count / 2] = even[k] - t;
+        //Complex t = polar(1.0, -2 * PI * k / count) * odd[k];
+        //samples[k] = even[k] + t;
+        //samples[k + count / 2] = even[k] - t;
     }
 }
 ;
