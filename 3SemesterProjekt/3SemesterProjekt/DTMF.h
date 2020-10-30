@@ -17,6 +17,7 @@ public:
 	DTMF();
 	void playDTMF(int tonevalg);
 	void receiveDTMF();
+	void ResetGoertzel();
 	~DTMF();
 
 private:
@@ -25,6 +26,8 @@ private:
 	const double tonesL[4] = { 697.,770.,852.,941. };
 	const double tonesH[4] = { 1209.,1336.,1477.,1633. };
 	typedef complex<double> Complex;
+	int SAMPLING_RATE = 8000;
+	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
 	
 };
 
