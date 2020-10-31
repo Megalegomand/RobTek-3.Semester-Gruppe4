@@ -1,6 +1,9 @@
 #include "DTMF.h"
 DTMF::DTMF() {
-  
+    for (int i = 0; i < 4; i++) {
+        goertzelH[i] = new Goertzel(tonesH[i], SAMPLING_RATE);
+        goertzelL[i] = new Goertzel(tonesL[i], SAMPLING_RATE);
+    }
 };
 void DTMF::playDTMF(int tonevalg) {
     
@@ -28,23 +31,38 @@ sf::SoundBuffer buffer;
 }
 void DTMF::receiveDTMF()
 {
-    /*
-    vector<int> even;
-    vector<int> odd;
+    
+    //vector<int> even;
+    //vector<int> odd;
     using namespace std::this_thread; // sleep_for, sleep_until
     using namespace std::chrono; // nanoseconds, system_clock, seconds
     std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
     std::string inputDevice = availableDevices[0];
     sf::SoundBufferRecorder recorder;
     recorder.start();
-    sleep_for(seconds(1));
-    sleep_until(system_clock::now() + seconds(1));
+    sleep_for(milliseconds(100));
+    sleep_until(system_clock::now() + milliseconds(100));
     recorder.stop();
     const sf::SoundBuffer& buffer = recorder.getBuffer();
     buffer.saveToFile("my_record.ogg");
-    const int* samples = buffer.getSamples();
+    /*sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile("sin1633.wav")) {
+        cout << "Load failed!" << endl;
+        return;
+    }*/
+    cout << recorder.getSampleRate() << endl;
+    const sf::Int16* samples = buffer.getSamples();
     std::size_t count = buffer.getSampleCount();
 
+    for (Goertzel* g : goertzelL) {
+        cout << g->processSamples(samples, count) << " ";
+    }
+    for (Goertzel* g : goertzelH) {
+        cout << g->processSamples(samples, count) << " ";
+    }
+    cout << endl;
+
+    /*
     //Ovenstående optager lyd og gemmer det 
     float coeff;
     float Q1;
@@ -54,7 +72,7 @@ void DTMF::receiveDTMF()
 
     float floatN;
     float omega;
-    */
+    
     /*doSomething(samples, count);*/
     /*
 

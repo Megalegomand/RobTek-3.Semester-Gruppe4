@@ -8,6 +8,7 @@
 #include<complex>
 #include<valarray>
 #include<complex.h>
+#include "Goertzel.h"
 
 
 using namespace std;
@@ -23,10 +24,12 @@ public:
 private:
 	const unsigned AMPLITUDE = 300;
 	const double PI = 3.14159265359;
-	const double tonesL[4] = { 697.,  770.,  852.,  941. };
-	const double tonesH[4] = { 1209., 1336., 1477., 1633. };
+	const int tonesL[4] = { 697,  770,  852,  941  };
+	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
+	Goertzel* goertzelL[4];
+	Goertzel* goertzelH[4];
 	typedef complex<double> Complex;
-	int SAMPLING_RATE = 8000;
+	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampelRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
 	
 };

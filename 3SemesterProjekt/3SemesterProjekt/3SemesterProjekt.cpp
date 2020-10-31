@@ -2,13 +2,13 @@
 #include <SFML/Audio.hpp>
 #include<iostream>
 #include "Goertzel.h"
-//#include"DTMF.h"
+#include"DTMF.h"
 
 using namespace std;
 int main()
 {
-    Goertzel g = Goertzel(1633, 8000);
-    cout << g.processSamples(NULL, 205) << endl;
+    //Goertzel g = Goertzel(1633, 8000);
+    //cout << g.processSamples(NULL, 205) << endl;
     /*sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
@@ -50,8 +50,10 @@ int main()
     
 
     }*/
-    //DTMF s;
-    //s.receiveDTMF();
+    DTMF s;
+    while (true) {
+        s.receiveDTMF();
+    }
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
     }*/
