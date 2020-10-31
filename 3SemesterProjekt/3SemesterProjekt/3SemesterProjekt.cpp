@@ -1,11 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include<iostream>
+#include "Goertzel.h"
 //#include"DTMF.h"
 
+using namespace std;
 int main()
 {
-    
+    Goertzel g = Goertzel(1633, 8000);
+    cout << g.processSamples(NULL, 205) << endl;
     /*sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);

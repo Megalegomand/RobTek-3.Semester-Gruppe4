@@ -28,6 +28,7 @@ sf::SoundBuffer buffer;
 }
 void DTMF::receiveDTMF()
 {
+    /*
     vector<int> even;
     vector<int> odd;
     using namespace std::this_thread; // sleep_for, sleep_until
@@ -53,10 +54,12 @@ void DTMF::receiveDTMF()
 
     float floatN;
     float omega;
-
+    */
     /*doSomething(samples, count);*/
-    floatN = (FLOATING)N;
-    k = (int)(0.5 + ((floatN *samples) / SAMPLING_RATE));
+    /*
+
+    floatN = (float) N;
+    k = (int)(0.5 + ((TARGET_FREQ) / SAMPLING_RATE));
     omega = (2.0 * PI * k) / floatN;
     sine = sin(omega);
     cosine = cos(omega);
@@ -67,10 +70,10 @@ void DTMF::receiveDTMF()
     printf(" and FREQUENCY = %f,\n", samples);
     printf("k = %d and coeff = %f\n\n", k, coeff);
 
-    ResetGoertzel();
+    //ResetGoertzel();
 
-
-
+    
+    */
    /* for (int i = 0; i < count; i+=2)
     {
         even.push_back(samples[i]);
@@ -80,17 +83,13 @@ void DTMF::receiveDTMF()
         odd.push_back(samples[i]);
     }
 
-   for (int k = 0; k < count / 2; k++)*/
+   for (int k = 0; k < count / 2; k++)*//*
     {
         //Complex t = polar(1.0, -2 * PI * k / count) * odd[k];
         //samples[k] = even[k] + t;
         //samples[k + count / 2] = even[k] - t;
     }
+    */
 }
-void DTMF::ResetGoertzel()
-{
-    Q2 = 0;
-    Q1 = 0;
-}
-;
+
 DTMF::~DTMF() {};
