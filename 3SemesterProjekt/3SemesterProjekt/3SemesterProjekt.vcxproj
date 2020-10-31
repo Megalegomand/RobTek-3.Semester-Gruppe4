@@ -154,16 +154,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3SemesterProjekt.cpp" />
-    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DataLink.cpp" />
     <ClCompile Include="DTMF.cpp" />
     <ClCompile Include="Goertzel.cpp" />
-    <ClCompile Include="Host.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Client.h" />
+    <ClInclude Include="DataLink.h" />
     <ClInclude Include="DTMF.h" />
     <ClInclude Include="Goertzel.h" />
-    <ClInclude Include="Host.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
