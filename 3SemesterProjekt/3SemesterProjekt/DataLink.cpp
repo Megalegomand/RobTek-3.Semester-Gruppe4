@@ -30,4 +30,9 @@ char DataLink::receiveTone()
 
 void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
 {
+	for (char c : PREAMBLE) {
+		sendTone(c);
+	}
+
+	sendTone(transmissionType);
 }

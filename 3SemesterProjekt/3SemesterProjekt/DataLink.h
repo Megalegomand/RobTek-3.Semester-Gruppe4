@@ -37,7 +37,7 @@ private:
 };
 
 /*
-Preamble        SFD (1tone) (xbytes)
+Preamble SFD (1tone) (xbytes)
 FA50FA50 F   TYPE     LENGTH DATA Checksum (FLAG)
 
 
