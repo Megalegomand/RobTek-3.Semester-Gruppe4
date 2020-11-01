@@ -1,4 +1,16 @@
 #pragma once
+#include<queue>
+
+enum TransmissionType {
+	BIND = 0x0,
+    CONNECT = 0x1,
+	ACK = 0x2,
+	NACK = 0x3,
+	TOKEN_PASS = 0x4,
+	DATA = 0xF,
+};
+
+using namespace std;
 class DataLink
 {
 public:
@@ -7,24 +19,26 @@ public:
 
 	bool listen(int timeout); // Timeout in ms
 	bool bind(int attempts);
+
+	bool sendData(vector<char>* data); // Returns true if succesfull
 private:
 	bool gotToken;
 
-	// Data transmission types
-	const unsigned char BIND = 0x0;
-	const unsigned char CONNECT = 0x1;
-	const unsigned char ACK = 0x2;
-	const unsigned char NACK = 0x3;
-	const unsigned char TOKEN_PASS = 0x4;
-	const unsigned char DATA = 0xF;
+	const char PREAMBLE[8] = { 0xF, 0xA, 0x5, 0x0, 0xF, 0xA, 0x5, 0x0 };
+	const char SFD = 0xF;
 
-	const unsigned int PREAMBLE = 0xFA50FA50;
-	const unsigned char SFD = 0xF;
+	queue<char> recieveBuffer;
+	queue<char> sendBuffer;
+
+	void sendTone(char tone);
+	char receiveTone(); // Returns -1 if no tone available
+
+	void sendFrame(TransmissionType transmissionType, vector<char> data);
 };
 
 /*
 Preamble        SFD (1tone) (xbytes)
-FA50FA50 F   TYPE     LENGTH DATA Checksum
+FA50FA50 F   TYPE     LENGTH DATA Checksum (FLAG)
 
 
 tone = 100ms
