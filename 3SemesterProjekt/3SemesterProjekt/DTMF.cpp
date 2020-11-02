@@ -34,6 +34,8 @@ void DTMF::receiveDTMF()
     
     //vector<int> even;
     //vector<int> odd;
+    goertzelresL.clear();
+    goertzelresH.clear();
     using namespace std::this_thread; // sleep_for, sleep_until
     using namespace std::chrono; // nanoseconds, system_clock, seconds
     std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
@@ -56,9 +58,11 @@ void DTMF::receiveDTMF()
 
     for (Goertzel* g : goertzelL) {
         cout << g->processSamples(samples, count) << " ";
+        goertzelresL.push_back(g->processSamples(samples, count));
     }
     for (Goertzel* g : goertzelH) {
         cout << g->processSamples(samples, count) << " ";
+        goertzelresH.push_back(g->processSamples(samples, count));
     }
     cout << endl;
 
@@ -108,6 +112,37 @@ void DTMF::receiveDTMF()
         //samples[k + count / 2] = even[k] - t;
     }
     */
+}
+
+void DTMF::determineDTMF()
+{
+     int i, pos1=0, pos2=0;
+     float  largest = 0, second_largest = 0;
+    //Finding Largest
+   
+    //finding second largset
+    for (i = 0; i < goertzelresH.size(); ++i)
+    {
+        for (int j = 0; j < goertzelresL.size(); ++j)
+        {
+            if (goertzelresL[j] > largest)
+            {
+                largest = goertzelresL[j];
+                pos1 = j;
+            }
+        }
+        if (goertzelresH[i] > second_largest)
+        {
+            second_largest = goertzelresH[i];
+            pos2 = i;
+
+         }
+    
+    }
+    cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
+    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4);
+    goertzelresH.clear();
+    goertzelresL.clear();
 }
 
 DTMF::~DTMF() {};

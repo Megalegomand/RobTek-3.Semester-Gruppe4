@@ -57,10 +57,12 @@ int main()
     
 
     }*/
-    //DTMF s;
-    //while (true) {
-    //    s.receiveDTMF();
-    //}
+
+    DTMF s;
+    while (true) {
+        s.receiveDTMF();
+        s.determineDTMF();
+    }
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
     }*/
