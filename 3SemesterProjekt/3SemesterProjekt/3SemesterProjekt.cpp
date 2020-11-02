@@ -3,10 +3,17 @@
 #include<iostream>
 #include "Goertzel.h"
 #include"DTMF.h"
+#include"DataLink.h"
 
 using namespace std;
 int main()
 {
+    DataLink dl = DataLink();
+    vector<char> data;
+    data.push_back('A');
+    data.push_back('B');
+    dl.sendData(data);
+
     //Goertzel g = Goertzel(1633, 8000);
     //cout << g.processSamples(NULL, 205) << endl;
     /*sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
@@ -50,10 +57,10 @@ int main()
     
 
     }*/
-    DTMF s;
-    while (true) {
-        s.receiveDTMF();
-    }
+    //DTMF s;
+    //while (true) {
+    //    s.receiveDTMF();
+    //}
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
     }*/

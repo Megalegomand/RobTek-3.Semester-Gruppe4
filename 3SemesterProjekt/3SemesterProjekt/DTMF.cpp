@@ -19,7 +19,7 @@ void DTMF::playDTMF(int tonevalg) {
     };
       
        
-sf::SoundBuffer buffer;
+    sf::SoundBuffer buffer;
 
     buffer.loadFromSamples(&dtmf[0],dtmf.size(), 2, 44100);
     sf::Sound Sound;

@@ -1,5 +1,7 @@
 #pragma once
-#include<queue>
+#include<concurrent_queue.h>
+#include<vector>
+#include<iostream>
 
 enum TransmissionType {
 	BIND = 0x0,
@@ -11,6 +13,7 @@ enum TransmissionType {
 };
 
 using namespace std;
+using namespace concurrency;
 class DataLink
 {
 public:
@@ -20,20 +23,21 @@ public:
 	bool listen(int timeout); // Timeout in ms
 	bool bind(int attempts);
 
-	bool sendData(vector<char>* data); // Returns true if succesfull
+	bool sendData(vector<char> &data); // Returns true if succesfull
 private:
-	bool gotToken;
+	bool gotToken = false;
 
 	const char PREAMBLE[8] = { 0xF, 0xA, 0x5, 0x0, 0xF, 0xA, 0x5, 0x0 };
 	const char SFD = 0xF;
 
-	queue<char> recieveBuffer;
-	queue<char> sendBuffer;
+	concurrent_queue<char> recieveBuffer;
+	concurrent_queue<char> sendBuffer;
 
 	void sendTone(char tone);
 	char receiveTone(); // Returns -1 if no tone available
 
 	void sendFrame(TransmissionType transmissionType, vector<char> data);
+	void sendSequence(vector<char> &sequence);
 };
 
 /*
