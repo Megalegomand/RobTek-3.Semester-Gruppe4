@@ -50,7 +50,6 @@ void DTMF::receiveDTMF()
         cout << "Load failed!" << endl;
         return;
     }*/
-    cout << recorder.getSampleRate() << endl;
     const sf::Int16* samples = buffer.getSamples();
     std::size_t count = buffer.getSampleCount();
 
@@ -71,9 +70,9 @@ int DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 {
      int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
-     float stoej[6];
+     float stoej[6] = {};
      int stoeji=0;
-     
+     int res = 0;
     //finding Largest second largset
     for (int i = 0; i < goertzelresH.size(); i++)
     {
@@ -110,15 +109,32 @@ int DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
     if (SNR>DBthreshhold)
     {
+        res= (pos1 + pos2) * 4;
         return (pos1 + pos2) * 4;
     }
     else
     {
+        res = -1;
         return -1;
     }
     /*cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
     cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;*/
+    recordPeriod(res);
+}
+
+void DTMF::recordPeriod(int DTMFres)
+{
     
+    while (true)
+    {
+        if (DTMFres != -1) {
+            break;
+        }
+        {
+            //Send fejl i modtagelse//
+
+        }
+    }
 }
 
 
