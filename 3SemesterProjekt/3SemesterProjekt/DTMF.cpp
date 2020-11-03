@@ -141,4 +141,49 @@ void DTMF::determineDTMF()
     goertzelresL.clear();
 }
 
+bool DTMF::determineDTMF2(int threshold)
+{
+    this-> threshold = threshold;
+    float  largestL = 0, largestH = 0;
+    int count = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (goertzelresL[i] > largestL && largestL > threshold)
+        {
+            values[i] = true;
+        }
+        else if (goertzelresL[i] > largestL && largestL < threshold)
+        {
+            values[i] = false;
+        }
+
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+
+        if (goertzelresH[i] > largestH && largestH > threshold)
+        {
+            values[i + 4] = true;
+        }
+        else if (goertzelresH[i] > largestH && largestH < threshold)
+        {
+            values[i + 4] = false;
+        }
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        if (values[i] = true)
+            count++;
+    }
+
+    if (count > 2)
+    {
+        return false;
+    }
+return values;
+}
+
 DTMF::~DTMF() {};

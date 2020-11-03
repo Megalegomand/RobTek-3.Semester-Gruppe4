@@ -27,6 +27,7 @@ public:
 	void playDTMF(int tonevalg);
 	void receiveDTMF();
 	void determineDTMF();
+	bool determineDTMF2(int threshold);
 	float processSamples(int* samples);
 
 	~DTMF();
@@ -40,6 +41,8 @@ private:
 	Goertzel* goertzelH[4];
 	vector<float> goertzelresL;
 	vector<float> goertzelresH;
+	bool values[8] = {};
+	int threshold;
 	typedef complex<double> Complex;
 	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampleRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
