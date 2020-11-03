@@ -4,7 +4,10 @@ DTMF::DTMF() {
         goertzelH[i] = new Goertzel(tonesH[i], SAMPLING_RATE);
         goertzelL[i] = new Goertzel(tonesL[i], SAMPLING_RATE);
     }
-};
+}
+void DTMF::sendSequence(vector<char>& sequence)
+{
+}
 void DTMF::playDTMF(int tonevalg) {
     
     vector<sf::Int16> dtmf;

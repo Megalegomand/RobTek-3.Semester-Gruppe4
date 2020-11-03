@@ -15,10 +15,13 @@ using namespace std;
 class DTMF
 {
 public:
+	const int TONE_DURATION = 100; // Millisseconds
+	const int LISTEN_DURATION = 10; // Duration of microlisten
+
 	DTMF();
 	void sendTone(char tone);
 	void sendSequence(vector<char>& sequence);
-	vector<char> receiveSequence(int timeout); // Timeout in millis, -1 for infinite
+	char listenTone(int time); // Listen time, return -1 for no DTMF
 
 
 	bool waitTone(int timeout); // Timeout in millis, -1 for infinite
@@ -43,6 +46,6 @@ private:
 	typedef complex<double> Complex;
 	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampleRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
-	
+
 };
 

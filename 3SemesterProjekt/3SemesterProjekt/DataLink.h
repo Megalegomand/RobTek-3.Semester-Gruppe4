@@ -2,6 +2,9 @@
 #include<concurrent_queue.h>
 #include<vector>
 #include<iostream>
+#include "DTMF.h"
+// Temp
+#include "VirtuelDTMF.h"
 
 enum TransmissionType {
 	BIND = 0x0,
@@ -10,6 +13,12 @@ enum TransmissionType {
 	NACK = 0x3,
 	TOKEN_PASS = 0x4,
 	DATA = 0xF,
+};
+
+enum class TransmissionStates {
+	NotConnected, 
+	Ready, 
+	Wait,
 };
 
 using namespace std;
@@ -25,19 +34,18 @@ public:
 
 	bool sendData(vector<char> &data); // Returns true if succesfull
 private:
-	bool gotToken = false;
-
 	const char PREAMBLE[8] = { 0xF, 0xA, 0x5, 0x0, 0xF, 0xA, 0x5, 0x0 };
 	const char SFD = 0xF;
 
 	concurrent_queue<char> recieveBuffer;
 	concurrent_queue<char> sendBuffer;
 
+	VirtuelDTMF* dtmf;
+
 	void sendTone(char tone);
 	char receiveTone(); // Returns -1 if no tone available
 
 	void sendFrame(TransmissionType transmissionType, vector<char> data);
-	void sendSequence(vector<char> &sequence);
 };
 
 /*

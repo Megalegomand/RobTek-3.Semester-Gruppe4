@@ -1,6 +1,8 @@
 #include "DataLink.h"
 
-DataLink::DataLink() {}
+DataLink::DataLink() {
+	dtmf = new  VirtuelDTMF();
+}
 
 bool DataLink::listen(int timeout)
 {
@@ -14,7 +16,7 @@ bool DataLink::bind(int attempts)
 
 bool DataLink::sendData(vector<char> &data)
 {
-	sendSequence(data);
+	dtmf->sendSequence(data);
 	return false;
 }
 
@@ -45,13 +47,6 @@ void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
 
 	frame.push_back(transmissionType);
 
-	sendSequence(frame);
+	dtmf->sendSequence(frame);
 }
 
-void DataLink::sendSequence(vector<char> &sequence)
-{
-	for (char tone : sequence) {
-		cout << int(tone) << endl;
-		//dtmf.playDTMF(tone);
-	}
-}

@@ -4,15 +4,21 @@
 #include "Goertzel.h"
 #include"DTMF.h"
 #include"DataLink.h"
+#include<thread>
 
 using namespace std;
 int main()
 {
+    VirtuelDTMF vdtmf;
+    std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
+
     DataLink dl = DataLink();
     vector<char> data;
     data.push_back('A');
     data.push_back('B');
     dl.sendData(data);
+
+    mediumReaderThread.join();
 
     //Goertzel g = Goertzel(1633, 8000);
     //cout << g.processSamples(NULL, 205) << endl;
@@ -57,12 +63,13 @@ int main()
     
 
     }*/
-
+    /*
     DTMF s;
     while (true) {
         s.receiveDTMF();
         s.determineDTMF();
     }
+    */
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);
     }*/
