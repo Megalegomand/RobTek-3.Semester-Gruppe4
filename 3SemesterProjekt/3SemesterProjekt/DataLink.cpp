@@ -1,8 +1,6 @@
 #include "DataLink.h"
 
-DataLink::DataLink()
-{
-}
+DataLink::DataLink() {}
 
 bool DataLink::listen(int timeout)
 {
@@ -14,33 +12,56 @@ bool DataLink::bind(int attempts)
 	return false;
 }
 
-bool DataLink::sendData(vector<char>* data)
+bool DataLink::sendData(vector<char> &data)
 {
+	sendSequence(data);
 	return false;
 }
 
 void DataLink::sendTone(char tone)
 {
+	sendBuffer.push(tone);
 }
 
 char DataLink::receiveTone()
 {
-	return 0;
+	char tone = 0x0;
+	if (recieveBuffer.try_pop(tone)) {
+		return tone;
+	}
+	else {
+		return -1;
+	}
+	
 }
 
 void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
 {
-	for (char c : PREAMBLE) {
-		sendTone(c);//PREAMBLE
-	}
-	sendTone(SFD);//SFD
+	vector<char> frame;
 
-	sendTone(transmissionType);//TYPE
+	for (char c : PREAMBLE) {
+		frame.push_back(c);//PREAMBLE
+	}
+
+	frame.push_back(SFD);//SFD
+
+	frame.push_back(transmissionType);//TYPE
 
 	for (char c : data) {
-		sendTone(c);//DATA
+		frame.push_back(c);//DATA
 	}
 	
-	sendTone(data.size());//DATALENGTH
+	frame.push_back(data.size());//DATALENGTH
 	
+	frame.push_back(transmissionType);
+
+	sendSequence(frame);
+}
+
+void DataLink::sendSequence(vector<char> &sequence)
+{
+	for (char tone : sequence) {
+		cout << int(tone) << endl;
+		//dtmf.playDTMF(tone);
+	}
 }
