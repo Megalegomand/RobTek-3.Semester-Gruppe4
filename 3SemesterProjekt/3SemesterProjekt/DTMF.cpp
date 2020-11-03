@@ -35,10 +35,8 @@ void DTMF::playDTMF(int tonevalg) {
 void DTMF::receiveDTMF()
 {
     
-    //vector<int> even;
-    //vector<int> odd;
-    goertzelresL.clear();
-    goertzelresH.clear();
+    vector<float> goertzelresL;
+    vector<float> goertzelresH;
     using namespace std::this_thread; // sleep_for, sleep_until
     using namespace std::chrono; // nanoseconds, system_clock, seconds
     std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
@@ -55,7 +53,6 @@ void DTMF::receiveDTMF()
         cout << "Load failed!" << endl;
         return;
     }*/
-    cout << recorder.getSampleRate() << endl;
     const sf::Int16* samples = buffer.getSamples();
     std::size_t count = buffer.getSampleCount();
 
@@ -69,61 +66,17 @@ void DTMF::receiveDTMF()
     }
     cout << endl;
 
-    /*
-    //Ovenstående optager lyd og gemmer det 
-    float coeff;
-    float Q1;
-    float Q2;
-    float sine;
-    float cosine;
-
-    float floatN;
-    float omega;
-    
-    /*doSomething(samples, count);*/
-    /*
-
-    floatN = (float) N;
-    k = (int)(0.5 + ((TARGET_FREQ) / SAMPLING_RATE));
-    omega = (2.0 * PI * k) / floatN;
-    sine = sin(omega);
-    cosine = cos(omega);
-    coeff = 2.0 * cosine;
-
-    printf("For SAMPLING_RATE = %f", SAMPLING_RATE);
-    printf(" N = %d", N);
-    printf(" and FREQUENCY = %f,\n", samples);
-    printf("k = %d and coeff = %f\n\n", k, coeff);
-
-    //ResetGoertzel();
-
-    
-    */
-   /* for (int i = 0; i < count; i+=2)
-    {
-        even.push_back(samples[i]);
-    }
-    for (int i = 1; i < count; i += 2)
-    {
-        odd.push_back(samples[i]);
-    }
-
-   for (int k = 0; k < count / 2; k++)*//*
-    {
-        //Complex t = polar(1.0, -2 * PI * k / count) * odd[k];
-        //samples[k] = even[k] + t;
-        //samples[k + count / 2] = even[k] - t;
-    }
-    */
+    determineDTMF(goertzelresL, goertzelresH);
 }
- // {true, false, false, false, true, true, false, false}
-void DTMF::determineDTMF()
+ 
+int DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 {
      int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
-    //Finding Largest
-   
-    //finding second largset
+     float stoej[6] = {};
+     int stoeji=0;
+     int res = 0;
+    //finding Largest second largset
     for (int i = 0; i < goertzelresH.size(); i++)
     {
         if (goertzelresL[i] > largest)
@@ -131,17 +84,61 @@ void DTMF::determineDTMF()
             largest = goertzelresL[i];
             pos1 = i;
         }
+        else
+        {
+            stoej[stoeji] = goertzelresL[i];
+            stoeji++;
+        }
         if (goertzelresH[i] > second_largest)
         {
             second_largest = goertzelresH[i];
             pos2 = i;
 
          }
+        {
+            stoej[stoeji];
+            stoeji++;
+        }
     }
-    cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
-    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;
-    goertzelresH.clear();
-    goertzelresL.clear();
+    float P_Signal = (largest + second_largest) / 2;
+    float sum=0.0;
+    for (int i = 0; i < 6; i++)
+    {
+        sum += stoej[i];
+    }
+    float P_stoej = sum / 6.0;
+
+    float SNR = 10 * log10(P_Signal/P_stoej);
+
+    if (SNR>DBthreshhold)
+    {
+        res= (pos1 + pos2) * 4;
+        return (pos1 + pos2) * 4;
+    }
+    else
+    {
+        res = -1;
+        return -1;
+    }
+    /*cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
+    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;*/
+    recordPeriod(res);
 }
+
+void DTMF::recordPeriod(int DTMFres)
+{
+    
+    while (true)
+    {
+        if (DTMFres != -1) {
+            break;
+        }
+        {
+            //Send fejl i modtagelse//
+
+        }
+    }
+}
+
 
 DTMF::~DTMF() {};

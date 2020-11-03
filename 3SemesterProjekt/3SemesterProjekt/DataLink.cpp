@@ -42,9 +42,19 @@ void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
 	vector<char> frame;
 
 	for (char c : PREAMBLE) {
-		frame.push_back(c);
+		frame.push_back(c);//PREAMBLE
 	}
 
+	frame.push_back(SFD);//SFD
+
+	frame.push_back(transmissionType);//TYPE
+
+	for (char c : data) {
+		frame.push_back(c);//DATA
+	}
+	
+	frame.push_back(data.size());//DATALENGTH
+	
 	frame.push_back(transmissionType);
 
 	dtmf->sendSequence(frame);
