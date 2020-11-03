@@ -113,23 +113,20 @@ void DTMF::receiveDTMF()
     }
     */
 }
-
+ // {true, false, false, false, true, true, false, false}
 void DTMF::determineDTMF()
 {
-     int i, pos1=0, pos2=0;
+     int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
     //Finding Largest
    
     //finding second largset
-    for (i = 0; i < goertzelresH.size(); ++i)
+    for (int i = 0; i < goertzelresH.size(); i++)
     {
-        for (int j = 0; j < goertzelresL.size(); ++j)
+        if (goertzelresL[i] > largest)
         {
-            if (goertzelresL[j] > largest)
-            {
-                largest = goertzelresL[j];
-                pos1 = j;
-            }
+            largest = goertzelresL[i];
+            pos1 = i;
         }
         if (goertzelresH[i] > second_largest)
         {
@@ -137,10 +134,9 @@ void DTMF::determineDTMF()
             pos2 = i;
 
          }
-    
     }
     cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
-    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4);
+    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;
     goertzelresH.clear();
     goertzelresL.clear();
 }
