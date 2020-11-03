@@ -41,8 +41,8 @@ private:
 };
 
 /*
-Preamble SFD (1tone) (xbytes)
-FA50FA50 F   TYPE     LENGTH DATA Checksum (FLAG)
+Preamble SFD (1tone)
+FA50FA50 F   TYPE    DATA Checksum (No transmission)
 
 
 tone = 100ms

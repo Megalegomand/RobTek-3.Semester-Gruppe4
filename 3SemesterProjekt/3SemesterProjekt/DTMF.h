@@ -16,6 +16,14 @@ class DTMF
 {
 public:
 	DTMF();
+	void sendTone(char tone);
+	void sendSequence(vector<char>& sequence);
+	vector<char> receiveSequence(int timeout); // Timeout in millis, -1 for infinite
+
+
+	bool waitTone(int timeout); // Timeout in millis, -1 for infinite
+	vector<char> getSequence(int timing); // Input the time for each tone
+
 	void playDTMF(int tonevalg);
 	void receiveDTMF();
 	void determineDTMF();
