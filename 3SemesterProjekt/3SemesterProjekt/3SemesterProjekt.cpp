@@ -17,9 +17,9 @@ int main()
 
     //DataLink dl2 = DataLink();
     //std::thread dl2Thread(&DataLink::bind, &dl2, 10);
-    ////vector<char> data;
-    ////data.push_back('A');
-    ////data.push_back('B');
+    vector<char> data;
+    data.push_back(0);
+    data.push_back(4);
     ////dl1.sendData(data);
 
     //mediumReaderThread.join();
@@ -72,10 +72,18 @@ int main()
     }*/
     
     DTMF s;
-    while (true) {
-        s.sendTone(1);
-
+    
+        /*s.sendTone(0);*/
+    /*s.sendSequence(data);*/
+    while (true)
+    {
+        cout << int(s.listenTone()) << endl;
     }
+    
+    
+        
+
+    
     
     /*for (int i = 0; i < 16; i++) {
         s.playDTMF(i);

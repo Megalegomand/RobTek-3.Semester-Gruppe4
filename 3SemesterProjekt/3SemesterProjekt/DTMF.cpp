@@ -19,12 +19,12 @@ char DTMF::listenTone()
 void DTMF::sendTone(char tonevalg) {
     
     vector<sf::Int16> dtmf;
-    const double incrementL = tonesL[tonevalg % 4] / 44100;
-    const double incrementH= tonesH[tonevalg / 4 - 1] / 44100;
+    const double incrementL = ((double) tonesL[tonevalg % 4]) / SAMPLING_RATE;
+    const double incrementH= ((double) tonesH[tonevalg / 4 - 1]) / SAMPLING_RATE;
     double x = 0;
     double y = 0;
-    int antalSamples = (int)(SAMPLING_RATE * (TONE_DURATION / 1000.0));
-    for (unsigned i = 0; i < antalSamples; i++) {
+    int antalSamples = ((SAMPLING_RATE * TONE_DURATION) / 1000);
+    for (unsigned int i = 0; i < antalSamples; i++) {
         dtmf.push_back(AMPLITUDE * sin(x * PI) + AMPLITUDE * sin(y * PI));
         x += incrementL;
         y += incrementH;
@@ -66,11 +66,11 @@ char DTMF::receiveDTMF()
     std::size_t count = buffer.getSampleCount();
 
     for (Goertzel* g : goertzelL) {
-        cout << g->processSamples(samples, count) << " ";
+        /*cout << g->processSamples(samples, count) << " ";*/
         goertzelresL.push_back(g->processSamples(samples, count));
     }
     for (Goertzel* g : goertzelH) {
-        cout << g->processSamples(samples, count) << " ";
+       /* cout << g->processSamples(samples, count) << " ";*/
         goertzelresH.push_back(g->processSamples(samples, count));
     }
     cout << endl;
@@ -122,12 +122,11 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
     if (SNR>DBthreshhold)
     {
-        res= (pos1 + pos2) * 4;
-        return (pos1 + pos2) * 4;
+        
+        return pos1*4 + pos2;
     }
     else
     {
-        res = -1;
         return -1;
     }
     /*cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
