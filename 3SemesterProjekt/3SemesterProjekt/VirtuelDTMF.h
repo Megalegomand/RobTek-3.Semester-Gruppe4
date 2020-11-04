@@ -10,7 +10,7 @@ class VirtuelDTMF : public DTMF
 public:
 	void sendSequence(vector<char>& sequence);
 	void sendTone(char tone);
-	char listenTone(int timeout);
+	char listenTone();
 
 	void outputMedium();
 

@@ -21,7 +21,7 @@ public:
 	DTMF();
 	void sendTone(char tone);
 	void sendSequence(vector<char>& sequence);
-	char listenTone(int time); // Listen time, return -1 for no DTMF
+	char listenTone(); // Listen time, return -1 for no DTMF
 
 
 	bool waitTone(int timeout); // Timeout in millis, -1 for infinite

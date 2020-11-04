@@ -20,10 +20,10 @@ void VirtuelDTMF::sendTone(char tone)
 	medium_mutex.unlock();
 }
 
-char VirtuelDTMF::listenTone(int timeout)
+char VirtuelDTMF::listenTone()
 {
 	char oldTone = medium;
-	this_thread::sleep_for(chrono::milliseconds(TONE_DURATION));
+	this_thread::sleep_for(chrono::milliseconds(LISTEN_DURATION));
 	char newTone = medium;
 	if (oldTone != newTone) {
 		return -1;
@@ -33,9 +33,10 @@ char VirtuelDTMF::listenTone(int timeout)
 
 void VirtuelDTMF::outputMedium()
 {
-	while (true) {
+	for (int i = 0; i < 20; i++) {
+	//while (true) {
 		cout << int(medium) << endl;
-		this_thread::sleep_for(chrono::milliseconds(TONE_DURATION/2));
+		this_thread::sleep_for(chrono::milliseconds(TONE_DURATION));
 	}
 }
 

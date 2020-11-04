@@ -12,13 +12,20 @@ int main()
     VirtuelDTMF vdtmf;
     std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
 
-    DataLink dl = DataLink();
-    vector<char> data;
-    data.push_back('A');
-    data.push_back('B');
-    dl.sendData(data);
+    DataLink dl1 = DataLink();
+    std::thread dl1Thread(&DataLink::listen, &dl1, 1000);
+
+    DataLink dl2 = DataLink();
+    std::thread dl2Thread(&DataLink::bind, &dl2, 10);
+    //vector<char> data;
+    //data.push_back('A');
+    //data.push_back('B');
+    //dl1.sendData(data);
 
     mediumReaderThread.join();
+    dl1Thread.join();
+    dl2Thread.join();
+
 
     //Goertzel g = Goertzel(1633, 8000);
     //cout << g.processSamples(NULL, 205) << endl;

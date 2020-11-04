@@ -46,6 +46,8 @@ private:
 	char receiveTone(); // Returns -1 if no tone available
 
 	void sendFrame(TransmissionType transmissionType, vector<char> data);
+	void sendFrame(TransmissionType transmissionType);
+	vector<char> waitFrame(int timeout); // Timeout in millis, returns frame without preamble and SFD
 };
 
 /*

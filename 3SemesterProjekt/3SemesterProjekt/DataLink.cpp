@@ -6,11 +6,13 @@ DataLink::DataLink() {
 
 bool DataLink::listen(int timeout)
 {
+	waitFrame(1000);
 	return false;
 }
 
 bool DataLink::bind(int attempts)
 {
+	sendFrame(TransmissionType::BIND);
 	return false;
 }
 
@@ -49,14 +51,31 @@ void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
 
 	frame.push_back(transmissionType);//TYPE
 
+	//frame.push_back(data.size());//DATALENGTH
+
 	for (char c : data) {
 		frame.push_back(c);//DATA
 	}
-	
-	frame.push_back(data.size());//DATALENGTH
-	
-	frame.push_back(transmissionType);
 
 	dtmf->sendSequence(frame);
+}
+
+void DataLink::sendFrame(TransmissionType transmissionType)
+{
+	sendFrame(transmissionType, vector<char>());
+}
+
+vector<char> DataLink::waitFrame(int timeout)
+{
+	auto start = chrono::system_clock::now();
+	while ((chrono::system_clock::now() - start).count() * 1000 < timeout) {
+		char tone = dtmf->listenTone();
+		if (tone != -1) {
+			break;
+		}
+	}
+
+
+	return vector<char>();
 }
 
