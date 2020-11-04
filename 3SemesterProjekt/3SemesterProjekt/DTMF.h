@@ -15,24 +15,19 @@ using namespace std;
 class DTMF
 {
 public:
-	const int TONE_DURATION = 100; // Millisseconds
+	const int TONE_DURATION = 10000; // Millisseconds
 	const int LISTEN_DURATION = 10; // Duration of microlisten
 
 	DTMF();
-	void sendTone(char tone);
+	void sendTone(char tonevalg);
 	void sendSequence(vector<char>& sequence);
 	char listenTone(); // Listen time, return -1 for no DTMF
 
 
-	bool waitTone(int timeout); // Timeout in millis, -1 for infinite
-	vector<char> getSequence(int timing); // Input the time for each tone
-
-	void playDTMF(int tonevalg);
-	void receiveDTMF();
-	int determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
-	void recordPeriod(int DTMFres);
-	float processSamples(int* samples);
-
+	
+	char receiveDTMF();
+	char determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
+	
 	~DTMF();
 
 private:
