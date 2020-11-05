@@ -39,33 +39,28 @@ char DataLink::receiveTone()
 	
 }
 
-void DataLink::sendFrame(TransmissionType transmissionType, vector<char> data)
+void DataLink::sendFrame(Frame frame)
 {
-	vector<char> frame;
+	vector<char> toneFrame;
 
 	for (char c : PREAMBLE) {
-		frame.push_back(c);//PREAMBLE
+		toneFrame.push_back(c);//PREAMBLE
 	}
 
-	frame.push_back(SFD);//SFD
+	toneFrame.push_back(SFD);//SFD
 
-	frame.push_back(transmissionType);//TYPE
+	toneFrame.push_back(frame.getType());//TYPE
 
 	//frame.push_back(data.size());//DATALENGTH
 
-	for (char c : data) {
-		frame.push_back(c);//DATA
+	for (char c : frame.getData()) {
+		toneFrame.push_back(c);//DATA
 	}
 
-	dtmf->sendSequence(frame);
+	dtmf->sendSequence(toneFrame);
 }
 
-void DataLink::sendFrame(TransmissionType transmissionType)
-{
-	sendFrame(transmissionType, vector<char>());
-}
-
-vector<char> DataLink::waitFrame(int timeout)
+Frame DataLink::waitFrame(int timeout)
 {
 	auto start = chrono::system_clock::now();
 	while ((chrono::system_clock::now() - start).count() * 1000 < timeout) {
@@ -76,6 +71,6 @@ vector<char> DataLink::waitFrame(int timeout)
 	}
 
 
-	return vector<char>();
+	return Frame();
 }
 
