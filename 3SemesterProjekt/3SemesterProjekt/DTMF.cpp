@@ -7,15 +7,24 @@ DTMF::DTMF() {
 }
 void DTMF::sendSequence(vector<char>& sequence)
 {
+    for (char tone : sequence) {
+       sendTone(tone);
+    }
 }
-void DTMF::playDTMF(int tonevalg) {
+char DTMF::listenTone()
+{
+    return receiveDTMF();
+    
+}
+void DTMF::sendTone(char tonevalg) {
     
     vector<sf::Int16> dtmf;
-    const double incrementL = tonesL[tonevalg % 4] / 44100;
-    const double incrementH= tonesH[tonevalg / 4 - 1] / 44100;
+    const double incrementL = ((double) tonesL[tonevalg % 4]) / SAMPLING_RATE;
+    const double incrementH= ((double) tonesH[tonevalg / 4 - 1]) / SAMPLING_RATE;
     double x = 0;
     double y = 0;
-    for (unsigned i = 0; i < 50000; i++) {
+    int antalSamples = ((SAMPLING_RATE * TONE_DURATION) / 1000);
+    for (unsigned int i = 0; i < antalSamples; i++) {
         dtmf.push_back(AMPLITUDE * sin(x * PI) + AMPLITUDE * sin(y * PI));
         x += incrementL;
         y += incrementH;
@@ -30,9 +39,9 @@ void DTMF::playDTMF(int tonevalg) {
     Sound.setBuffer(buffer);
     Sound.setLoop(true);
     Sound.play();
-    sf::sleep(sf::milliseconds(1000));
+    sf::sleep(sf::milliseconds(TONE_DURATION));
 }
-void DTMF::receiveDTMF()
+char DTMF::receiveDTMF()
 {
     
     vector<float> goertzelresL;
@@ -43,8 +52,8 @@ void DTMF::receiveDTMF()
     std::string inputDevice = availableDevices[0];
     sf::SoundBufferRecorder recorder;
     recorder.start();
-    sleep_for(milliseconds(100));
-    sleep_until(system_clock::now() + milliseconds(100));
+    sleep_for(milliseconds(LISTEN_DURATION));
+    sleep_until(system_clock::now() + milliseconds(LISTEN_DURATION));
     recorder.stop();
     const sf::SoundBuffer& buffer = recorder.getBuffer();
     buffer.saveToFile("my_record.ogg");
@@ -57,19 +66,20 @@ void DTMF::receiveDTMF()
     std::size_t count = buffer.getSampleCount();
 
     for (Goertzel* g : goertzelL) {
-        cout << g->processSamples(samples, count) << " ";
+        /*cout << g->processSamples(samples, count) << " ";*/
         goertzelresL.push_back(g->processSamples(samples, count));
     }
     for (Goertzel* g : goertzelH) {
-        cout << g->processSamples(samples, count) << " ";
+       /* cout << g->processSamples(samples, count) << " ";*/
         goertzelresH.push_back(g->processSamples(samples, count));
     }
     cout << endl;
 
-    determineDTMF(goertzelresL, goertzelresH);
+    return determineDTMF(goertzelresL, goertzelresH);
+    
 }
  
-int DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
+char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 {
      int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
@@ -112,33 +122,19 @@ int DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
     if (SNR>DBthreshhold)
     {
-        res= (pos1 + pos2) * 4;
-        return (pos1 + pos2) * 4;
+        
+        return pos1*4 + pos2;
     }
     else
     {
-        res = -1;
         return -1;
     }
     /*cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
     cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;*/
-    recordPeriod(res);
-}
-
-void DTMF::recordPeriod(int DTMFres)
-{
     
-    while (true)
-    {
-        if (DTMFres != -1) {
-            break;
-        }
-        {
-            //Send fejl i modtagelse//
-
-        }
-    }
 }
+
+
 
 
 DTMF::~DTMF() {};
