@@ -1,5 +1,8 @@
 #pragma once
 #include<vector>
+#include"DTMF.h"
+#include"VirtuelDTMF.h"
+#include"Timer.h"
 
 enum TransmissionType {
 	BIND = 0x0,
@@ -14,15 +17,29 @@ using namespace std;
 class Frame
 {
 public:
+	const int TONE_DURATION = 20; // Millisseconds
+	const int LISTEN_MARGIN = 2 * TONE_DURATION / 10; // Margin applied on each side of the tone, to reduce noise
+	const int LISTEN_DURATION = 2; // Listen duration to catch the first tone
+
 	Frame();
-	Frame(TransmissionType transmissionType, vector<char> data);
-	Frame(TransmissionType transmissionType);
 
 	TransmissionType getType();
 	vector<char> getData();
 
+	void setFrame(TransmissionType transmissionType); // Clears data
+	void setFrame(TransmissionType transmissionType, vector<char> data);
+
+	void send();
+	bool wait(int timeout); // Timeout in millis, returns successful
 private:
+	const char PREAMBLE[4] = { 0xF, 0xA, 0x5, 0x0 };
+	//const char SFD = 0x0;
+
 	TransmissionType transmissionType;
 	vector<char> data;
+	VirtuelDTMF* dtmf;
+	Timer* timer;
+
+	char nextTone(Timer* timer, int toneNum);
 };
 

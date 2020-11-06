@@ -1,76 +1,36 @@
 #include "DataLink.h"
 
 DataLink::DataLink() {
-	dtmf = new  VirtuelDTMF();
+	frame = new Frame();
 }
 
 bool DataLink::listen(int timeout)
 {
-	waitFrame(1000);
+	bool t = frame->wait(timeout);
+	cout << "Listen: " << t << endl;
+	cout << "Type: " << frame->getType() << endl;
+	cout << "Data: ";
+	for (char c : frame->getData()) {
+		cout << int(c) << ", ";
+	}
+	cout << endl;
 	return false;
 }
 
 bool DataLink::bind(int attempts)
 {
-	sendFrame(TransmissionType::BIND);
+	vector<char> data;
+	data.push_back(0x1);
+	data.push_back(0x1);
+	frame->setFrame(BIND, data);
+	frame->send();
 	return false;
 }
 
 bool DataLink::sendData(vector<char> &data)
 {
-	dtmf->sendSequence(data);
+	//sendFrame(data);
 	return false;
 }
 
-void DataLink::sendTone(char tone)
-{
-	sendBuffer.push(tone);
-}
-
-char DataLink::receiveTone()
-{
-	char tone = 0x0;
-	if (recieveBuffer.try_pop(tone)) {
-		return tone;
-	}
-	else {
-		return -1;
-	}
-	
-}
-
-void DataLink::sendFrame(Frame frame)
-{
-	vector<char> toneFrame;
-
-	for (char c : PREAMBLE) {
-		toneFrame.push_back(c);//PREAMBLE
-	}
-
-	toneFrame.push_back(SFD);//SFD
-
-	toneFrame.push_back(frame.getType());//TYPE
-
-	//frame.push_back(data.size());//DATALENGTH
-
-	for (char c : frame.getData()) {
-		toneFrame.push_back(c);//DATA
-	}
-
-	dtmf->sendSequence(toneFrame);
-}
-
-Frame DataLink::waitFrame(int timeout)
-{
-	auto start = chrono::system_clock::now();
-	while ((chrono::system_clock::now() - start).count() * 1000 < timeout) {
-		char tone = dtmf->listenTone();
-		if (tone != -1) {
-			break;
-		}
-	}
-
-
-	return Frame();
-}
 

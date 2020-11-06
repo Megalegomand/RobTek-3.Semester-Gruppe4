@@ -15,7 +15,7 @@ using namespace std;
 class DTMF
 {
 public:
-	const int TONE_DURATION = 1000; // Millisseconds
+	const int TONE_DURATION = 100; // Millisseconds
 	const int LISTEN_DURATION = 10; // Duration of microlisten
 
 	DTMF();

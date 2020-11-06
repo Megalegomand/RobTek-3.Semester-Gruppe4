@@ -2,10 +2,11 @@
 #include<concurrent_queue.h>
 #include<vector>
 #include<iostream>
-#include "DTMF.h"
+#include"DTMF.h"
+#include"Frame.h"
+
 // Temp
-#include "VirtuelDTMF.h"
-#include "Frame.h"
+#include"VirtuelDTMF.h"
 
 enum class TransmissionStates {
 	NotConnected, 
@@ -19,7 +20,6 @@ class DataLink
 {
 public:
 	DataLink();
-	
 
 	bool listen(int timeout); // Timeout in ms
 	bool bind(int attempts);
@@ -27,19 +27,7 @@ public:
 	bool sendData(vector<char> &data); // Returns true if succesfull
 	vector<char> waitData(int timeout);
 private:
-	const char PREAMBLE[8] = { 0xF, 0xA, 0x5, 0x0, 0xF, 0xA, 0x5, 0x0 };
-	const char SFD = 0xF;
-
-	concurrent_queue<char> recieveBuffer;
-	concurrent_queue<char> sendBuffer;
-
-	VirtuelDTMF* dtmf;
-
-	void sendTone(char tone);
-	char receiveTone(); // Returns -1 if no tone available
-
-	void sendFrame(Frame frame);
-	Frame waitFrame(int timeout); // Timeout in millis, returns frame without preamble and SFD
+	Frame* frame;
 };
 
 /*

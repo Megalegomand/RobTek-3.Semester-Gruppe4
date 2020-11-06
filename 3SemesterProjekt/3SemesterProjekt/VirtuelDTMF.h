@@ -8,9 +8,9 @@ using namespace std;
 class VirtuelDTMF : public DTMF
 {
 public:
-	void sendSequence(vector<char>& sequence);
-	void sendTone(char tone);
-	char listenTone();
+	void sendSequence(vector<char>& sequence, int duration);
+	void sendTone(char tone, int duration);
+	char listenTone(int duration);
 
 	void outputMedium();
 
