@@ -6,24 +6,31 @@ DataLink::DataLink() {
 
 bool DataLink::listen(int timeout)
 {
-	bool t = frame->wait(timeout);
-	cout << "Listen: " << t << endl;
-	cout << "Type: " << frame->getType() << endl;
-	cout << "Data: ";
-	for (char c : frame->getData()) {
-		cout << int(c) << ", ";
+	while (true) {
+		bool t = frame->wait(timeout);
+		cout << "Listen: " << t << endl;
+		cout << "Type: " << frame->getType() << endl;
+		cout << "Data: ";
+		for (char c : frame->getData()) {
+			cout << int(c) << ", ";
+		}
+		cout << endl;
+		frame->send();
 	}
-	cout << endl;
+
 	return false;
 }
 
 bool DataLink::bind(int attempts)
 {
 	vector<char> data;
-	data.push_back(0x1);
-	data.push_back(0x1);
-	frame->setFrame(BIND, data);
-	frame->send();
+	while (true) {
+		data.push_back(0x0);
+		frame->setFrame(BIND, data);
+		frame->send();
+		frame->wait(100);
+		data = frame->getData();
+	}
 	return false;
 }
 

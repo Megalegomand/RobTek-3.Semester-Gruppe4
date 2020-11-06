@@ -5,25 +5,25 @@ DTMF::DTMF() {
         goertzelL[i] = new Goertzel(tonesL[i], SAMPLING_RATE);
     }
 }
-void DTMF::sendSequence(vector<char>& sequence)
+void DTMF::sendSequence(vector<char>& sequence, int duration)
 {
     for (char tone : sequence) {
-       sendTone(tone);
+       sendTone(tone, duration);
     }
 }
-char DTMF::listenTone()
+char DTMF::listenTone(int duration)
 {
-    return receiveDTMF();
+    return receiveDTMF(duration);
     
 }
-void DTMF::sendTone(char tonevalg) {
+void DTMF::sendTone(char tonevalg, int duration) {
     
     vector<sf::Int16> dtmf;
     const double incrementL = ((double) tonesL[tonevalg % 4]) / SAMPLING_RATE;
     const double incrementH= ((double) tonesH[tonevalg / 4 - 1]) / SAMPLING_RATE;
     double x = 0;
     double y = 0;
-    int antalSamples = ((SAMPLING_RATE * TONE_DURATION) / 1000);
+    int antalSamples = ((SAMPLING_RATE * duration) / 1000);
     for (unsigned int i = 0; i < antalSamples; i++) {
         dtmf.push_back(AMPLITUDE * sin(x * PI) + AMPLITUDE * sin(y * PI));
         x += incrementL;
@@ -39,9 +39,9 @@ void DTMF::sendTone(char tonevalg) {
     Sound.setBuffer(buffer);
     Sound.setLoop(true);
     Sound.play();
-    sf::sleep(sf::milliseconds(TONE_DURATION));
+    sf::sleep(sf::milliseconds(duration));
 }
-char DTMF::receiveDTMF()
+char DTMF::receiveDTMF(int duration)
 {
     
     vector<float> goertzelresL;
@@ -52,11 +52,11 @@ char DTMF::receiveDTMF()
     std::string inputDevice = availableDevices[0];
     sf::SoundBufferRecorder recorder;
     recorder.start();
-    sleep_for(milliseconds(LISTEN_DURATION));
-    sleep_until(system_clock::now() + milliseconds(LISTEN_DURATION));
+    sleep_for(milliseconds(duration));
+    sleep_until(system_clock::now() + milliseconds(duration));
     recorder.stop();
     const sf::SoundBuffer& buffer = recorder.getBuffer();
-    buffer.saveToFile("my_record.ogg");
+    //buffer.saveToFile("my_record.ogg");
     /*sf::SoundBuffer buffer;
     if (!buffer.loadFromFile("sin1633.wav")) {
         cout << "Load failed!" << endl;
@@ -73,7 +73,7 @@ char DTMF::receiveDTMF()
        /* cout << g->processSamples(samples, count) << " ";*/
         goertzelresH.push_back(g->processSamples(samples, count));
     }
-    cout << endl;
+    //cout << endl;
 
     return determineDTMF(goertzelresL, goertzelresH);
     

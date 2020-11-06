@@ -3,7 +3,7 @@
 Frame::Frame()
 {
 	transmissionType = BIND;
-	dtmf = new VirtuelDTMF();
+	dtmf = new DTMF();
 	timer = new Timer();
 }
 
@@ -60,6 +60,7 @@ bool Frame::wait(int timeout)
 		while (tone == -1) {
 			timer->start();
 			tone = dtmf->listenTone(LISTEN_DURATION);
+			cout << int(tone) << endl;
 		}
 		
 		int tonei = 0;

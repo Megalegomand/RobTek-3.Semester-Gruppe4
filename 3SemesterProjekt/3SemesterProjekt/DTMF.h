@@ -15,17 +15,13 @@ using namespace std;
 class DTMF
 {
 public:
-	const int TONE_DURATION = 100; // Millisseconds
-	const int LISTEN_DURATION = 10; // Duration of microlisten
-
 	DTMF();
-	void sendTone(char tonevalg);
-	void sendSequence(vector<char>& sequence);
-	char listenTone(); // Listen time, return -1 for no DTMF
-
+	void sendTone(char tonevalg, int duration);
+	void sendSequence(vector<char>& sequence, int duration);
+	char listenTone(int duration); // Listen time, return -1 for no DTMF
 
 	
-	char receiveDTMF();
+	char receiveDTMF(int duration);
 	char determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
 	
 	~DTMF();
@@ -38,7 +34,7 @@ private:
 	Goertzel* goertzelL[4];
 	Goertzel* goertzelH[4];
 	bool values[8] = {};
-	int DBthreshhold = 0;
+	int DBthreshhold = 10;
 	typedef complex<double> Complex;
 	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampleRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
