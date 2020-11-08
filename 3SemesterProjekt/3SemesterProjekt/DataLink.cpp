@@ -15,7 +15,7 @@ bool DataLink::listen(int timeout)
 			cout << int(c) << ", ";
 		}
 		cout << endl;
-		frame->send();
+		//frame->send();
 	}
 
 	return false;
@@ -24,12 +24,13 @@ bool DataLink::listen(int timeout)
 bool DataLink::bind(int attempts)
 {
 	vector<char> data;
+	//data.push_back(0x0);
 	while (true) {
-		data.push_back(0x0);
+		//data.push_back(0x0);
 		frame->setFrame(BIND, data);
 		frame->send();
-		frame->wait(100);
-		data = frame->getData();
+		//frame->wait(100);
+		//data = frame->getData();
 	}
 	return false;
 }

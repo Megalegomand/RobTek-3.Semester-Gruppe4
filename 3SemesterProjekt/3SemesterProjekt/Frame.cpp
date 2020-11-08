@@ -60,7 +60,6 @@ bool Frame::wait(int timeout)
 		while (tone == -1) {
 			timer->start();
 			tone = dtmf->listenTone(LISTEN_DURATION);
-			cout << int(tone) << endl;
 		}
 		
 		int tonei = 0;
@@ -101,7 +100,9 @@ bool Frame::wait(int timeout)
 			tonei++;
 			tone = nextTone(timer, tonei);
 		}
-		return true;
+		if (headeri > preambleSize) {
+			return true;
+		}
 	}
 	return false;
 }

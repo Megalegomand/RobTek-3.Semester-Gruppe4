@@ -15,9 +15,9 @@ int main()
     this_thread::sleep_for(chrono::milliseconds(1));
     
     DataLink dl1 = DataLink();
-    std::thread dl1Thread(&DataLink::listen, &dl1, 100);
+    std::thread dl1Thread(&DataLink::listen, &dl1, 1000000);
 
-    this_thread::sleep_for(chrono::milliseconds(10));
+    //this_thread::sleep_for(chrono::milliseconds(10));
     
     DataLink dl2 = DataLink();
     std::thread dl2Thread(&DataLink::bind, &dl2, 10);

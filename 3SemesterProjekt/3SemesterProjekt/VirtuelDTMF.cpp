@@ -7,6 +7,7 @@ void VirtuelDTMF::sendSequence(vector<char>& sequence, int duration) {
 	for (char tone : sequence) {
 		sendTone(tone, duration);
 	}
+	this_thread::sleep_for(chrono::milliseconds(duration));
 }
 
 void VirtuelDTMF::sendTone(char tone, int duration)

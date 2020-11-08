@@ -13,7 +13,9 @@ void DTMF::sendSequence(vector<char>& sequence, int duration)
 }
 char DTMF::listenTone(int duration)
 {
-    return receiveDTMF(duration);
+    char t = receiveDTMF(duration);
+    cout << "R " << int(t) << endl;
+    return t;
     
 }
 void DTMF::sendTone(char tonevalg, int duration) {
@@ -39,7 +41,7 @@ void DTMF::sendTone(char tonevalg, int duration) {
     Sound.setBuffer(buffer);
     Sound.setLoop(true);
     Sound.play();
-    sf::sleep(sf::milliseconds(duration));
+    this_thread::sleep_for(chrono::milliseconds(duration));
 }
 char DTMF::receiveDTMF(int duration)
 {
@@ -52,8 +54,7 @@ char DTMF::receiveDTMF(int duration)
     std::string inputDevice = availableDevices[0];
     sf::SoundBufferRecorder recorder;
     recorder.start();
-    sleep_for(milliseconds(duration));
-    sleep_until(system_clock::now() + milliseconds(duration));
+    this_thread::sleep_for(chrono::milliseconds(duration));
     recorder.stop();
     const sf::SoundBuffer& buffer = recorder.getBuffer();
     //buffer.saveToFile("my_record.ogg");
