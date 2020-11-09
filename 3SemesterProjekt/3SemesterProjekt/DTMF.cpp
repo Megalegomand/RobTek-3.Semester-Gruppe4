@@ -21,24 +21,25 @@ char DTMF::listenTone(int duration)
 void DTMF::sendTone(char tonevalg, int duration) {
     
     vector<sf::Int16> dtmf;
-    const double incrementL = ((double) tonesL[tonevalg % 4]) / SAMPLING_RATE;
-    const double incrementH= ((double) tonesH[tonevalg / 4]) / SAMPLING_RATE;
+    const double incrementL = ((double) tonesL[tonevalg / 4]) / SAMPLING_RATE;
+    const double incrementH= ((double) tonesH[tonevalg % 4]) / SAMPLING_RATE;
     double x = 0;
     double y = 0;
     int antalSamples = ((SAMPLING_RATE * duration) / 1000);
     for (unsigned int i = 0; i < antalSamples; i++) {
-        dtmf.push_back(AMPLITUDE * sin(x * 2 * PI) + AMPLITUDE * sin(y * 2 * PI));
+        dtmf.push_back(AMPLITUDE * sin(x * PI) + AMPLITUDE * sin(y * PI));
         x += incrementL;
         y += incrementH;
     };
+      
        
     sf::SoundBuffer buffer;
 
-    buffer.loadFromSamples(&dtmf[0],dtmf.size(), 1, SAMPLING_RATE);
+    buffer.loadFromSamples(&dtmf[0],dtmf.size(), 2, 44100);
     sf::Sound Sound;
 
     Sound.setBuffer(buffer);
-    //Sound.setLoop(true);
+   /* Sound.setLoop(true);*/
     Sound.play();
     this_thread::sleep_for(chrono::milliseconds(duration));
 }
