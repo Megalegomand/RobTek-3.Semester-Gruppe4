@@ -12,7 +12,7 @@ public:
 	void sendTone(char tone, int duration);
 	char listenTone(int duration);
 
-	//void outputMedium();
+	void outputMedium();
 
 	static char medium;
 	static mutex medium_mutex;

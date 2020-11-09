@@ -10,8 +10,8 @@
 
 enum class TransmissionStates {
 	NotConnected, 
-	Ready, 
-	Wait,
+	Token, 
+	NotToken,
 };
 
 using namespace std;
@@ -26,8 +26,10 @@ public:
 
 	bool sendData(vector<char> &data); // Returns true if succesfull
 	vector<char> waitData(int timeout);
+	bool passToken(); // Pass token, return false if doesn't have token
 private:
 	Frame* frame;
+	bool hasToken = false;
 };
 
 /*
@@ -41,8 +43,8 @@ tone = 100ms
 1: Bind
 2: ACK
 
-1: Connect
-2: ACK
+//1: Connect
+//2: ACK
 1: Data
 2: ACK
 

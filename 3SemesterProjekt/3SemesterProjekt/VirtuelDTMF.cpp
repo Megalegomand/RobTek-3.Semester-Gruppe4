@@ -38,14 +38,15 @@ char VirtuelDTMF::listenTone(int duration)
 	return newTone;
 }
 
-//void VirtuelDTMF::outputMedium(int duration)
-//{
-//	for (int i = 0; i < 20; i++) {
-//	//while (true) {
-//		medium_mutex.lock();
-//		cout << int(medium) << endl;
-//		medium_mutex.unlock();
-//		this_thread::sleep_for(chrono::milliseconds(duration/10));
-//	}
-//}
+void VirtuelDTMF::outputMedium()
+{
+	//Frame frame = Frame();
+	//for (int i = 0; i < 20; i++) {
+	while (true) {
+		medium_mutex.lock();
+		cout << int(medium) << endl;
+		medium_mutex.unlock();
+		this_thread::sleep_for(chrono::milliseconds(1000/10));
+	}
+}
 

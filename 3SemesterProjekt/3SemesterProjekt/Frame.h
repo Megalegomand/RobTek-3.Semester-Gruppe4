@@ -17,9 +17,9 @@ using namespace std;
 class Frame
 {
 public:
-	const int TONE_DURATION = 1000; // Millisseconds
-	const int LISTEN_MARGIN = 2 * TONE_DURATION / 10; // Margin applied on each side of the tone, to reduce noise
-	const int LISTEN_DURATION = 100; // Listen duration to catch the first tone
+	const int TONE_DURATION = 100; // Millisseconds
+	const int LISTEN_MARGIN = 4 * TONE_DURATION / 10; // Margin applied on each side of the tone, to reduce noise
+	const int LISTEN_DURATION = 10; // Listen duration to catch the first tone
 
 	Frame();
 
@@ -37,7 +37,7 @@ private:
 
 	TransmissionType transmissionType;
 	vector<char> data;
-	DTMF* dtmf;
+	VirtuelDTMF* dtmf;
 	Timer* timer;
 
 	char nextTone(Timer* timer, int toneNum);
