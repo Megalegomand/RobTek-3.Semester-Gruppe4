@@ -38,6 +38,8 @@ private:
 	typedef complex<double> Complex;
 	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampleRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
-
+	std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
+	std::string inputDevice = availableDevices[0];
+	
 };
 
