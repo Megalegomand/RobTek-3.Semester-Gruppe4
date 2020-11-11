@@ -7,7 +7,7 @@
 #include<thread>
 
 using namespace std;
-int main()
+int main1()
 {
     /*for (int i = 0; i < 16; i++) {
         DTMF dtmf = DTMF();
