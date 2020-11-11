@@ -57,14 +57,58 @@ bool DataLink::bind(int attempts)
 }
 
 bool DataLink::sendData(vector<char> &data)
-{
-	//sendFrame(data);
+{	
+	for (char c : data) {
+		frame->setFrame(DATA, c);
+		frame->send();
+	}
+
+	if (frame->wait(1000)) {
+		if (frame->getType() == ACK) {
+			hasToken = true;
+			return true;
+		}
+	}
+		
 	return false;
 }
 
 vector<char> DataLink::waitData(int timeout)
 {
+	if (frame->wait(timeout)) {
+		if (frame->getType() == DATA) {
+			frame->setFrame(ACK);
+			frame->send();
+			hasToken = false;
+		}
+	}
 	return vector<char>();
+}
+
+bool DataLink::passToken()
+{
+	if (frame->wait(hasToken = false)) {
+
+		frame->setFrame(TOKEN_PASS);
+		frame->send();
+
+		if (frame->wait(100000)) {
+			if (frame->getType() == ACK) {
+				hasToken = true;
+				return true;
+			}
+		}
+		return false;
+	}
+	return false;
+
+	/*if (frame->wait(hasToken = false)) {
+		hasToken 
+
+		frame->setFrame(TOKEN_PASS);
+		frame->send();
+	}*/
+
 }
 
 
