@@ -85,10 +85,13 @@ int main()
     }*/
     
     DTMF s;
-    while (true)
+    
+    std::thread dl1Thread(&DTMF::sendTone, &s, 0, 100000);
+    for (int i = 0; i < 10; i++)
     {
-        s.sendTone(0,100);
+        s.listenTone(100);
     }
+    dl1Thread.join();
         
     /////*s.sendSequence(data);*/
     /*while (true)
