@@ -82,7 +82,7 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 {
      int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
-     float stoej[6] = {};
+     float stoej[6];
      int stoeji=0;
      int res = 0;
     //finding Largest second largset
@@ -104,6 +104,7 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
             pos2 = i;
 
          }
+        else
         {
             stoej[stoeji];
             stoeji++;
@@ -129,8 +130,6 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
         cout << "SNR" << SNR << endl;
         return -1;
     }
-    
-    
 }
 
 
