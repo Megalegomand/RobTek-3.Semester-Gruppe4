@@ -11,6 +11,8 @@ Tictactoe::Tictactoe() {
 //char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
 //void board();
 
+//*******bind er player 1, listen er player 2********
+
 int Tictactoe::game()
 {
     int player = 1, i, choice;
@@ -19,8 +21,16 @@ int Tictactoe::game()
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
     int errorLift = 0;//controls errors on lifting of pieces
-
+    int local; // controls which player is local
     char mark;
+
+    if (/*bind*/1) {
+        local = 1;
+    }
+    else {
+        local = 2;
+    }
+
     do
     {
         board();
@@ -34,7 +44,12 @@ int Tictactoe::game()
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
             
             cout << "Player " << player << ", remove a number:  ";
-            cin >> choice;
+            if (player == local) {
+                cin >> choice;
+            }
+            else {
+                //choice = Datalink.data
+            }
 
             if (choice == 1 && square[1] == mark)
 
@@ -85,7 +100,13 @@ int Tictactoe::game()
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
         } else {
             cout << "Player " << player << ", enter a number:  ";
-            cin >> choice;
+            if (player == local) {
+                cin >> choice;
+            }
+            else {
+                //choice = Datalink.data
+            }
+
             if (choice == 1 && square[1] == '1')
 
                 square[1] = mark;
@@ -147,7 +168,9 @@ int Tictactoe::game()
 
     cin.ignore();
     cin.get();
-    return 0;
+    if (player == local) {
+        return choice;
+    }
 }
 
 /*FUNCTION TO RETURN GAME STATUS

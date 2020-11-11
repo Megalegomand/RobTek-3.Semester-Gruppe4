@@ -5,7 +5,6 @@ using namespace std;
 class Tictactoe {
 public:
 	Tictactoe();
-	
 	int game();
 	int checkwin();
 	void board();
