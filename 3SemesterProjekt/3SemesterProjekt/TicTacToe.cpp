@@ -1,12 +1,19 @@
 #include <iostream>
+#include "Tictactoe.h"
 using namespace std;
 
-char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
+Tictactoe::Tictactoe() {
+    //char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
+}
 
-int checkwin();
-void board();
 
-int Tictactoe()
+//int checkwin();
+//char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
+//void board();
+
+//*******bind er player 1, listen er player 2********
+
+int Tictactoe::game()
 {
     int player = 1, i, choice;
     int p1p = 3;//number of pieces not on the board for player one
@@ -14,8 +21,16 @@ int Tictactoe()
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
     int errorLift = 0;//controls errors on lifting of pieces
-
+    int local; // controls which player is local
     char mark;
+
+    if (/*bind*/1) {
+        local = 1;
+    }
+    else {
+        local = 2;
+    }
+
     do
     {
         board();
@@ -29,7 +44,12 @@ int Tictactoe()
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
             
             cout << "Player " << player << ", remove a number:  ";
-            cin >> choice;
+            if (player == local) {
+                cin >> choice;
+            }
+            else {
+                //choice = Datalink.data
+            }
 
             if (choice == 1 && square[1] == mark)
 
@@ -80,7 +100,13 @@ int Tictactoe()
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
         } else {
             cout << "Player " << player << ", enter a number:  ";
-            cin >> choice;
+            if (player == local) {
+                cin >> choice;
+            }
+            else {
+                //choice = Datalink.data
+            }
+
             if (choice == 1 && square[1] == '1')
 
                 square[1] = mark;
@@ -133,6 +159,7 @@ int Tictactoe()
         
     } while (i == -1);
     board();
+
     if (i == 1)
 
         cout << "==>\aPlayer " << --player << " win ";
@@ -141,7 +168,9 @@ int Tictactoe()
 
     cin.ignore();
     cin.get();
-    return 0;
+    if (player == local) {
+        return choice;
+    }
 }
 
 /*FUNCTION TO RETURN GAME STATUS
@@ -149,7 +178,7 @@ int Tictactoe()
 -1 FOR GAME IS IN PROGRESS
 O GAME IS OVER AND NO RESULT*/
 
-int checkwin()
+int Tictactoe::checkwin()
 {
     if (square[1] == square[2] && square[2] == square[3])
 
@@ -178,7 +207,6 @@ int checkwin()
     else if (square[1] != '1' && square[2] != '2' && square[3] != '3'
         && square[4] != '4' && square[5] != '5' && square[6] != '6'
         && square[7] != '7' && square[8] != '8' && square[9] != '9')
-
         return 0;
     else
         return -1;
@@ -187,7 +215,7 @@ int checkwin()
 
 //FUNCTION TO DRAW BOARD OF TIC TAC TOE WITH PLAYERS MARK
 
-void board()
+void Tictactoe::board()
 {
     system("cls");
     cout << "\n\n\tTic Tac Toe\n\n";

@@ -82,7 +82,6 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 {
      int pos1=0, pos2=0;
      float  largest = 0, second_largest = 0;
-     float stoej[6] = {-1, -1, -1, -1, -1, -1};
      int res = 0;
     //finding Largest second largset
     for (int i = 0; i < goertzelresH.size(); i++)

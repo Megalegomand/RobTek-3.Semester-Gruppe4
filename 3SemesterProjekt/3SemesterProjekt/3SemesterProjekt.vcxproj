@@ -167,6 +167,7 @@
     <ClInclude Include="DTMF.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Goertzel.h" />
+	<ClCompile Include="TicTacToe.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VirtuelDTMF.h" />
   </ItemGroup>
