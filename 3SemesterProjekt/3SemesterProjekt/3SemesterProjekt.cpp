@@ -25,15 +25,19 @@ int main()
     //this_thread::sleep_for(chrono::milliseconds(10));
     
     DataLink dl2 = DataLink();
-    std::thread dl2Thread(&DataLink::bind, &dl2, 10);
-    //vector<char> data;
-    //data.push_back(0);
-    //data.push_back(4);
-    //dl1.sendData(data);
+    dl2.bind(10);
+    dl1Thread.join();
+
+    vector<char> data;
+    data.push_back(0);
+    data.push_back(4);
+    std::thread dl3Thread(&DataLink::waitData, &dl1, 1000000);
+    dl2.sendData(data);
+    
 
     mediumReaderThread.join();
-    dl1Thread.join();
-    dl2Thread.join();
+    dl3Thread.join();
+
 
 
     //Goertzel g = Goertzel(1633, 8000);
