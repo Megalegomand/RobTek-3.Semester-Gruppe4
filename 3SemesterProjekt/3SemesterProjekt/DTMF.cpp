@@ -121,11 +121,12 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
     if (SNR>DBthreshhold)
     {
-        
+        cout <<"SNR" << SNR << endl;
         return pos1*4 + pos2;
     }
     else
     {
+        cout << "SNR" << SNR << endl;
         return -1;
     }
     

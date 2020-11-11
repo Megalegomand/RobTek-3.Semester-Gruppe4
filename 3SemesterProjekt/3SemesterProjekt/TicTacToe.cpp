@@ -6,14 +6,14 @@ char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
 int checkwin();
 void board();
 
-int main()
+int Tictactoe()
 {
     int player = 1, i, choice;
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
-    int errorLift = 0;
+    int errorLift = 0;//controls errors on lifting of pieces
 
     char mark;
     do
@@ -23,13 +23,14 @@ int main()
         pp = (player == 1) ? p1p : p2p;
         cout << pp << endl;
 
-        //cout << "Player " << player << ", enter a number:  ";
-        //cin >> choice;
+      
 
         mark = (player == 1) ? 'X' : 'O';
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
+            
             cout << "Player " << player << ", remove a number:  ";
             cin >> choice;
+
             if (choice == 1 && square[1] == mark)
 
                 square[1] = '1';

@@ -27,7 +27,7 @@ public:
 	~DTMF();
 
 private:
-	const unsigned AMPLITUDE = 300;
+	const unsigned AMPLITUDE = 1000;
 	const double PI = 3.14159265359;
 	const int tonesL[4] = { 697,  770,  852,  941  };
 	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
