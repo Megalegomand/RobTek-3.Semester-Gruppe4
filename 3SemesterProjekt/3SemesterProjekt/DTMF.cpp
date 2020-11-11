@@ -50,8 +50,6 @@ char DTMF::receiveDTMF(int duration)
     vector<float> goertzelresH;
     using namespace std::this_thread; // sleep_for, sleep_until
     using namespace std::chrono; // nanoseconds, system_clock, seconds
-    std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
-    std::string inputDevice = availableDevices[0];
     sf::SoundBufferRecorder recorder;
     recorder.start();
     this_thread::sleep_for(chrono::milliseconds(duration));
@@ -130,8 +128,7 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
     {
         return -1;
     }
-    /*cout << "nn Largest Number :" << largest << " at position " << (pos1 + 1);
-    cout << "nn Second Largest Number :" << second_largest << " at position " << (pos2 + 4) << endl;*/
+    
     
 }
 

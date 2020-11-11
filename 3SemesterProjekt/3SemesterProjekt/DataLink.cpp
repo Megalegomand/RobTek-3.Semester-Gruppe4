@@ -58,10 +58,8 @@ bool DataLink::bind(int attempts)
 
 bool DataLink::sendData(vector<char> &data)
 {	
-	for (char c : data) {
-		frame->setFrame(DATA, c);
-		frame->send();
-	}
+	frame->setFrame(DATA, data);
+	frame->send();
 
 	if (frame->wait(1000)) {
 		if (frame->getType() == ACK) {
@@ -82,19 +80,22 @@ vector<char> DataLink::waitData(int timeout)
 			hasToken = false;
 		}
 	}
+	for (char c : frame->getData()) {
+		cout << int(c) << ", ";
+	}
 	return vector<char>();
 }
 
 bool DataLink::passToken()
 {
-	if (frame->wait(hasToken = false)) {
+	if (hasToken) {
 
 		frame->setFrame(TOKEN_PASS);
 		frame->send();
 
 		if (frame->wait(100000)) {
 			if (frame->getType() == ACK) {
-				hasToken = true;
+				hasToken = false;
 				return true;
 			}
 		}
