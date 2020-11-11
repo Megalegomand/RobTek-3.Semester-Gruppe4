@@ -21,8 +21,8 @@ char DTMF::listenTone(int duration)
 void DTMF::sendTone(char tonevalg, int duration) {
     
     vector<sf::Int16> dtmf;
-    const double incrementL = ((double) tonesL[tonevalg % 4]) / SAMPLING_RATE;
-    const double incrementH= ((double) tonesH[tonevalg / 4 - 1]) / SAMPLING_RATE;
+    const double incrementL = ((double) tonesL[tonevalg / 4]) / SAMPLING_RATE;
+    const double incrementH= ((double) tonesH[tonevalg % 4]) / SAMPLING_RATE;
     double x = 0;
     double y = 0;
     int antalSamples = ((SAMPLING_RATE * duration) / 1000);
@@ -39,7 +39,7 @@ void DTMF::sendTone(char tonevalg, int duration) {
     sf::Sound Sound;
 
     Sound.setBuffer(buffer);
-    Sound.setLoop(true);
+   /* Sound.setLoop(true);*/
     Sound.play();
     this_thread::sleep_for(chrono::milliseconds(duration));
 }

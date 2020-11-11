@@ -3,7 +3,7 @@
 Frame::Frame()
 {
 	transmissionType = BIND;
-	dtmf = new DTMF();
+	dtmf = new VirtuelDTMF();
 	timer = new Timer();
 }
 

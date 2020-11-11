@@ -9,8 +9,13 @@
 using namespace std;
 int main()
 {
-    //VirtuelDTMF vdtmf;
-    //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
+    /*for (int i = 0; i < 16; i++) {
+        DTMF dtmf = DTMF();
+        dtmf.sendTone(i, 1000);
+    }*/
+
+    VirtuelDTMF vdtmf;
+    std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
     
     this_thread::sleep_for(chrono::milliseconds(1));
     
@@ -26,7 +31,7 @@ int main()
     //data.push_back(4);
     //dl1.sendData(data);
 
-    //mediumReaderThread.join();
+    mediumReaderThread.join();
     dl1Thread.join();
     dl2Thread.join();
 
@@ -76,12 +81,12 @@ int main()
     }*/
     
     //DTMF s;
-    //
-    //    /*s.sendTone(0);*/
-    ///*s.sendSequence(data);*/
+    ////
+    ////    /*s.sendTone(0);*/
+    /////*s.sendSequence(data);*/
     //while (true)
     //{
-    //    cout << int(s.listenTone()) << endl;
+    //    cout << int(s.listenTone(100)) << endl;
     //}
     
     
