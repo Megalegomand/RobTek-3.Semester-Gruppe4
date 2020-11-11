@@ -14,29 +14,29 @@ int main()
         dtmf.sendTone(i, 1000);
     }*/
 
-    VirtuelDTMF vdtmf;
-    std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
-    
-    this_thread::sleep_for(chrono::milliseconds(1));
-    
-    DataLink dl1 = DataLink();
-    std::thread dl1Thread(&DataLink::listen, &dl1, 1000000);
+    //VirtuelDTMF vdtmf;
+    //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
+    //
+    //this_thread::sleep_for(chrono::milliseconds(1));
+    //
+    //DataLink dl1 = DataLink();
+    //std::thread dl1Thread(&DataLink::listen, &dl1, 1000000);
 
-    //this_thread::sleep_for(chrono::milliseconds(10));
-    
-    DataLink dl2 = DataLink();
-    dl2.bind(10);
-    dl1Thread.join();
+    ////this_thread::sleep_for(chrono::milliseconds(10));
+    //
+    //DataLink dl2 = DataLink();
+    //dl2.bind(10);
+    //dl1Thread.join();
 
-    vector<char> data;
-    data.push_back(0);
-    data.push_back(4);
-    std::thread dl3Thread(&DataLink::waitData, &dl1, 1000000);
-    dl2.sendData(data);
-    
+    //vector<char> data;
+    //data.push_back(0);
+    //data.push_back(4);
+    //std::thread dl3Thread(&DataLink::waitData, &dl1, 1000000);
+    //dl2.sendData(data);
+    //
 
-    mediumReaderThread.join();
-    dl3Thread.join();
+    //mediumReaderThread.join();
+    //dl3Thread.join();
 
 
 
@@ -84,14 +84,20 @@ int main()
 
     }*/
     
-    //DTMF s;
-    ////
-    ////    /*s.sendTone(0);*/
+    DTMF s;
+    
+    std::thread dl1Thread(&DTMF::sendTone, &s, 0, 100000);
+    for (int i = 0; i < 20; i++)
+    {
+        s.listenTone(100);
+    }
+    dl1Thread.join();
+        
     /////*s.sendSequence(data);*/
-    //while (true)
-    //{
-    //    cout << int(s.listenTone(100)) << endl;
-    //}
+    /*while (true)
+    {
+        cout << int(s.listenTone(100)) << endl;
+    }*/
     
     
         

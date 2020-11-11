@@ -73,17 +73,20 @@ bool DataLink::sendData(vector<char> &data)
 
 vector<char> DataLink::waitData(int timeout)
 {
+	vector<char> data;
 	if (frame->wait(timeout)) {
 		if (frame->getType() == DATA) {
+			data = frame->getData();
 			frame->setFrame(ACK);
 			frame->send();
 			hasToken = false;
 		}
 	}
-	for (char c : frame->getData()) {
+	for (char c : data) {
 		cout << int(c) << ", ";
 	}
-	return vector<char>();
+	cout << endl;
+	return data;
 }
 
 bool DataLink::passToken()
