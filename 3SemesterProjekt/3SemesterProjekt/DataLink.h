@@ -34,7 +34,7 @@ private:
 
 /*
 Preamble SFD (1tone)
-FA50FA50 0   TYPE    DATA Checksum (No transmission)
+FA50   TYPE    DATA Checksum (No transmission)
 
 
 tone = 100ms
