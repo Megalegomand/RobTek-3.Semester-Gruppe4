@@ -14,7 +14,7 @@ void DTMF::sendSequence(vector<char>& sequence, int duration)
 char DTMF::listenTone(int duration)
 {
     char t = receiveDTMF(duration);
-    cout << "R " << int(t) << endl;
+    /*cout << "R " << int(t) << endl;*/
     return t;
     
 }
@@ -112,16 +112,16 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
     }
     float P_stoej = sum / 6.0;
 
-    float SNR = 10 * log10(P_Signal/P_stoej);
+    float SNR = P_Signal/P_stoej;
 
     if (SNR>DBthreshhold)
     {
-        cout <<"SNR" << SNR << endl;
-        return pos1*4 + pos2;
+        cout << SNR << endl;
+        return  pos1 * 4 + pos2;
     }
     else
     {
-        cout << "SNR" << SNR << endl;
+        cout << SNR << endl;
         return -1;
     }
 }

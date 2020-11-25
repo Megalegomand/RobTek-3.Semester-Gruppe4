@@ -1,0 +1,12 @@
+﻿  DTMF.cpp
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(29,32): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(30,48): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=sf::Int16
+          ]
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(65,23): warning C4244: 'initializing': conversion from 'sf::Uint64' to 'size_t', possible loss of data
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(88,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(105,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\3SemesterProjekt\DTMF.cpp(114,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  3SemesterProjekt.vcxproj -> C:\Users\Philip\Documents\2. Semester\Projekt\RobTek-3.Semester-Gruppe4\3SemesterProjekt\Debug\3SemesterProjekt.exe
