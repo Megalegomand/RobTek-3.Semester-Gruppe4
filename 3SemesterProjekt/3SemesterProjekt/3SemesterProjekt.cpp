@@ -29,7 +29,7 @@ int main()
     dl2->bind(10);
     this_thread::sleep_for(chrono::milliseconds(100000));
 
-    dl1Thread.join();
+    //dl1Thread.join();
 
     //vector<char> data;
     //data.push_back(0);

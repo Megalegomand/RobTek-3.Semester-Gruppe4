@@ -24,12 +24,12 @@ class DataLink
 public:
 	const int BIND_WAIT_MIN = 10;
 	const int BIND_WAIT_DIFF = 500;
-	const int MAX_LOSS_CONNECTION = 1000; // Maximum loss of connection, sync will be send at half this time
+	const int MAX_LOSS_CONNECTION = 3000; // Maximum loss of connection, sync will be send at half this time
 	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 1000;
 
 	DataLink();
-	DataLink(function<void(TransmissionType, vector<char>)> dataReady, function<void()> tokenPass);
+	DataLink(function<void(vector<char>)> dataReady, function<void()> tokenPass);
 	//DataLink(const DataLink&);
 
 	bool bind(int attempts);
@@ -43,7 +43,7 @@ private:
 	TransmissionState state = TransmissionState:: NotConnected;
 	thread* connected_thread;
 
-	function<void(TransmissionType, vector<char>)> dataReady;
+	function<void(vector<char>)> dataReady;
 	function<void()> tokenPass;
 
 	bool sendWaitACK(TransmissionType type, vector<char> data); // Sends data and waits for ACK, tries ATTEMPTS times

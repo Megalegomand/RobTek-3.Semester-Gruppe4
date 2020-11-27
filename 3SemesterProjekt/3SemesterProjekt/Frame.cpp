@@ -17,16 +17,18 @@ vector<char> Frame::getData()
 	return data;
 }
 
-void Frame::setFrame(TransmissionType transmissionType)
+void Frame::sendFrame(TransmissionType transmissionType)
 {
 	this->transmissionType = transmissionType;
 	this->data.clear();
+	send();
 }
 
-void Frame::setFrame(TransmissionType transmissionType, vector<char> data)
+void Frame::sendFrame(TransmissionType transmissionType, vector<char> data)
 {
 	this->transmissionType = transmissionType;
 	this->data = data;
+	send();
 }
 
 void Frame::send()
