@@ -10,6 +10,7 @@ enum TransmissionType {
 	ACK = 0x2,
 	NACK = 0x3,
 	TOKEN_PASS = 0x4,
+	ALIVE = 0x5,
 	DATA = 0xF,
 };
 
@@ -31,14 +32,15 @@ public:
 
 	void send();
 	bool wait(int timeout); // Timeout in millis, returns successful
+
+	Timer* getLastActive(); // Returns milliseconds since last frame was recieved
 private:
 	const char PREAMBLE[4] = { 0xF, 0xA, 0x5, 0x0 };
-	//const char SFD = 0x0;
 
 	TransmissionType transmissionType;
 	vector<char> data;
 	VirtuelDTMF* dtmf;
-	Timer* timer;
+	Timer* lastActive;
 
 	char nextTone(Timer* timer, int toneNum);
 };

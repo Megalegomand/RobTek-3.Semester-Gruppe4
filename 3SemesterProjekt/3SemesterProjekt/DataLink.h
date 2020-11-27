@@ -4,14 +4,15 @@
 #include<iostream>
 #include"DTMF.h"
 #include"Frame.h"
+#include<mutex>
 
 // Temp
 #include"VirtuelDTMF.h"
 
-enum class TransmissionStates {
+enum class TransmissionState {
 	NotConnected, 
-	Token, 
-	NotToken,
+	Token, // Has token, is able to send data along
+	Waiting, // Waiting for data and token
 };
 
 using namespace std;
@@ -19,9 +20,14 @@ using namespace concurrency;
 class DataLink
 {
 public:
-	DataLink();
+	const int BIND_WAIT_MIN = 10;
+	const int BIND_WAIT_DIFF = 500;
+	const int MAX_LOSS_CONNECTION = 10000; // Maximum loss of connection, sync will be send at half this time
+	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 
-	bool listen(int timeout); // Timeout in ms
+	DataLink();
+	//DataLink(const DataLink&);
+
 	bool bind(int attempts);
 
 	bool sendData(vector<char> &data); // Returns true if succesfull
@@ -29,7 +35,11 @@ public:
 	bool passToken(); // Pass token, return false if doesn't have token
 private:
 	Frame* frame;
-	bool hasToken = false;
+	mutex frame_mutex;
+	TransmissionState state = TransmissionState:: NotConnected;
+	thread* alive_thread;
+
+	void alive();
 };
 
 /*

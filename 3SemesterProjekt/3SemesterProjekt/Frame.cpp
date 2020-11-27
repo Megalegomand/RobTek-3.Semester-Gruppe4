@@ -4,7 +4,7 @@ Frame::Frame()
 {
 	transmissionType = BIND;
 	dtmf = new VirtuelDTMF();
-	timer = new Timer();
+	lastActive = new Timer();
 }
 
 TransmissionType Frame::getType()
@@ -54,13 +54,19 @@ bool Frame::wait(int timeout)
 {
 	this->data.clear();
 
-	timer->start();
-	while (timer->elapsedMillis() < timeout) {
+	Timer timeoutTimer = Timer();
+	Timer timer = Timer();
+
+	timeoutTimer.start();
+	while (timeoutTimer.elapsedMillis() < timeout) {
 		char tone = -1;
 		while (tone == -1) {
-			timer->start();
+			if (timeoutTimer.elapsedMillis() > timeout) {
+				return false;
+			}
 			tone = dtmf->listenTone(LISTEN_DURATION);
 		}
+		timer.start();
 		
 		int tonei = 0;
 		int headeri = -1;
@@ -98,13 +104,19 @@ bool Frame::wait(int timeout)
 				data.push_back(tone);
 			}
 			tonei++;
-			tone = nextTone(timer, tonei);
+			tone = nextTone(&timer, tonei);
 		}
 		if (headeri > preambleSize) {
+			lastActive->start();
 			return true;
 		}
 	}
 	return false;
+}
+
+Timer* Frame::getLastActive()
+{
+	return lastActive;
 }
 
 char Frame::nextTone(Timer* timer, int toneNum) {

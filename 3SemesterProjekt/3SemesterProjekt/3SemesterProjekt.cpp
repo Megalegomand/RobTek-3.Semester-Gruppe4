@@ -15,28 +15,30 @@ int main()
         dtmf.sendTone(i, 1000);
     }*/
 
-    //VirtuelDTMF vdtmf;
-    //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
-    //
-    //this_thread::sleep_for(chrono::milliseconds(1));
-    //
-    //DataLink dl1 = DataLink();
-    //std::thread dl1Thread(&DataLink::listen, &dl1, 1000000);
+    VirtuelDTMF vdtmf;
+    std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
+    
+    this_thread::sleep_for(chrono::milliseconds(100));
+    
+    DataLink* dl1 = new DataLink();
+    std::thread dl1Thread(&DataLink::bind, dl1, 10);
 
-    ////this_thread::sleep_for(chrono::milliseconds(10));
-    //
-    //DataLink dl2 = DataLink();
-    //dl2.bind(10);
-    //dl1Thread.join();
+    this_thread::sleep_for(chrono::milliseconds(100));
+    
+    DataLink* dl2 = new DataLink();
+    dl2->bind(10);
+    this_thread::sleep_for(chrono::milliseconds(100000));
+
+    dl1Thread.join();
 
     //vector<char> data;
     //data.push_back(0);
     //data.push_back(4);
     //std::thread dl3Thread(&DataLink::waitData, &dl1, 1000000);
     //dl2.sendData(data);
-    //
+    
 
-    //mediumReaderThread.join();
+    mediumReaderThread.join();
     //dl3Thread.join();
 
 

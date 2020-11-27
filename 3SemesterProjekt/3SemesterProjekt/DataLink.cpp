@@ -2,53 +2,31 @@
 
 DataLink::DataLink() {
 	frame = new Frame();
-}
-
-bool DataLink::listen(int timeout)
-{
-	//while (true) {
-	//	bool t = frame->wait(timeout);
-	//	cout << "Listen: " << t << endl;
-	//	cout << "Type: " << frame->getType() << endl;
-	//	cout << "Data: ";
-	//	for (char c : frame->getData()) {
-	//		cout << int(c) << ", ";
-	//	}
-	//	cout << endl;
-	//	//frame->send();
-	//}
-
-	if (frame->wait(timeout)) {
-		if (frame->getType() == BIND) {
-			frame->setFrame(ACK);
-			frame->send();
-			hasToken = false;
-			return true;
-		}
-	}
-	return false;
+	srand(time(NULL)); // To make sure virtual DTMF works
 }
 
 bool DataLink::bind(int attempts)
 {
-	//vector<char> data;
-	//data.push_back(0x0);
-	//while (true) {
-	//	//data.push_back(0x0);
-	//	frame->setFrame(BIND);
-	//	frame->send();
-	//	frame->setFrame(BIND, data);
-	//	frame->send();
-	//	//frame->wait(100);
-	//	//data = frame->getData();
-	//}
+	if (state != TransmissionState::NotConnected) {
+		return false;
+	}
 
 	for (int i = 0; i < attempts; i++) {
 		frame->setFrame(BIND);
 		frame->send();
-		if (frame->wait(1000)) {
-			if (frame->getType() == ACK) {
-				hasToken = true;
+
+		// Wait random time for collision avoidance
+		if (frame->wait(rand() % BIND_WAIT_DIFF + BIND_WAIT_DIFF)) {
+			switch (frame->getType()) {
+			case ACK:
+				state = TransmissionState::Token;
+				//alive_thread = new thread(&DataLink::alive, this);
+				return true;
+			case BIND:
+				frame->setFrame(ACK);
+				frame->send();
+				state = TransmissionState::Waiting;
+				alive_thread = new thread(&DataLink::alive, this);
 				return true;
 			}
 		}
@@ -63,7 +41,6 @@ bool DataLink::sendData(vector<char> &data)
 
 	if (frame->wait(1000)) {
 		if (frame->getType() == ACK) {
-			hasToken = true;
 			return true;
 		}
 	}
@@ -79,7 +56,6 @@ vector<char> DataLink::waitData(int timeout)
 			data = frame->getData();
 			frame->setFrame(ACK);
 			frame->send();
-			hasToken = false;
 		}
 	}
 	for (char c : data) {
@@ -91,14 +67,14 @@ vector<char> DataLink::waitData(int timeout)
 
 bool DataLink::passToken()
 {
-	if (hasToken) {
+	if (state == TransmissionState::Token) {
 
 		frame->setFrame(TOKEN_PASS);
 		frame->send();
 
 		if (frame->wait(100000)) {
 			if (frame->getType() == ACK) {
-				hasToken = false;
+				TransmissionState::Waiting;
 				return true;
 			}
 		}
@@ -113,6 +89,31 @@ bool DataLink::passToken()
 		frame->send();
 	}*/
 
+}
+
+void DataLink::alive()
+{
+	while (state != TransmissionState::NotConnected) {
+		cout << "Kage" << endl;
+		switch (state) {
+		case TransmissionState::Waiting:
+			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION) {
+				state = TransmissionState::NotConnected;
+			}
+			else {
+				frame->getLastActive()->sleepUntil(MAX_LOSS_CONNECTION);
+			}
+			break;
+		case TransmissionState::Token:
+			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION/2) {
+				//frame->setFrame()
+			}
+			else {
+				frame->getLastActive()->sleepUntil(MAX_LOSS_CONNECTION);
+			}
+			break;
+		}
+	}
 }
 
 
