@@ -31,6 +31,10 @@ void Frame::setFrame(TransmissionType transmissionType, vector<char> data)
 
 void Frame::send()
 {
+	if (transmissionType == NONE) {
+		return;
+	}
+
 	vector<char> toneFrame;
 
 	for (char c : PREAMBLE) {
@@ -53,6 +57,7 @@ void Frame::send()
 bool Frame::wait(int timeout)
 {
 	this->data.clear();
+	this->transmissionType = NONE;
 
 	Timer timeoutTimer = Timer();
 	Timer timer = Timer();

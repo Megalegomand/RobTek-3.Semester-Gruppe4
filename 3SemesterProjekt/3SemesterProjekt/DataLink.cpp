@@ -5,12 +5,18 @@ DataLink::DataLink() {
 	srand(time(NULL)); // To make sure virtual DTMF works
 }
 
+DataLink::DataLink(function<void(TransmissionType, vector<char>)> dataReady, function<void()> tokenPass) : DataLink()
+{
+	this->dataReady = dataReady;
+	this->tokenPass = tokenPass;
+}
+
 bool DataLink::bind(int attempts)
 {
 	if (state != TransmissionState::NotConnected) {
 		return false;
 	}
-
+	frame_mutex.lock(); // Locked throughout, since other threads are disabled during bind
 	for (int i = 0; i < attempts; i++) {
 		frame->setFrame(BIND);
 		frame->send();
@@ -20,98 +26,83 @@ bool DataLink::bind(int attempts)
 			switch (frame->getType()) {
 			case ACK:
 				state = TransmissionState::Token;
-				//alive_thread = new thread(&DataLink::alive, this);
+				connected_thread = new thread(&DataLink::connectedRun, this);
+				frame_mutex.unlock();
 				return true;
 			case BIND:
 				frame->setFrame(ACK);
 				frame->send();
 				state = TransmissionState::Waiting;
-				alive_thread = new thread(&DataLink::alive, this);
+				connected_thread = new thread(&DataLink::connectedRun, this);
+				frame_mutex.unlock();
 				return true;
 			}
 		}
 	}
+	frame_mutex.unlock();
 	return false;
 }
 
 bool DataLink::sendData(vector<char> &data)
 {	
-	frame->setFrame(DATA, data);
-	frame->send();
-
-	if (frame->wait(1000)) {
-		if (frame->getType() == ACK) {
-			return true;
-		}
-	}
-		
+	frame_mutex.lock();
+	sendWaitACK(DATA, data);
+	frame_mutex.unlock();
 	return false;
-}
-
-vector<char> DataLink::waitData(int timeout)
-{
-	vector<char> data;
-	if (frame->wait(timeout)) {
-		if (frame->getType() == DATA) {
-			data = frame->getData();
-			frame->setFrame(ACK);
-			frame->send();
-		}
-	}
-	for (char c : data) {
-		cout << int(c) << ", ";
-	}
-	cout << endl;
-	return data;
 }
 
 bool DataLink::passToken()
 {
 	if (state == TransmissionState::Token) {
+		if (sendWaitACK(TOKEN_PASS)) {
+			return true;
+		}
+	}
+	return false;
+}
 
-		frame->setFrame(TOKEN_PASS);
+bool DataLink::sendWaitACK(TransmissionType type, vector<char> data)
+{
+	frame_mutex.lock(); // Locked throughout, since other threads should be disabled from trying
+	for (int i = 0; i < ATTEMPTS; i++) {
+		frame->setFrame(type, data);
 		frame->send();
 
-		if (frame->wait(100000)) {
+		if (frame->wait(LISTEN_TIME)) {
 			if (frame->getType() == ACK) {
-				TransmissionState::Waiting;
+				frame_mutex.unlock();
 				return true;
 			}
 		}
-		return false;
 	}
+	frame_mutex.unlock();
 	return false;
-
-	/*if (frame->wait(hasToken = false)) {
-		hasToken 
-
-		frame->setFrame(TOKEN_PASS);
-		frame->send();
-	}*/
-
 }
 
-void DataLink::alive()
+bool DataLink::sendWaitACK(TransmissionType type)
+{
+	return sendWaitACK(type, vector<char>());
+}
+
+void DataLink::connectedRun()
 {
 	while (state != TransmissionState::NotConnected) {
-		cout << "Kage" << endl;
-		switch (state) {
-		case TransmissionState::Waiting:
+		if (state == TransmissionState::Waiting) {
 			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION) {
 				state = TransmissionState::NotConnected;
 			}
 			else {
 				frame->getLastActive()->sleepUntil(MAX_LOSS_CONNECTION);
 			}
-			break;
-		case TransmissionState::Token:
-			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION/2) {
-				//frame->setFrame()
+		} else if (state == TransmissionState::Token) {
+			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION / 2) {
+				if (!sendWaitACK(ALIVE)) {
+					state = TransmissionState::NotConnected;
+				}
 			}
 			else {
-				frame->getLastActive()->sleepUntil(MAX_LOSS_CONNECTION);
+				frame->getLastActive()->sleepUntil(MAX_LOSS_CONNECTION / 2);
 			}
-			break;
 		}
 	}
 }

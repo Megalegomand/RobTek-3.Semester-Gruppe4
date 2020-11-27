@@ -55,6 +55,7 @@ char DTMF::receiveDTMF(int duration)
     this_thread::sleep_for(chrono::milliseconds(duration));
     recorder.stop();
     const sf::SoundBuffer& buffer = recorder.getBuffer();
+    cout << "Kage" << buffer.getSampleCount() << endl;
     //buffer.saveToFile("my_record.ogg");
     /*sf::SoundBuffer buffer;
     if (!buffer.loadFromFile("sin1633.wav")) {

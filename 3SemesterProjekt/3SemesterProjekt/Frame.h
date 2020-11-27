@@ -5,8 +5,9 @@
 #include"Timer.h"
 
 enum TransmissionType {
+	NONE = 0xFF,
 	BIND = 0x0,
-	CONNECT = 0x1,
+	CONNECT = 0x1, // Not used
 	ACK = 0x2,
 	NACK = 0x3,
 	TOKEN_PASS = 0x4,
@@ -20,7 +21,7 @@ class Frame
 public:
 	const int TONE_DURATION = 100; // Millisseconds
 	const int LISTEN_MARGIN = 4 * TONE_DURATION / 10; // Margin applied on each side of the tone, to reduce noise
-	const int LISTEN_DURATION = 10; // Listen duration to catch the first tone
+	const int LISTEN_DURATION = 1; // Listen duration to catch the first tone
 
 	Frame();
 
@@ -37,7 +38,7 @@ public:
 private:
 	const char PREAMBLE[4] = { 0xF, 0xA, 0x5, 0x0 };
 
-	TransmissionType transmissionType;
+	TransmissionType transmissionType = NONE;
 	vector<char> data;
 	VirtuelDTMF* dtmf;
 	Timer* lastActive;
