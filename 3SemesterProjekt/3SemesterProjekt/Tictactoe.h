@@ -1,4 +1,13 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include<iostream>
+#include "Goertzel.h"
+#include"DTMF.h"
+#include"DataLink.h"
+#include<thread>
+#include<fstream>
+#include <functional>
 using namespace std;
 
 
@@ -8,6 +17,8 @@ public:
 	int game();
 	int checkwin();
 	void board();
+	void data(vector<char> data);
+	void tokenpass();
 
 
 private:

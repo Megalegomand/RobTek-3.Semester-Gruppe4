@@ -1,33 +1,44 @@
 #include <iostream>
 #include "Tictactoe.h"
+
 using namespace std;
 
 Tictactoe::Tictactoe() {
-    //char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
 }
 
 
-//int checkwin();
-//char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
-//void board();
+void Tictactoe::data(vector<char> data) {
+    for (char c : data) {
+        choicef = int(c);
+    }
+    
+}
+
+void Tictactoe::tokenpass() {
+    
+}
 
 //*******bind er player 1, listen er player 2********
 
 int Tictactoe::game()
 {
+    DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass)); // what the hell went wrong?
     int player = 1, i, choice;
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
     int errorLift = 0;//controls errors on lifting of pieces
-    int local; // controls which player is local
-    char mark;
+    int passon = 0; //used to determine if the token should be passed
+    char mark;//determines what kind of piece a player puts down
+    char a;//used to convert int to char array
+    vector<char> out;
+    
 
-    if (/*bind*/1) {
+    if (local == 0 && /*TransmissionState() = token*/1) {//send help dosnt work like i thought it would
         local = 1;
     }
-    else {
+    else if(local == 0) {
         local = 2;
     }
 
@@ -48,7 +59,7 @@ int Tictactoe::game()
                 cin >> choice;
             }
             else {
-                //choice = Datalink.data
+                choice = choicef;
             }
 
             if (choice == 1 && square[1] == mark)
@@ -98,13 +109,14 @@ int Tictactoe::game()
                 errorLift = 0;
             }
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
+            passon--;
         } else {
             cout << "Player " << player << ", enter a number:  ";
             if (player == local) {
                 cin >> choice;
             }
             else {
-                //choice = Datalink.data
+                choice = choicef;
             }
 
             if (choice == 1 && square[1] == '1')
@@ -139,6 +151,7 @@ int Tictactoe::game()
                 cout << "Invalid move ";
                 error = 1;
                 player--;
+                passon--;
                 cin.ignore();
                 cin.get();
             }
@@ -156,6 +169,7 @@ int Tictactoe::game()
 
         
         player++;
+        passon++;
         
     } while (i == -1);
     board();
@@ -169,8 +183,16 @@ int Tictactoe::game()
     cin.ignore();
     cin.get();
     if (player == local) {
-        return choice;
+        a = choice;
+        out.clear();
+        out.push_back(a);
+        DataLink sendData(out);// seems like i fucked something up
+        if (passon == 1) {
+            passon = 0;
+            tokenpass;
+        }
     }
+    return 0;
 }
 
 /*FUNCTION TO RETURN GAME STATUS
@@ -238,3 +260,5 @@ void Tictactoe::board()
 
     cout << "     |     |     " << endl << endl;
 }
+
+
