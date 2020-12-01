@@ -37,9 +37,9 @@ int main()
 
     this_thread::sleep_for(chrono::milliseconds(600));
     
-    DataLink* dl2 = new DataLink();
+    DataLink* dl2 = new DataLink(std::bind(data, _1), std::bind(tokenpass));
     dl2->bind(10);
-    dl1Thread.join();
+    //dl1Thread.join();
 
     cout << "Passing " << dl2->passToken() << endl;
     this_thread::sleep_for(chrono::milliseconds(500));
