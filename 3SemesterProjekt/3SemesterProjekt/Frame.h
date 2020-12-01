@@ -7,11 +7,11 @@
 enum TransmissionType {
 	NONE = 0xFF,
 	BIND = 0x0,
-	CONNECT = 0x1, // Not used
 	ACK = 0x2,
 	NACK = 0x3,
 	TOKEN_PASS = 0x4,
 	ALIVE = 0x5,
+	CLOSE = 0xE,
 	DATA = 0xF,
 };
 

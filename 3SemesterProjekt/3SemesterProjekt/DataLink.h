@@ -29,7 +29,7 @@ public:
 	const int LISTEN_TIME = 1000;
 
 	DataLink();
-	DataLink(function<void(vector<char>)> dataReady, function<void()> tokenPass);
+	DataLink(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closed);
 	//DataLink(const DataLink&);
 
 	bool bind(int attempts);
@@ -37,6 +37,7 @@ public:
 	bool sendData(vector<char> &data); // Returns true if succesfull
 	//vector<char> waitData(int timeout);
 	bool passToken(); // Pass token, return false if pass unsuccesful (Waiting or Conection failed)
+	void close();
 
 	TransmissionState getState();
 private:
@@ -45,12 +46,15 @@ private:
 	TransmissionState state = TransmissionState::NotConnected;
 	thread* connected_thread;
 
-	function<void(vector<char>)> dataReady;
-	function<void()> tokenPass;
+	function<void(vector<char>)> dataReadyEvent;
+	function<void()> tokenPassEvent;
+	function<void()> closeEvent;
 
 	bool sendWaitACK(TransmissionType type, vector<char> data); // Sends data and waits for ACK, tries ATTEMPTS times
 	bool sendWaitACK(TransmissionType type);					  // Returns false if connection is lost
 	void connectedRun();
+
+	void terminate();
 };
 
 /*
