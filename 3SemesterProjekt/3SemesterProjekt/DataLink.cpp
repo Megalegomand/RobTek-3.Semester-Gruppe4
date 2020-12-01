@@ -53,10 +53,16 @@ bool DataLink::passToken()
 {
 	if (state == TransmissionState::Token) {
 		if (sendWaitACK(TOKEN_PASS)) {
+			state = TransmissionState::Waiting;
 			return true;
 		}
 	}
 	return false;
+}
+
+TransmissionState DataLink::getState()
+{
+	return state;
 }
 
 bool DataLink::sendWaitACK(TransmissionType type, vector<char> data)
@@ -97,6 +103,7 @@ void DataLink::connectedRun()
 						break;
 					case TOKEN_PASS:
 						tokenPass();
+						state = TransmissionState::Token;
 						frame->sendFrame(ACK);
 						break;
 					case ALIVE:

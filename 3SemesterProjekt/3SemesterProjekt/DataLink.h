@@ -37,10 +37,12 @@ public:
 	bool sendData(vector<char> &data); // Returns true if succesfull
 	//vector<char> waitData(int timeout);
 	bool passToken(); // Pass token, return false if pass unsuccesful (Waiting or Conection failed)
+
+	TransmissionState getState();
 private:
 	Frame* frame;
 	mutex frame_mutex;
-	TransmissionState state = TransmissionState:: NotConnected;
+	TransmissionState state = TransmissionState::NotConnected;
 	thread* connected_thread;
 
 	function<void(vector<char>)> dataReady;
