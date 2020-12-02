@@ -26,8 +26,10 @@ void Tictactoe::end() {
 
 int Tictactoe::game()
 {
-    DataLink* dl = new DataLink(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); // what the hell went wrong?
-    int player = 1, i, choice;
+    DataLink* dl = new DataLink(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); 
+    int player = 1;//which player have turn
+    int i;//controls game state
+    int choice;//the move the player have made
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
     int pp;//number of pieces not on the board for the current player
@@ -39,7 +41,7 @@ int Tictactoe::game()
     vector<char> out;
     
 
-    if (local == 0 && /*TransmissionState() = token*/1) {//send help dosnt work like i thought it would
+    if (local == 0 && dl->getState() == TransmissionState::Token) {//send help dosnt work like i thought it would
         local = 1;
     }
     else if(local == 0) {
@@ -190,7 +192,7 @@ int Tictactoe::game()
         a = choice;
         out.clear();
         out.push_back(a);
-        dl->sendData(out);// seems like i fucked something up
+        dl->sendData(out);
         if (passon == 1) {
             passon = 0;
             dl->passToken();
