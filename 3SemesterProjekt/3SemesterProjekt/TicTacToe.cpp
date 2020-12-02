@@ -26,7 +26,7 @@ void Tictactoe::end() {
 
 int Tictactoe::game()
 {
-    DataLink* dl1 = new DataLink(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); // what the hell went wrong?
+    DataLink* dl = new DataLink(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); // what the hell went wrong?
     int player = 1, i, choice;
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
@@ -190,10 +190,10 @@ int Tictactoe::game()
         a = choice;
         out.clear();
         out.push_back(a);
-        DataLink sendData(out);// seems like i fucked something up
+        dl->sendData(out);// seems like i fucked something up
         if (passon == 1) {
             passon = 0;
-            tokenpass;
+            dl->passToken();
         }
     }
     return 0;
