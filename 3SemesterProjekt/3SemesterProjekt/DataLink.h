@@ -22,9 +22,9 @@ using namespace concurrency;
 class DataLink
 {
 public:
-	const int BIND_WAIT_MIN = 10;
-	const int BIND_WAIT_DIFF = 500;
-	const int MAX_LOSS_CONNECTION = 3000; // Maximum loss of connection, sync will be send at half this time
+	const int BIND_WAIT_MIN = 10000;
+	const int BIND_WAIT_DIFF = 10000;
+	const int MAX_LOSS_CONNECTION = 5000; // Maximum loss of connection, sync will be send at half this time
 	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 1000;
 

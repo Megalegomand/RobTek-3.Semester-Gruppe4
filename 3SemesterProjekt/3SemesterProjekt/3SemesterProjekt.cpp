@@ -33,24 +33,24 @@ int main()
         dtmf.sendTone(i, 1000);
     }*/
 
-    VirtuelDTMF vdtmf;
-    std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
+    //VirtuelDTMF vdtmf;
+    //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
     
     DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
     std::thread dl1Thread(&DataLink::bind, dl1, 10);
 
-    this_thread::sleep_for(chrono::milliseconds(600));
+    this_thread::sleep_for(chrono::milliseconds(10000));
     
     DataLink* dl2 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
-    dl2->bind(10);
+    cout << dl2->bind(10) << "-----------------------------------------" << endl;
     //dl1Thread.join();
 
-    cout << "Passing " << dl2->passToken() << endl;
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    //cout << "Passing " << dl2->passToken() << endl;
+    //this_thread::sleep_for(chrono::milliseconds(1000));
     
-    cout << "Passing " << dl1->passToken() << endl;
+    //cout << "Passing " << dl1->passToken() << endl;
 
-    this_thread::sleep_for(chrono::milliseconds(100000));
+    //this_thread::sleep_for(chrono::milliseconds(100000));
 
     //dl1Thread.join();
 
@@ -61,7 +61,7 @@ int main()
     //dl2.sendData(data);
     
 
-    mediumReaderThread.join();
+    //mediumReaderThread.join();
     //dl3Thread.join();
 
 
