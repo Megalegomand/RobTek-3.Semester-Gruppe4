@@ -6,12 +6,48 @@ DTMF::DTMF() {
     }
 }
 
-void DTMF::sendSequence(vector<char>& sequence, int duration)
+DTMF::DTMF(int duration) : DTMF()
 {
-    for (char tone : sequence) {
-       sendTone(tone, duration);
+    prepareTones(duration);
+}
+
+void DTMF::prepareTones(int duration)
+{
+    for (int tonei = 0; tonei < 16; tonei++) {
+        preparedTones[tonei] = new vector<sf::Int16>();
+
+        const double incrementL = ((double)tonesL[tonei / 4]) / SAMPLING_RATE;
+        const double incrementH = ((double)tonesH[tonei % 4]) / SAMPLING_RATE;
+
+        double x = 0;
+        double y = 0;
+        
+        int antalSamples = ((SAMPLING_RATE * duration) / 1000);
+
+        for (unsigned int i = 0; i < antalSamples; i++) {
+            preparedTones[tonei]->push_back(AMPLITUDE * sin(x * 2 * PI) + AMPLITUDE * sin(y * 2 * PI));
+            x += incrementL;
+            y += incrementH;
+        };
     }
 }
+
+void DTMF::sendSequence(vector<char>& sequence)
+{
+    vector<sf::Int16> samples = vector<sf::Int16>();
+    for (char tone : sequence) {
+        samples.insert(samples.end(), preparedTones[tone]->begin(), preparedTones[tone]->end());
+    }
+
+    sf::SoundBuffer buffer;
+
+    buffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLING_RATE);
+    
+    sound.setBuffer(buffer);
+    sound.play();
+    this_thread::sleep_for(chrono::milliseconds(buffer.getDuration().asMilliseconds()));
+}
+
 char DTMF::listenTone(int duration)
 {
     char t = receiveDTMF(duration);
@@ -19,29 +55,31 @@ char DTMF::listenTone(int duration)
     return t;
     
 }
-void DTMF::sendTone(char tonevalg, int duration) {
-    
-    vector<sf::Int16> dtmf;
-    const double incrementL = ((double) tonesL[tonevalg / 4]) / SAMPLING_RATE;
-    const double incrementH= ((double) tonesH[tonevalg % 4]) / SAMPLING_RATE;
-    double x = 0;
-    double y = 0;
-    int antalSamples = ((SAMPLING_RATE * duration) / 1000);
-    for (unsigned int i = 0; i < antalSamples; i++) {
-        dtmf.push_back(AMPLITUDE * sin(x * 2 * PI) + AMPLITUDE * sin(y * 2 * PI));
-        x += incrementL;
-        y += incrementH;
-    };
-   
-    buffer.loadFromSamples(&dtmf[0], dtmf.size(), 1, SAMPLING_RATE);
-    cout << "Time" << buffer.getDuration().asMilliseconds() << endl;
-    sound.setBuffer(buffer);
-   /* Sound.setLoop(true);*/
-    sound.play();
-    cout << sound.getStatus() << endl;
-    this_thread::sleep_for(chrono::milliseconds(duration));
-    cout << sound.getStatus() << endl;
-}
+
+//void DTMF::sendTone(char tonevalg, int duration) {
+//    
+//    vector<sf::Int16> dtmf;
+//    const double incrementL = ((double) tonesL[tonevalg / 4]) / SAMPLING_RATE;
+//    const double incrementH= ((double) tonesH[tonevalg % 4]) / SAMPLING_RATE;
+//    double x = 0;
+//    double y = 0;
+//    int antalSamples = ((SAMPLING_RATE * duration) / 1000);
+//    for (unsigned int i = 0; i < antalSamples; i++) {
+//        dtmf.push_back(AMPLITUDE * sin(x * 2 * PI) + AMPLITUDE * sin(y * 2 * PI));
+//        x += incrementL;
+//        y += incrementH;
+//    };
+//   
+//    buffer.loadFromSamples(&dtmf[0], dtmf.size(), 1, SAMPLING_RATE);
+//    cout << "Time" << buffer.getDuration().asMilliseconds() << endl;
+//    sound.setBuffer(buffer);
+//   /* Sound.setLoop(true);*/
+//    sound.play();
+//    cout << sound.getStatus() << endl;
+//    this_thread::sleep_for(chrono::milliseconds(duration));
+//    cout << sound.getStatus() << endl;
+//}
+
 char DTMF::receiveDTMF(int duration)
 {
     

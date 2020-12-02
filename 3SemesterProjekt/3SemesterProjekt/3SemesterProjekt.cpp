@@ -33,10 +33,15 @@ int main()
         dtmf.sendTone(i, 1000);
     }*/
 
-    DTMF dtmf = DTMF();
+    DTMF dtmf = DTMF(1000);
     Timer timer = Timer();
+    vector<char> seq;
+    seq.push_back(0x0);
+    seq.push_back(0x5);
+    seq.push_back(0x9);
+    seq.push_back(0xF);
     timer.start();
-    dtmf.sendTone(1, 10000);
+    dtmf.sendSequence(seq);
     cout << timer.elapsedMillis() << endl;
     return 0;
 

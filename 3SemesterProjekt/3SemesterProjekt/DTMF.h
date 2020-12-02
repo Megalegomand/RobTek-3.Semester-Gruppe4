@@ -15,9 +15,17 @@ using namespace std;
 class DTMF
 {
 public:
+	const unsigned AMPLITUDE = 10000;
+	const double PI = 3.14159265359;
+	const int tonesL[4] = { 697,  770,  852,  941 };
+	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
+
 	DTMF();
-	void sendTone(char tonevalg, int duration);
-	void sendSequence(vector<char>& sequence, int duration);
+	DTMF(int duration);
+	//void sendTone(char tonevalg, int duration);
+	void prepareTones(int duration);
+	void sendSequence(vector<char>& sequence);
+
 	char listenTone(int duration); // Listen time, return -1 for no DTMF
 
 	
@@ -27,15 +35,12 @@ public:
 	~DTMF();
 
 private:
-	const unsigned AMPLITUDE = 10000;
-	const double PI = 3.14159265359;
-	const int tonesL[4] = { 697,  770,  852,  941  };
-	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
+	vector<sf::Int16>* preparedTones[16];
+
+	sf::Sound sound;
+
 	Goertzel* goertzelL[4];
 	Goertzel* goertzelH[4];
-
-	sf::SoundBuffer buffer;
-	sf::Sound sound;
 
 	bool values[8] = {};
 	int DBthreshhold = 10;

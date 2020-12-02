@@ -3,7 +3,7 @@
 Frame::Frame()
 {
 	transmissionType = BIND;
-	dtmf = new DTMF();
+	dtmf = new DTMF(TONE_DURATION);
 	lastActive = new Timer();
 }
 
@@ -53,7 +53,7 @@ void Frame::send()
 		toneFrame.push_back(c);//DATA
 	}
 
-	dtmf->sendSequence(toneFrame, TONE_DURATION);
+	dtmf->sendSequence(toneFrame);
 }
 
 bool Frame::wait(int timeout)
