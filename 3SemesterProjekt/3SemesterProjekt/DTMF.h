@@ -33,6 +33,10 @@ private:
 	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
 	Goertzel* goertzelL[4];
 	Goertzel* goertzelH[4];
+
+	sf::SoundBuffer buffer;
+	sf::Sound sound;
+
 	bool values[8] = {};
 	int DBthreshhold = 10;
 	typedef complex<double> Complex;

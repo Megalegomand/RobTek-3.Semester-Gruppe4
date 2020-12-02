@@ -5,6 +5,7 @@ DTMF::DTMF() {
         goertzelL[i] = new Goertzel(tonesL[i], SAMPLING_RATE);
     }
 }
+
 void DTMF::sendSequence(vector<char>& sequence, int duration)
 {
     for (char tone : sequence) {
@@ -31,17 +32,15 @@ void DTMF::sendTone(char tonevalg, int duration) {
         x += incrementL;
         y += incrementH;
     };
-      
-       
-    sf::SoundBuffer buffer;
-
-    buffer.loadFromSamples(&dtmf[0],dtmf.size(), 2, 44100);
-    sf::Sound Sound;
-
-    Sound.setBuffer(buffer);
+   
+    buffer.loadFromSamples(&dtmf[0], dtmf.size(), 1, SAMPLING_RATE);
+    cout << "Time" << buffer.getDuration().asMilliseconds() << endl;
+    sound.setBuffer(buffer);
    /* Sound.setLoop(true);*/
-    Sound.play();
+    sound.play();
+    cout << sound.getStatus() << endl;
     this_thread::sleep_for(chrono::milliseconds(duration));
+    cout << sound.getStatus() << endl;
 }
 char DTMF::receiveDTMF(int duration)
 {

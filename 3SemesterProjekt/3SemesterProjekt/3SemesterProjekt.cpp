@@ -33,9 +33,22 @@ int main()
         dtmf.sendTone(i, 1000);
     }*/
 
+    DTMF dtmf = DTMF();
+    Timer timer = Timer();
+    timer.start();
+    dtmf.sendTone(1, 10000);
+    cout << timer.elapsedMillis() << endl;
+    timer.start();
+    dtmf.sendTone(1, 1000);
+    cout << timer.elapsedMillis() << endl;
+    timer.start();
+    dtmf.sendTone(1, 1000);
+    cout << timer.elapsedMillis() << endl;
+    return 0;
+
     //VirtuelDTMF vdtmf;
     //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
-    
+
     DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
     std::thread dl1Thread(&DataLink::bind, dl1, 10);
 
@@ -43,7 +56,8 @@ int main()
     
     DataLink* dl2 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
     cout << dl2->bind(10) << "-----------------------------------------" << endl;
-    //dl1Thread.join();
+    
+    dl1Thread.join();
 
     //cout << "Passing " << dl2->passToken() << endl;
     //this_thread::sleep_for(chrono::milliseconds(1000));
