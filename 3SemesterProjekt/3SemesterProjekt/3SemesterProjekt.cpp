@@ -38,12 +38,6 @@ int main()
     timer.start();
     dtmf.sendTone(1, 10000);
     cout << timer.elapsedMillis() << endl;
-    timer.start();
-    dtmf.sendTone(1, 1000);
-    cout << timer.elapsedMillis() << endl;
-    timer.start();
-    dtmf.sendTone(1, 1000);
-    cout << timer.elapsedMillis() << endl;
     return 0;
 
     //VirtuelDTMF vdtmf;

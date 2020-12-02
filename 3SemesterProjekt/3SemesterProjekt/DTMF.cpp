@@ -28,7 +28,7 @@ void DTMF::sendTone(char tonevalg, int duration) {
     double y = 0;
     int antalSamples = ((SAMPLING_RATE * duration) / 1000);
     for (unsigned int i = 0; i < antalSamples; i++) {
-        dtmf.push_back(AMPLITUDE * sin(x * PI) + AMPLITUDE * sin(y * PI));
+        dtmf.push_back(AMPLITUDE * sin(x * 2 * PI) + AMPLITUDE * sin(y * 2 * PI));
         x += incrementL;
         y += incrementH;
     };
