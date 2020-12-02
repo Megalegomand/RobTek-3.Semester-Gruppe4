@@ -1,13 +1,7 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include<iostream>
-#include "Goertzel.h"
 #include"DTMF.h"
 #include"DataLink.h"
-#include<thread>
-#include<fstream>
-#include <functional>
 using namespace std;
 
 
@@ -19,10 +13,13 @@ public:
 	void board();
 	void data(vector<char> data);
 	void tokenpass();
+	void end();
 
 
 private:
 	char square[10] = { 'o','1','2','3','4','5','6','7','8','9' };
+	int local = 0;// controls which player is local
+	int choicef = 0; // choice of foreign player
 
 
 };

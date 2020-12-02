@@ -2,6 +2,7 @@
 #include "Tictactoe.h"
 
 using namespace std;
+using namespace std::placeholders;
 
 Tictactoe::Tictactoe() {
 }
@@ -18,11 +19,14 @@ void Tictactoe::tokenpass() {
     
 }
 
+void Tictactoe::end() {
+
+}
 //*******bind er player 1, listen er player 2********
 
 int Tictactoe::game()
 {
-    DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass)); // what the hell went wrong?
+    DataLink* dl1 = new DataLink(std::bind(&Tictactoe::data, _1), std::bind(&Tictactoe::tokenpass), std::bind(&Tictactoe::end)); // what the hell went wrong?
     int player = 1, i, choice;
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
