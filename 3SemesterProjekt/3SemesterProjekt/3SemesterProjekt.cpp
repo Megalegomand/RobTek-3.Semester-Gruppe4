@@ -20,6 +20,10 @@ void tokenpass() {
     cout << "TOKEN" << endl;
 }
 
+void closed() {
+    cout << "CLOSED" << endl;
+}
+
 using namespace std;
 using namespace std::placeholders;
 int main()
@@ -32,17 +36,17 @@ int main()
     VirtuelDTMF vdtmf;
     std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
     
-    DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass));
+    DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
     std::thread dl1Thread(&DataLink::bind, dl1, 10);
 
     this_thread::sleep_for(chrono::milliseconds(600));
     
-    DataLink* dl2 = new DataLink();
+    DataLink* dl2 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
     dl2->bind(10);
-    dl1Thread.join();
+    //dl1Thread.join();
 
     cout << "Passing " << dl2->passToken() << endl;
-    this_thread::sleep_for(chrono::milliseconds(500));
+    this_thread::sleep_for(chrono::milliseconds(1000));
     
     cout << "Passing " << dl1->passToken() << endl;
 

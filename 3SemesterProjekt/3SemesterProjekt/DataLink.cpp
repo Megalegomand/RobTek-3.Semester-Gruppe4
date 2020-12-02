@@ -5,10 +5,11 @@ DataLink::DataLink() {
 	srand(time(NULL)); // To make sure virtual DTMF works
 }
 
-DataLink::DataLink(function<void(vector<char>)> dataReady, function<void()> tokenPass) : DataLink()
+DataLink::DataLink(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closeEvent) : DataLink()
 {
-	this->dataReady = dataReady;
-	this->tokenPass = tokenPass;
+	this->dataReadyEvent = dataReadyEvent;
+	this->tokenPassEvent = tokenPassEvent;
+	this->closeEvent = closeEvent;
 }
 
 bool DataLink::bind(int attempts)
@@ -43,10 +44,13 @@ bool DataLink::bind(int attempts)
 
 bool DataLink::sendData(vector<char> &data)
 {	
-	frame_mutex.lock();
-	sendWaitACK(DATA, data);
-	frame_mutex.unlock();
-	return false;
+	bool ret = false;
+	if (state == TransmissionState::Token) {
+		frame_mutex.lock();
+		ret = sendWaitACK(DATA, data);
+		frame_mutex.unlock();
+	}
+	return ret;
 }
 
 bool DataLink::passToken()
@@ -60,6 +64,18 @@ bool DataLink::passToken()
 	return false;
 }
 
+void DataLink::close()
+{
+	if (state == TransmissionState::Token) {
+		sendWaitACK(CLOSE);
+		terminate();
+	}
+	else 
+	{
+		terminate();
+	}
+}
+
 TransmissionState DataLink::getState()
 {
 	return state;
@@ -67,6 +83,10 @@ TransmissionState DataLink::getState()
 
 bool DataLink::sendWaitACK(TransmissionType type, vector<char> data)
 {
+	if (state != TransmissionState::Token) {
+		return false;
+	}
+
 	frame_mutex.lock();
 	for (int i = 0; i < ATTEMPTS; i++) {
 		frame->sendFrame(type, data);
@@ -92,22 +112,26 @@ void DataLink::connectedRun()
 	while (state != TransmissionState::NotConnected) {
 		if (state == TransmissionState::Waiting) {
 			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION) {
-				state = TransmissionState::NotConnected;
+				terminate();
 			}
 			else {
 				if (frame->wait(MAX_LOSS_CONNECTION - frame->getLastActive()->elapsedMillis())) {
 					switch (frame->getType()) {
 					case DATA:
-						dataReady(frame->getData());
+						dataReadyEvent(frame->getData());
 						frame->sendFrame(ACK);
 						break;
 					case TOKEN_PASS:
-						tokenPass();
+						tokenPassEvent();
 						state = TransmissionState::Token;
 						frame->sendFrame(ACK);
 						break;
 					case ALIVE:
 						frame->sendFrame(ACK);
+						break;
+					case CLOSE:
+						frame->sendFrame(ACK);
+						terminate();
 						break;
 					}
 				}
@@ -115,7 +139,7 @@ void DataLink::connectedRun()
 		} else if (state == TransmissionState::Token) {
 			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION / 2) {
 				if (!sendWaitACK(ALIVE)) {
-					state = TransmissionState::NotConnected;
+					terminate();
 				}
 			}
 			else {
@@ -123,6 +147,12 @@ void DataLink::connectedRun()
 			}
 		}
 	}
+}
+
+void DataLink::terminate()
+{
+	state = TransmissionState::NotConnected;
+	closeEvent();
 }
 
 
