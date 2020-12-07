@@ -9,6 +9,7 @@ DTMF::DTMF() {
 
     this->setDevice(getDefaultDevice());
     cout << getDefaultDevice() << endl;
+    setChannelCount(1);
 
     goertzel = new Goertzel(SAMPLE_RATE);
 
@@ -38,6 +39,29 @@ void DTMF::prepareTones()
     }
 }
 
+int DTMF::syncMove(deque<Int16>* toneSamples, char tone)
+{
+    int ret = (determineDTMF(toneSamples, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
+    return ret - (determineDTMF(toneSamples, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
+}
+
+void DTMF::moveSamples(deque<Int16>* tone, int amount)
+{
+    while (amount > inputSamples.size()) {} // Wait samples
+
+    inputSamples_mutex.lock();
+    for (int i = 0; i < amount; i++) { // Make sure there is still samples available
+        tone->push_back(inputSamples.front());
+        inputSamples.pop();
+        tone->pop_front();
+    }
+    inputSamples_mutex.unlock();
+
+    processCounter_mutex.lock();
+    processCounter++;
+    processCounter_mutex.unlock();
+}
+
 void DTMF::sendSequence(vector<char>& sequence)
 {
     vector<sf::Int16> samples = vector<sf::Int16>();
@@ -64,53 +88,48 @@ vector<char> DTMF::listenSequence(int duration)
 
     deque<Int16> currentTone = deque<Int16>();
 
-    while (startTime.elapsedMillis() < duration) {
-        while (inputSamples.size() < TONE_SAMPLES) {};
-        inputSamples_mutex.lock();
-        for (int i = 0; i < TONE_SAMPLES; i++) {
-            currentTone.push_back(inputSamples.front());
-            inputSamples.pop();
-        }
-        inputSamples_mutex.unlock();
-
-        char tone = -1;
-        while (tone == -1) {
-            cout << "----------" << endl;
-            Timer t = Timer();
-            t.start();
-            cout << "DTone " << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << " : " << int(determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES)) << endl;
-            tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
-            cout << "det" << t.elapsedMillis() << endl;
-            cout << "Tone " <<int(tone) << endl;
-            
-            
-            sampleMove_mutex.lock();
-            int sampleMoveC = sampleMove;
-            sampleMove_mutex.unlock();
-            inputSamples_mutex.lock();
-            if (sampleMoveC > inputSamples.size()) {
-                sampleMoveC = inputSamples.size();
-            }
-            for (int i = 0; i < sampleMoveC; i++) { // Make sure there is still samples available
-                currentTone.push_back(inputSamples.front());
-                inputSamples.pop();
-                currentTone.pop_front();
-            }
-            inputSamples_mutex.unlock();
-
-            processCounter_mutex.lock();
-            processCounter++;
-            processCounter_mutex.unlock();
-            cout << "Time" << t.elapsedMillis() << endl;
-        }
-        cout << "Tone: " << int(tone) << endl;
-        
-        //this->stop();
-        //return vector<char>();
+    // Fill tone buffer
+    while (inputSamples.size() < TONE_SAMPLES) {};
+    inputSamples_mutex.lock();
+    for (int i = 0; i < TONE_SAMPLES; i++) {
+        currentTone.push_back(inputSamples.front());
+        inputSamples.pop();
     }
-    this_thread::sleep_for(chrono::milliseconds(10000));
+    inputSamples_mutex.unlock();
+
+    // Sync
+    while (startTime.elapsedMillis() < duration) {
+        
+        if (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
+            break;
+        }
+        
+        sampleMove_mutex.lock();
+        int sampleMoveC = sampleMove;
+        sampleMove_mutex.unlock();
+        moveSamples(&currentTone, sampleMoveC);
+    }
+
+    // Get tones
+    //cout << "-----------------" << endl;
+    vector<char> tones = vector<char>();
+    char tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
+    while (tone != -1) {
+        tones.push_back(tone);
+        //cout << "Tone: " << int(tone) << ":" << (int) determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES) << ":" << (int) determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) << endl;
+        //cout << "SM" << syncMove(&currentTone, tone) << endl;
+        moveSamples(&currentTone, TONE_SAMPLES + syncMove(&currentTone, tone) * TONE_SAMPLES / 8);
+        tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
+    }
+    //cout << "Tone: " << int(tone) << ":" << (int)determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES) << ":" << (int)determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) << endl;
+    //cout << "SM" << syncMove(&currentTone, tone) << endl;
+    
+    cout << "Recieved" << endl;
+    for (char c : tones) {
+        cout << (int)c << endl;
+    }
     this->stop();
-    return vector<char>();
+    return tones;
 }
 
 char DTMF::listenTone(int duration)
@@ -194,12 +213,12 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
     if (SNR>DBthreshhold)
     {
-        cout << SNR << endl;
+        //cout << SNR << endl;
         return  pos1 * 4 + pos2;
     }
     else
     {
-        cout << SNR << endl;
+        //cout << SNR << endl;
         return -1;
     }
 }
@@ -247,12 +266,12 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 
     if (SNR > DBthreshhold)
     {
-        cout << SNR << endl;
+        //cout << SNR << endl;
         return  pos1 * 4 + pos2;
     }
     else
     {
-        cout << SNR << endl;
+        //cout << SNR << endl;
         return -1;
     }
 }
@@ -301,8 +320,8 @@ bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)
     processCounter_mutex.unlock();
 
     if (sampleMove > TONE_SAMPLES / 4) {
-        cout << "SMBefore" << sampleMove << endl;
-        cout << TONE_SAMPLES << ":" << TONE_SAMPLES / 4 << endl;
+        //cout << "SMBefore" << sampleMove << endl;
+        //cout << TONE_SAMPLES << ":" << TONE_SAMPLES / 4 << endl;
         sampleMove = TONE_SAMPLES / 4;
     }
     sampleMove_mutex.unlock();

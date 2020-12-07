@@ -75,6 +75,10 @@ private:
 	std::string inputDevice = availableDevices[0];
 
 	void prepareTones();
+
+	int syncMove(deque<Int16>* toneSamples, char tone);
+
+	void moveSamples(deque<Int16>* tone, int amount);
 	
 protected:
 	virtual bool onProcessSamples(const Int16* samples, std::size_t sampleCount);

@@ -37,7 +37,7 @@ int main()
     //dtmf->prepareTones(10000);
     Timer timer = Timer();
     vector<char> seq;
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 16; i++) {
         seq.push_back(i);
     }
     //seq.push_back(0x0);
@@ -52,10 +52,11 @@ int main()
     //dtmf->sendSequence(seq);
     //this_thread::sleep_for(chrono::milliseconds(100));
     //vector<char> c = dtmf->listenSequence(1000);
+    dtmf->listenSequence(10);
 
     std::thread kage(&DTMF::listenSequence, dtmf, 100000);
-    this_thread::sleep_for(chrono::milliseconds(100));
-    //dtmf->sendSequence(seq);
+    this_thread::sleep_for(chrono::milliseconds(1000));
+    dtmf->sendSequence(seq);
 
     kage.join();
 
