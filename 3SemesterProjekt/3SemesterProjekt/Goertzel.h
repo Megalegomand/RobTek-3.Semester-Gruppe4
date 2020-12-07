@@ -14,7 +14,7 @@ public:
 	Goertzel(int sampleFrequency);
 	Goertzel(int targetFrequency, int sampleFrequency);
 	float processSamples(const sf::Int16 *samples, int count);
-	float processSamples(deque<Int16> samples, int start, int end, int targetFrequency);
+	float processSamples(deque<Int16>* samples, int start, int end, int targetFrequency);
 
 private:
 	const double PI = 3.14159265359;

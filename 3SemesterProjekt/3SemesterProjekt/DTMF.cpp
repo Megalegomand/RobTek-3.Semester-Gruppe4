@@ -78,8 +78,8 @@ vector<char> DTMF::listenSequence(int duration)
             cout << "----------" << endl;
             Timer t = Timer();
             t.start();
-            //cout << "DTone " << int(determineDTMF(currentTone, 0, TONE_SAMPLES / 2)) << " : " << int(determineDTMF(currentTone, TONE_SAMPLES / 2, TONE_SAMPLES)) << endl;
-            tone = determineDTMF(currentTone, 0, TONE_SAMPLES);
+            cout << "DTone " << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << " : " << int(determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES)) << endl;
+            tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
             cout << "det" << t.elapsedMillis() << endl;
             cout << "Tone " <<int(tone) << endl;
             
@@ -204,19 +204,12 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
     }
 }
 
-char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
+char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 {
-    cout << "----------------------------------- Timer" << endl;
-    Timer t = Timer();
-    t.start();
-
     for (int i = 0; i < 4; i++) {
         goertzelresH[i] = goertzel->processSamples(samples, start, end, TONES_H[i]);
-        cout << "t" << i << ";" << t.elapsedMillis() << endl;
         goertzelresL[i] = goertzel->processSamples(samples, start, end, TONES_L[i]);
-        cout << "t" << i << ";" << t.elapsedMillis() << endl;
     }
-    cout << "t" << t.elapsedMillis() << endl;
 
     int pos1 = 0, pos2 = 0;
     float  largest = 0, second_largest = 0;
@@ -237,8 +230,7 @@ char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
         }
     }
     float P_Signal = (largest + second_largest) / 2;
-    cout << "t" << t.elapsedMillis() << endl;
-
+    
     float sum = 0.0;
     for (int i = 0; i < goertzelresH.size(); i++)
     {
@@ -250,8 +242,7 @@ char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
         }
     }
     float P_stoej = sum / 6.0;
-    cout << "t" << t.elapsedMillis() << endl;
-
+    
     float SNR = P_Signal / P_stoej;
 
     if (SNR > DBthreshhold)

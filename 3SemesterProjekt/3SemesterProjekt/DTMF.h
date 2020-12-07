@@ -40,7 +40,7 @@ public:
 	char receiveDTMF(int duration);
 	char determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
 
-	char determineDTMF(deque<Int16> samples, int start, int end);
+	char determineDTMF(deque<Int16>* samples, int start, int end);
 
 	void prepareTones(int duration);
 	
