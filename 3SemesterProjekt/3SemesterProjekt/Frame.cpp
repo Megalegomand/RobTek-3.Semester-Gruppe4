@@ -3,7 +3,7 @@
 Frame::Frame()
 {
 	transmissionType = BIND;
-	dtmf = new DTMF(TONE_DURATION);
+	dtmf = new DTMF();
 	lastActive = new Timer();
 }
 

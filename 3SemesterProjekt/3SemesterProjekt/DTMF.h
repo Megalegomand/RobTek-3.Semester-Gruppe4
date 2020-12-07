@@ -7,30 +7,42 @@
 #include<math.h>
 #include<complex>
 #include<valarray>
-#include<complex.h>
 #include "Goertzel.h"
-
+#include<SFML/Audio/SoundRecorder.hpp>
+#include<queue>
+#include<mutex>
+#include"Timer.h"
+#include<deque>
 
 using namespace std;
-class DTMF
+using namespace sf;
+class DTMF : public SoundRecorder
 {
 public:
+	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 	const double PI = 3.14159265359;
-	const int tonesL[4] = { 697,  770,  852,  941 };
-	const int tonesH[4] = { 1209, 1336, 1477, 1633 };
+	const int TONES_L[4] = { 697,  770,  852,  941 };
+	const int TONES_H[4] = { 1209, 1336, 1477, 1633 };
+	const int SAMPLE_RATE = 44100;
+	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 
 	DTMF();
-	DTMF(int duration);
 	//void sendTone(char tonevalg, int duration);
-	void prepareTones(int duration);
 	void sendSequence(vector<char>& sequence);
+
+
+	vector<char> listenSequence(int timeout);
 
 	char listenTone(int duration); // Listen time, return -1 for no DTMF
 
 	
 	char receiveDTMF(int duration);
 	char determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
+
+	char determineDTMF(deque<Int16> samples, int start, int end);
+
+	void prepareTones(int duration);
 	
 	~DTMF();
 
@@ -39,16 +51,29 @@ private:
 
 	sf::Sound sound;
 
+	queue<Int16> inputSamples;
+	mutex inputSamples_mutex;
+	Goertzel* goertzel;
+
+	int sampleMove = 500;
+	mutex sampleMove_mutex;
+
+	int processCounter = 0;
+	mutex processCounter_mutex;
+
 	Goertzel* goertzelL[4];
 	Goertzel* goertzelH[4];
 
 	bool values[8] = {};
 	int DBthreshhold = 10;
 	typedef complex<double> Complex;
-	int SAMPLING_RATE = 44100; // Burde sættes til værdien af recorder.getSampleRate()
 	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
-	std::vector<std::string> availableDevices = sf::SoundRecorder::getAvailableDevices();
+	std::vector<std::string> availableDevices = SoundRecorder::getAvailableDevices();
 	std::string inputDevice = availableDevices[0];
+
+	void prepareTones();
 	
+protected:
+	virtual bool onProcessSamples(const Int16* samples, std::size_t sampleCount);
 };
 
