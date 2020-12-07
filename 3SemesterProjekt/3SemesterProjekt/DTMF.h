@@ -24,13 +24,18 @@ public:
 	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 
-	const int TONES_L[4] = { 697,  770,  852,  941 };  // DTMF low tones
-	const int TONES_H[4] = { 1209, 1336, 1477, 1633 }; // DTMF high tones
-
 	const int SNR_DB_THRESHHOLD = 10;
 
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
+
+	// Keeps 1s samples ready at all times
+	// The samples are usually updated every 10ms, hence this should be plenty buffer
+	const unsigned int INPUT_SAMPLES_MAX_SIZE = SAMPLE_RATE; 
+
+
+	const int TONES_L[4] = { 697,  770,  852,  941 };  // DTMF low tones
+	const int TONES_H[4] = { 1209, 1336, 1477, 1633 }; // DTMF high tones
 
 	DTMF();
 
@@ -47,7 +52,7 @@ private:
 	Goertzel* goertzel;
 
 	// Samples from recorder
-	queue<Int16> inputSamples;
+	queue<Int16> inputSamples = queue<Int16>();
 	mutex inputSamples_mutex;
 
 	// How much should the sample move while searching
@@ -58,9 +63,6 @@ private:
 	// Used to calculate sampleMove
 	int processCounter = 1;
 	mutex processCounter_mutex;
-
-	float goertzelresH[4];
-	float goertzelresL[4];
 
 	// Precalculate tone samples
 	void prepareTones();

@@ -42,9 +42,6 @@
     <ClCompile Include="TicTacToe.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="RollingBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DTMF.h">
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RollingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

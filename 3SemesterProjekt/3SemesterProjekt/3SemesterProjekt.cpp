@@ -55,10 +55,16 @@ int main()
     dtmf->listenSequence(10);
 
     std::thread kage(&DTMF::listenSequence, dtmf, 100000);
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    this_thread::sleep_for(chrono::milliseconds(100));
     dtmf->sendSequence(seq);
 
     kage.join();
+
+    std::thread kage1(&DTMF::listenSequence, dtmf, 100000);
+    this_thread::sleep_for(chrono::milliseconds(100));
+    dtmf->sendSequence(seq);
+
+    kage1.join();
 
     return 0;
 

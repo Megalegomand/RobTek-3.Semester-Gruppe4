@@ -158,7 +158,6 @@
     <ClCompile Include="DTMF.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Goertzel.cpp" />
-    <ClCompile Include="RollingBuffer.cpp" />
     <ClCompile Include="TicTacToe.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VirtuelDTMF.cpp" />
@@ -169,7 +168,6 @@
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Goertzel.h" />
     <ClCompile Include="TicTacToe.h" />
-    <ClInclude Include="RollingBuffer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VirtuelDTMF.h" />
   </ItemGroup>
