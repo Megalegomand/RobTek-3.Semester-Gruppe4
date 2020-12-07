@@ -2,6 +2,8 @@
 #include <math.h>
 #include<SFML/Audio.hpp>
 #include<deque>
+#include<iostream>
+#include"Timer.h"
 
 using namespace std;
 using namespace sf;

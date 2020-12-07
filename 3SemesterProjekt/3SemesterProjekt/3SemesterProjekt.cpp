@@ -53,9 +53,9 @@ int main()
     //this_thread::sleep_for(chrono::milliseconds(100));
     //vector<char> c = dtmf->listenSequence(1000);
 
-    std::thread kage(&DTMF::listenSequence, dtmf, 10000);
+    std::thread kage(&DTMF::listenSequence, dtmf, 100000);
     this_thread::sleep_for(chrono::milliseconds(100));
-    dtmf->sendSequence(seq);
+    //dtmf->sendSequence(seq);
 
     kage.join();
 

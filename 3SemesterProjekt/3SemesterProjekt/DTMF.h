@@ -19,7 +19,7 @@ using namespace sf;
 class DTMF : public SoundRecorder
 {
 public:
-	const int TONE_DURATION = 100; // Millisseconds
+	const int TONE_DURATION = 20; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 	const double PI = 3.14159265359;
 	const int TONES_L[4] = { 697,  770,  852,  941 };
@@ -58,8 +58,11 @@ private:
 	int sampleMove = 500;
 	mutex sampleMove_mutex;
 
-	int processCounter = 0;
+	int processCounter = 1;
 	mutex processCounter_mutex;
+
+	vector<float> goertzelresH = vector<float>();
+	vector<float> goertzelresL = vector<float>();
 
 	Goertzel* goertzelL[4];
 	Goertzel* goertzelH[4];

@@ -11,6 +11,9 @@ DTMF::DTMF() {
     cout << getDefaultDevice() << endl;
 
     goertzel = new Goertzel(SAMPLE_RATE);
+
+    goertzelresH.resize(4);
+    goertzelresL.resize(4);
 }
 
 
@@ -72,14 +75,18 @@ vector<char> DTMF::listenSequence(int duration)
 
         char tone = -1;
         while (tone == -1) {
-            cout << "DTone " << int(determineDTMF(currentTone, 0, TONE_SAMPLES / 2)) << " : " << int(determineDTMF(currentTone, TONE_SAMPLES / 2, TONE_SAMPLES)) << endl;
+            cout << "----------" << endl;
+            Timer t = Timer();
+            t.start();
+            //cout << "DTone " << int(determineDTMF(currentTone, 0, TONE_SAMPLES / 2)) << " : " << int(determineDTMF(currentTone, TONE_SAMPLES / 2, TONE_SAMPLES)) << endl;
             tone = determineDTMF(currentTone, 0, TONE_SAMPLES);
+            cout << "det" << t.elapsedMillis() << endl;
             cout << "Tone " <<int(tone) << endl;
-            cout << TONE_SAMPLES << endl;
+            
+            
             sampleMove_mutex.lock();
             int sampleMoveC = sampleMove;
             sampleMove_mutex.unlock();
-            
             inputSamples_mutex.lock();
             if (sampleMoveC > inputSamples.size()) {
                 sampleMoveC = inputSamples.size();
@@ -94,10 +101,12 @@ vector<char> DTMF::listenSequence(int duration)
             processCounter_mutex.lock();
             processCounter++;
             processCounter_mutex.unlock();
+            cout << "Time" << t.elapsedMillis() << endl;
         }
         cout << "Tone: " << int(tone) << endl;
         
-        return vector<char>();
+        //this->stop();
+        //return vector<char>();
     }
     this_thread::sleep_for(chrono::milliseconds(10000));
     this->stop();
@@ -197,13 +206,15 @@ char DTMF::determineDTMF(vector<float> goertzelresL, vector<float> goertzelresH)
 
 char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
 {
-    vector<float> goertzelresH = vector<float>();
-    vector<float> goertzelresL = vector<float>();
+    cout << "----------------------------------- Timer" << endl;
+    Timer t = Timer();
+    t.start();
 
     for (int i = 0; i < 4; i++) {
-        goertzelresH.push_back(goertzel->processSamples(samples, start, end, TONES_H[i]));
-        goertzelresL.push_back(goertzel->processSamples(samples, start, end, TONES_L[i]));
+        goertzelresH[i] = goertzel->processSamples(samples, start, end, TONES_H[i]);
+        goertzelresL[i] = goertzel->processSamples(samples, start, end, TONES_L[i]);
     }
+    cout << "t" << t.elapsedMillis() << endl;
 
     int pos1 = 0, pos2 = 0;
     float  largest = 0, second_largest = 0;
@@ -224,6 +235,7 @@ char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
         }
     }
     float P_Signal = (largest + second_largest) / 2;
+    cout << "t" << t.elapsedMillis() << endl;
 
     float sum = 0.0;
     for (int i = 0; i < goertzelresH.size(); i++)
@@ -236,6 +248,7 @@ char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
         }
     }
     float P_stoej = sum / 6.0;
+    cout << "t" << t.elapsedMillis() << endl;
 
     float SNR = P_Signal / P_stoej;
 
@@ -275,7 +288,11 @@ void DTMF::prepareTones(int duration)
 
 
 
-DTMF::~DTMF() {}
+DTMF::~DTMF() {
+    stop();
+}
+
+
 bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)
 {
     inputSamples_mutex.lock();
@@ -290,8 +307,10 @@ bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)
     processCounter = 1;
     processCounter_mutex.unlock();
 
-    if (sampleMove < TONE_DURATION / 4) {
-        sampleMove = TONE_DURATION / 4;
+    if (sampleMove > TONE_SAMPLES / 4) {
+        cout << "SMBefore" << sampleMove << endl;
+        cout << TONE_SAMPLES << ":" << TONE_SAMPLES / 4 << endl;
+        sampleMove = TONE_SAMPLES / 4;
     }
     sampleMove_mutex.unlock();
 
