@@ -24,7 +24,7 @@ public:
 	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 
-	const int SNR_DB_THRESHHOLD = 10;
+	const int SNR_THRESHHOLD = 10;
 
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
@@ -39,8 +39,12 @@ public:
 
 	DTMF();
 
+	// Send sequence of DTMF tones
 	void sendSequence(vector<char>& sequence);
-	vector<char> listenSequence(int timeout);
+
+	// Listen for DTMF tone until timeout is reached
+	// Return DTMF tone or -1 if no tone was found
+	vector<char> listenSequence(int timeout); // Timeout in millis
 
 	~DTMF();
 
@@ -72,7 +76,7 @@ private:
 	// Move samples amount by inserting from input samples
 	// Tone size is maintained
 	void moveSamples(deque<Int16>* tone, int amount);
-	// Determine whether to move samples left or right
+	// Determine whether to move samples left or right, by returning 1 or -1
 	int syncMove(deque<Int16>* toneSamples, char tone);
 
 protected:

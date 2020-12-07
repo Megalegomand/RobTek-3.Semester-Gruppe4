@@ -135,82 +135,59 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 		goertzelH[i] = goertzel->processSamples(samples, start, end, TONES_H[i]);
 		goertzelL[i] = goertzel->processSamples(samples, start, end, TONES_L[i]);
 	}
-	// ------------------------------------------
-	int pos1 = 0, pos2 = 0;
-	float  largest = 0, second_largest = 0;
-	int res = 0;
-	//finding Largest second largset
-	for (int i = 0; i < 4; i++)
-	{
-		if (goertzelL[i] > largest)
-		{
-			largest = goertzelL[i];
-			pos1 = i;
-		}
-		if (goertzelH[i] > second_largest)
-		{
-			second_largest = goertzelH[i];
-			pos2 = i;
 
-		}
-	}
-	float P_Signal = (largest + second_largest) / 2;
+	// Position for calculating DTMF tone
+	int posL = 0;
+	int posH = 0;
 
-	float sum = 0.0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (i != pos1) {
-			sum += goertzelL[i];
-		}
-		if (i != pos2) {
-			sum += goertzelH[i];
-		}
-	}
-	float P_stoej = sum / 6.0;
-
-	float SNR = P_Signal / P_stoej;
-	cout << SNR << endl;
-
-	// ------------------------------------------
+	// Signal strenght
 	float signalH = 0.0;
 	float signalL = 0.0;
+
+	// Sum of every other tone
 	float noise_sum = 0.0;
-	//finding Largest second largset
+
+	// Go through each tone
 	for (int i = 0; i < 4; i++)
 	{
+		// Get largest tone and define it as signal
 		if (goertzelL[i] > signalL)
 		{
-			noise_sum += signalL;
+			// If a higher tone is found, the previous is added to noise
+			noise_sum += signalL; 
 			signalL = goertzelL[i];
+			posL = i;
 		}
 		else {
 			noise_sum += goertzelL[i];
 		}
 
+		// Same code as high tones
 		if (goertzelH[i] > signalH)
 		{
 			noise_sum += signalH;
 			signalH = goertzelH[i];
+			posH = i;
 		}
 		else {
 			noise_sum += goertzelH[i];
 		}
 	}
+
+	// Calculate average
 	float signal_avg = (signalH + signalL) / 2;
+	float noise_avg = noise_sum / 6.0;
 
-	P_stoej = noise_sum / 6.0;
+	// Calculate SNR
+	float SNR = signal_avg / noise_avg;
 
-	SNR = signal_avg / P_stoej;
-	cout << SNR << endl;
-
-	if (SNR > SNR_DB_THRESHHOLD)
+	// Return DTMF tone or -1 if no tone was found
+	if (SNR > SNR_THRESHHOLD)
 	{
-		//cout << SNR << endl;
-		return  pos1 * 4 + pos2;
+		return  posL * 4 + posH;
 	}
 	else
 	{
-		//cout << SNR << endl;
 		return -1;
 	}
 }
@@ -220,13 +197,15 @@ void DTMF::moveSamples(deque<Int16>* tone, int amount)
 	while (amount > inputSamples.size()) {} // Wait samples
 
 	inputSamples_mutex.lock();
-	for (int i = 0; i < amount; i++) { // Make sure there is still samples available
+	// Move samples from inputSamples into tone
+	for (int i = 0; i < amount; i++) {
 		tone->push_back(inputSamples.front());
 		inputSamples.pop();
 		tone->pop_front();
 	}
 	inputSamples_mutex.unlock();
 
+	// This counts as one processing of samples
 	processCounter_mutex.lock();
 	processCounter++;
 	processCounter_mutex.unlock();
@@ -234,38 +213,40 @@ void DTMF::moveSamples(deque<Int16>* tone, int amount)
 
 int DTMF::syncMove(deque<Int16>* toneSamples, char tone)
 {
+	// Use the first and last half of the tone to calculate whether the tone is about
+	// to get out of sync. This is done by comparing the half with the tone found in
+	// the complete sample. If one half is different to the actual tone, then 1 or
+	// -1 is returned, depending on which side of the tone is about to get of sync.
+	// If both halfs are different from the tone, 0 is returned, however the complete
+	// sample will most likely return -1 for the sample in this case, hence this wont
+	// be a problem.
 	int ret = (determineDTMF(toneSamples, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
 	return ret - (determineDTMF(toneSamples, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
 }
 
-
-
-
-
-
-
-
 bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)
 {
+	// Move samples from the recorded samples into input samples
 	inputSamples_mutex.lock();
 	for (int i = 0; i < sampleCount; i++) {
 		inputSamples.push(samples[i]);
 	}
 	inputSamples_mutex.unlock();
 
+	// Calculate searchSampleMove from the size of input samples and processCounter
 	processCounter_mutex.lock();
 	searchSampleMove_mutex.lock();
 	searchSampleMove = inputSamples.size() / processCounter;
 	processCounter = 1;
 	processCounter_mutex.unlock();
 
+	// Make sure the sample move isn't so large that tones can't be found
 	if (searchSampleMove > TONE_SAMPLES / 4) {
-		//cout << "SMBefore" << sampleMove << endl;
-		//cout << TONE_SAMPLES << ":" << TONE_SAMPLES / 4 << endl;
 		searchSampleMove = TONE_SAMPLES / 4;
 	}
 	searchSampleMove_mutex.unlock();
 
+	// Limit the size of inputSamples to INPUT_SAMPLES_MAX_SIZE
 	inputSamples_mutex.lock();
 	while (inputSamples.size() > INPUT_SAMPLES_MAX_SIZE) {
 		inputSamples.pop();
@@ -273,5 +254,4 @@ bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)
 	inputSamples_mutex.unlock();
 
 	return true;
-}
-;
+};
