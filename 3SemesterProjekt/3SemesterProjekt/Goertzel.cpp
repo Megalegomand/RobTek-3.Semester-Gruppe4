@@ -34,15 +34,17 @@ float Goertzel::processSamples(deque<Int16> samples, int start, int end, int tar
 	Timer t = Timer();
 	t.start();
 	float k = round(float((end - start) * targetFrequency) / sampleFrequency);
-	float sumr = 0;
-	float sumi = 0;
-	float angleC = -2 * PI * k / (end - start);
+	float c = 2 * cos((2 * PI / (end - start)) * k);
+
+	float q0 = 0.0;
+	float q1 = 0.0;
+	float q2 = 0.0;
 	//cout << "t" << t.elapsedMillis() << endl;
 	for (int n = 0; n < end - start; n++) {
-		float angle =  n * angleC;
-		sumr += samples[n] * cos(angle);
-		sumi += samples[n] * sin(angle);
+		q0 = c * q1 - q2 + samples[n];
+		q2 = q1;
+		q1 = q0;
 	}
 	//cout << "t" << t.elapsedMillis() << endl;
-	return sqrt(sumr*sumr + sumi*sumi);
+	return sqrt(q1*q1+q2*q2-q1*q2*c);
 }

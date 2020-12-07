@@ -19,7 +19,7 @@ using namespace sf;
 class DTMF : public SoundRecorder
 {
 public:
-	const int TONE_DURATION = 20; // Millisseconds
+	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 	const double PI = 3.14159265359;
 	const int TONES_L[4] = { 697,  770,  852,  941 };

@@ -212,7 +212,9 @@ char DTMF::determineDTMF(deque<Int16> samples, int start, int end)
 
     for (int i = 0; i < 4; i++) {
         goertzelresH[i] = goertzel->processSamples(samples, start, end, TONES_H[i]);
+        cout << "t" << i << ";" << t.elapsedMillis() << endl;
         goertzelresL[i] = goertzel->processSamples(samples, start, end, TONES_L[i]);
+        cout << "t" << i << ";" << t.elapsedMillis() << endl;
     }
     cout << "t" << t.elapsedMillis() << endl;
 
