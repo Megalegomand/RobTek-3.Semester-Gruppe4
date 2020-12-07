@@ -71,7 +71,7 @@ bool Frame::wait(int timeout)
 			if (timeoutTimer.elapsedMillis() > timeout) {
 				return false;
 			}
-			tone = dtmf->listenTone(LISTEN_DURATION);
+			tone = 0;//dtmf->listenTone(LISTEN_DURATION);
 		}
 		timer.start();
 		
@@ -130,7 +130,7 @@ char Frame::nextTone(Timer* timer, int toneNum) {
 	//cout << "Begin" << timer->elapsedMillis() << endl;
 	timer->sleepUntil(toneNum * TONE_DURATION + LISTEN_MARGIN);
 	//cout << "Listen" <<timer->elapsedMillis() << endl;
-	return dtmf->listenTone(TONE_DURATION - 2 * LISTEN_MARGIN);
+	return 0; //dtmf->listenTone(TONE_DURATION - 2 * LISTEN_MARGIN);
 	//timer->sleepUntil(toneNum * TONE_DURATION + TONE_DURATION);
 	//cout << "End" << timer->elapsedMillis() << endl;
 }

@@ -19,31 +19,24 @@ using namespace sf;
 class DTMF : public SoundRecorder
 {
 public:
+	const int SAMPLE_RATE = 44100;
+
 	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
-	const double PI = 3.14159265359;
-	const int TONES_L[4] = { 697,  770,  852,  941 };
-	const int TONES_H[4] = { 1209, 1336, 1477, 1633 };
-	const int SAMPLE_RATE = 44100;
+
+	const int TONES_L[4] = { 697,  770,  852,  941 };  // DTMF low tones
+	const int TONES_H[4] = { 1209, 1336, 1477, 1633 }; // DTMF high tones
+
+	const int SNR_DB_THRESHHOLD = 10;
+
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
+	const double PI = 3.14159265359;
 
 	DTMF();
-	//void sendTone(char tonevalg, int duration);
+
 	void sendSequence(vector<char>& sequence);
-
-
 	vector<char> listenSequence(int timeout);
 
-	char listenTone(int duration); // Listen time, return -1 for no DTMF
-
-	
-	char receiveDTMF(int duration);
-	char determineDTMF(vector<float>goertzelresL,vector<float>goertzalresH);
-
-	char determineDTMF(deque<Int16>* samples, int start, int end);
-
-	void prepareTones(int duration);
-	
 	~DTMF();
 
 private:
@@ -51,36 +44,36 @@ private:
 
 	sf::Sound sound;
 
-	queue<Int16> inputSamples;
-	mutex inputSamples_mutex;
 	Goertzel* goertzel;
 
-	int sampleMove = 500;
-	mutex sampleMove_mutex;
+	// Samples from recorder
+	queue<Int16> inputSamples;
+	mutex inputSamples_mutex;
 
+	// How much should the sample move while searching
+	int searchSampleMove = 500;
+	mutex searchSampleMove_mutex;
+
+	// How many times has the current input samples been processed
+	// Used to calculate sampleMove
 	int processCounter = 1;
 	mutex processCounter_mutex;
 
-	vector<float> goertzelresH = vector<float>();
-	vector<float> goertzelresL = vector<float>();
+	float goertzelresH[4];
+	float goertzelresL[4];
 
-	Goertzel* goertzelL[4];
-	Goertzel* goertzelH[4];
-
-	bool values[8] = {};
-	int DBthreshhold = 10;
-	typedef complex<double> Complex;
-	int N = 205; // forklaring til hvorfor vi bruger lige denne N sampling
-	std::vector<std::string> availableDevices = SoundRecorder::getAvailableDevices();
-	std::string inputDevice = availableDevices[0];
-
+	// Precalculate tone samples
 	void prepareTones();
 
+	// Determine tone from samples by analysing samples from start to end
+	char determineDTMF(deque<Int16>* samples, int start, int end);
+	// Move samples amount by inserting from input samples
+	// Tone size is maintained
+	void moveSamples(deque<Int16>* tone, int amount);
+	// Determine whether to move samples left or right
 	int syncMove(deque<Int16>* toneSamples, char tone);
 
-	void moveSamples(deque<Int16>* tone, int amount);
-	
 protected:
-	virtual bool onProcessSamples(const Int16* samples, std::size_t sampleCount);
+	virtual bool onProcessSamples(const Int16* samples, std::size_t sampleCount); // From SoundRecorder
 };
 

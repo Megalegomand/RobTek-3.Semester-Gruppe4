@@ -144,7 +144,7 @@ int main()
     
     for (int i = 0; i < 100; i++)
     {
-        s.listenTone(100);
+        //s.listenTone(100);
      }
           
     /////*s.sendSequence(data);*/
