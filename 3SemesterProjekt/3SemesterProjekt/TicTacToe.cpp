@@ -189,6 +189,7 @@ int TicTacToe::game()
 
         if (player != local && dl->getState() == TransmissionState::Token) {
             dl->passToken();
+            this_thread::sleep_for(chrono::milliseconds(1000));
         }
         
     } while (i == -1);
