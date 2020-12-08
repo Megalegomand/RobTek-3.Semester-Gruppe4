@@ -105,6 +105,12 @@ int TicTacToe::game()
                 cin.ignore();
                 cin.get();
             }
+
+            if (errorLift != 1) {
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
+            }
              
 
 
@@ -166,6 +172,13 @@ int TicTacToe::game()
                 cin.ignore();
                 cin.get();
             }
+
+            if (errorLift != 1) {
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
+            }
+
             if (player == 1 && error == 0) { // this function will lower the amount of free pieces, if you had free pieces when your turn started
                 p1p--;
             }
