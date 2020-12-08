@@ -19,7 +19,7 @@ using namespace std;
 class Frame
 {
 public:
-	const char PREAMBLE[4] = { 0xF, 0xA, 0x5, 0x0 };
+	const char PREAMBLE[5] = { 0xF, 0xE, 0xA, 0x5, 0x0 };
 
 	Frame();
 
@@ -27,7 +27,7 @@ public:
 	vector<char> getData();
 
 	void sendFrame(TransmissionType transmissionType); // Clears data
-	void sendFrame(TransmissionType transmissionType, vector<char> data);
+	void sendFrame(TransmissionType transmissionType, vector<char> dataTones);
 
 	bool wait(int timeout); // Timeout in millis, returns successful
 
@@ -35,7 +35,7 @@ public:
 private:
 	
 	TransmissionType transmissionType = NONE;
-	vector<char> data;
+	vector<char> dataTones;
 	DTMF* dtmf;
 	Timer* lastActive;
 

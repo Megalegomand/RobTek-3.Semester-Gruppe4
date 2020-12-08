@@ -14,20 +14,22 @@ TransmissionType Frame::getType()
 
 vector<char> Frame::getData()
 {
-	return data;
+	return dataTones;
 }
 
 void Frame::sendFrame(TransmissionType transmissionType)
 {
 	this->transmissionType = transmissionType;
-	this->data.clear();
+	this->dataTones.clear();
 	send();
 }
 
-void Frame::sendFrame(TransmissionType transmissionType, vector<char> data)
+void Frame::sendFrame(TransmissionType transmissionType, vector<char> dataTones)
 {
 	this->transmissionType = transmissionType;
-	this->data = data;
+	// Convert data from bytes to tones
+
+	this->dataTones = dataTones;
 	send();
 }
 
@@ -43,13 +45,11 @@ void Frame::send()
 		toneFrame.push_back(c);//PREAMBLE
 	}
 
-	//toneFrame.push_back(SFD);//SFD
-
 	toneFrame.push_back(transmissionType);//TYPE
 
-	//frame.push_back(data.size());//DATALENGTH
+	toneFrame.push_back(dataTones.size() / 2);//DATALENGTH
 
-	for (char c : data) {
+	for (char c : dataTones) {
 		toneFrame.push_back(c);//DATA
 	}
 
@@ -58,65 +58,26 @@ void Frame::send()
 
 bool Frame::wait(int timeout)
 {
-	this->data.clear();
+	Timer startTime = Timer();
+	startTime.start();
+
+	this->dataTones.clear();
 	this->transmissionType = NONE;
 
-	Timer timeoutTimer = Timer();
-	Timer timer = Timer();
-
-	timeoutTimer.start();
-	while (timeoutTimer.elapsedMillis() < timeout) {
-		char tone = -1;
-		while (tone == -1) {
-			if (timeoutTimer.elapsedMillis() > timeout) {
-				return false;
-			}
-			tone = 0;//dtmf->listenTone(LISTEN_DURATION);
-		}
-		timer.start();
-		
-		int tonei = 0;
-		int headeri = -1;
-		int preambleSize = sizeof(PREAMBLE) / sizeof(PREAMBLE[0]);
-		while (tone != -1) {
-			//cout << "End" << timer->elapsedMillis() << endl;
-			
-			if (headeri == -1) // First tone in preamble
-			{
-				const char* found = find(PREAMBLE, PREAMBLE + preambleSize, tone);
-				if (found != end(PREAMBLE)) 
-				{
-					headeri = distance(PREAMBLE, found) + 1;
-				} 
-				else 
-				{
-					break;
+	while (startTime.elapsedMillis() < timeout) {
+		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
+		if (tones.size != 0) {
+			bool p = true;
+			for (int i = 0; i < 5; i++) {
+				if (dataTones[i] != PREAMBLE[i]) {
+					p = false;
 				}
 			}
-			else if (headeri < preambleSize) // Rest of preamble
-			{
-				if (PREAMBLE[headeri] == tone) {
-					headeri++;
-				} else {
-					break;
-				}
+			if (!p) {
+				continue;
 			}
-			else if (headeri == preambleSize) // Type
-			{
-				transmissionType = TransmissionType(tone);
-				headeri++;
-			}
-			else // Rest of tones
-			{
-				data.push_back(tone);
-			}
-			tonei++;
-			//tone = nextTone(&timer, tonei);
 		}
-		if (headeri > preambleSize) {
-			lastActive->start();
-			return true;
-		}
+		return true;
 	}
 	return false;
 }
