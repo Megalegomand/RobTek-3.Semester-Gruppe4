@@ -24,9 +24,6 @@
     <ClCompile Include="Goertzel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataLink.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VirtuelDTMF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,15 +39,15 @@
     <ClCompile Include="TicTacToe.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="FrameHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DTMF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Goertzel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DataLink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VirtuelDTMF.h">
@@ -60,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
