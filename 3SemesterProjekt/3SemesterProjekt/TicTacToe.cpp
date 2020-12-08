@@ -12,7 +12,6 @@ void TicTacToe::data(vector<char> data) {
     for (char c : data) {
         choicef = int(c);
     }
-    
 }
 
 void TicTacToe::tokenpass() {
@@ -67,6 +66,8 @@ int TicTacToe::game()
                 cin >> choice;
             }
             else {
+                choicef = -1;
+                while (choicef == -1);
                 choice = choicef;
             }
 
@@ -124,6 +125,8 @@ int TicTacToe::game()
                 cin >> choice;
             }
             else {
+                choicef = -1;
+                while (choicef == -1);
                 choice = choicef;
             }
 
