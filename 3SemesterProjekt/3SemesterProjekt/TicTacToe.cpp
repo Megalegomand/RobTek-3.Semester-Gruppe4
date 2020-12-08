@@ -4,29 +4,29 @@
 using namespace std;
 using namespace std::placeholders;
 
-Tictactoe::Tictactoe() {
+TicTacToe::TicTacToe() {
 }
 
 
-void Tictactoe::data(vector<char> data) {
+void TicTacToe::data(vector<char> data) {
     for (char c : data) {
         choicef = int(c);
     }
     
 }
 
-void Tictactoe::tokenpass() {
+void TicTacToe::tokenpass() {
     
 }
 
-void Tictactoe::end() {
+void TicTacToe::end() {
 
 }
 //*******bind er player 1, listen er player 2********
 
-int Tictactoe::game()
+int TicTacToe::game()
 {
-    FrameHandler* dl = new FrameHandler(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); 
+    FrameHandler* dl = new FrameHandler(std::bind(&TicTacToe::data, this, _1), std::bind(&TicTacToe::tokenpass, this), std::bind(&TicTacToe::end, this)); 
     int player = 1;//which player have turn
     int i;//controls game state
     int choice;//the move the player have made
@@ -39,6 +39,8 @@ int Tictactoe::game()
     char mark;//determines what kind of piece a player puts down
     char a;//used to convert int to char array
     vector<char> out;
+
+    dl->bind(10);
     
 
     if (local == 0 && dl->getState() == TransmissionState::Token) {//send help dosnt work like i thought it would
@@ -206,7 +208,7 @@ int Tictactoe::game()
 -1 FOR GAME IS IN PROGRESS
 O GAME IS OVER AND NO RESULT*/
 
-int Tictactoe::checkwin()
+int TicTacToe::checkwin()
 {
     if (square[1] == square[2] && square[2] == square[3])
 
@@ -243,7 +245,7 @@ int Tictactoe::checkwin()
 
 //FUNCTION TO DRAW BOARD OF TIC TAC TOE WITH PLAYERS MARK
 
-void Tictactoe::board()
+void TicTacToe::board()
 {
     system("cls");
     cout << "\n\n\tTic Tac Toe\n\n";

@@ -5,9 +5,9 @@
 using namespace std;
 
 
-class Tictactoe {
+class TicTacToe {
 public:
-	Tictactoe();
+	TicTacToe();
 	int game();
 	int checkwin();
 	void board();
