@@ -56,8 +56,6 @@ int TicTacToe::game()
         pp = (player == 1) ? p1p : p2p;
         cout << pp << endl;
 
-      
-
         mark = (player == 1) ? 'X' : 'O';
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
             
@@ -187,11 +185,11 @@ int TicTacToe::game()
         }
         i = checkwin();
 
-        
         player++;
-        passon++;
 
-        dl->passToken();
+        if (player != local && dl->getState() == TransmissionState::Token) {
+            dl->passToken();
+        }
         
     } while (i == -1);
     board();
@@ -204,15 +202,7 @@ int TicTacToe::game()
 
     cin.ignore();
     cin.get();
-    if (player == local) {
-        a = choice;
-        out.clear();
-        out.push_back(a);
-        dl->sendData(out);
-        if (passon == 1) {
-            passon = 0;
-        }
-    }
+    
     return 0;
 }
 
