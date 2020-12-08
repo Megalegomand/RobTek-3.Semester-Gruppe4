@@ -69,6 +69,10 @@ int TicTacToe::game()
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
+
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
             }
 
             if (choice == 1 && square[1] == mark)
@@ -105,12 +109,6 @@ int TicTacToe::game()
                 cin.ignore();
                 cin.get();
             }
-
-            if (errorLift != 1) {
-                vector<char> data = vector<char>();
-                data.push_back(choice);
-                dl->sendData(data);
-            }
              
 
 
@@ -134,6 +132,10 @@ int TicTacToe::game()
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
+
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
             }
 
             if (choice == 1 && square[1] == '1')
@@ -171,12 +173,6 @@ int TicTacToe::game()
                 passon--;
                 cin.ignore();
                 cin.get();
-            }
-
-            if (errorLift != 1) {
-                vector<char> data = vector<char>();
-                data.push_back(choice);
-                dl->sendData(data);
             }
 
             if (player == 1 && error == 0) { // this function will lower the amount of free pieces, if you had free pieces when your turn started
