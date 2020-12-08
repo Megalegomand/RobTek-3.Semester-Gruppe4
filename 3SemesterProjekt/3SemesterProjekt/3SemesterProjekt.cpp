@@ -33,21 +33,24 @@ using namespace std::placeholders;
 int main()
 {
     FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
-    FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
+    //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
 
     vector<char> data = vector<char>();
     for (char i = 0; i < 15; i++) {
         data.push_back(i);
     }
 
-    thread t1(&FrameHandler::bind, f1, 10);
-    this_thread::sleep_for(chrono::milliseconds(1500));
-    thread t2(&FrameHandler::bind, f2, 10);
+    //thread t1(&FrameHandler::bind, f1, 10);
+    //this_thread::sleep_for(chrono::milliseconds(1500));
+    //thread t2(&FrameHandler::bind, f2, 10);
+
+    cout << "B" << f1->bind(10) << endl;
+    this_thread::sleep_for(chrono::milliseconds(100000));
 
     //cout << "d" << int(f1->bind(10)) << endl;
 
-    t1.join();
-    t2.join();
+    //t1.join();
+    //t2.join();
 
     return 0;
 

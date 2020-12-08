@@ -35,7 +35,7 @@ bool FrameHandler::bind(int attempts)
 				frame->sendFrame(ACK);
 				cout << "ACKf" << endl;
 				state = TransmissionState::Waiting;
-				//connected_thread = new thread(&FrameHandler::connectedRun, this);
+				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			}

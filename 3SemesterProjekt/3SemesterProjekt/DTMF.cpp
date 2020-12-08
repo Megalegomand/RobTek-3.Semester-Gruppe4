@@ -39,7 +39,6 @@ void DTMF::sendSequence(vector<char>& sequence)
 
 vector<char> DTMF::listenSequence(int timeout)
 {
-	//this->start(SAMPLE_RATE); // TEMP
 	// Timer to keep stop at timeout
 	Timer startTime = Timer();
 	startTime.start();
@@ -89,7 +88,6 @@ vector<char> DTMF::listenSequence(int timeout)
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 
-	//this->stop(); // TEMP
 	return tones;
 }
 
