@@ -35,16 +35,11 @@ int main()
 {
     FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     if (f->bind(10)) {
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
-        f->passToken();
+        while (true) {
+            if (f->getState() == TransmissionState::Token) {
+                f->passToken();
+            }
+        }
     }
     this_thread::sleep_for(chrono::milliseconds(100000));
 
