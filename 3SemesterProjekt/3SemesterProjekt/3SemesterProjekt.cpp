@@ -28,58 +28,20 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    /*for (int i = 0; i < 16; i++) {
-        DTMF dtmf = DTMF();
-        dtmf.sendTone(i, 1000);
-    }*/
+    
+    Frame f = Frame();
 
-    DTMF* dtmf = new DTMF();
-    //dtmf->prepareTones(10000);
-    Timer timer = Timer();
-    vector<char> seq;
-    for (int i = 0; i < 16; i++) {
-        seq.push_back(i);
+    vector<char> data = vector<char>();
+    for (char i = 0; i < 15; i++) {
+        data.push_back(i);
     }
-    //seq.push_back(0x0);
-    //seq.push_back(0x5);
-    //seq.push_back(0x9);
-    //seq.push_back(0xF);
-    //timer.start();
-    //dtmf->sendSequence(seq);
-    //cout << timer.elapsedMillis() << endl;
 
-    //std::thread kage(&DTMF::sendSequence, dtmf, std::ref(seq));
-    //dtmf->sendSequence(seq);
-    //this_thread::sleep_for(chrono::milliseconds(100));
-    //vector<char> c = dtmf->listenSequence(1000);
-    dtmf->listenSequence(10);
+    DTMF dtmf = DTMF();
+    thread t(DTMF::listenSequence, dtmf, )
 
-    std::thread kage(&DTMF::listenSequence, dtmf, 100000);
-    this_thread::sleep_for(chrono::milliseconds(100));
-    dtmf->sendSequence(seq);
-
-    kage.join();
-
-    std::thread kage1(&DTMF::listenSequence, dtmf, 100000);
-    this_thread::sleep_for(chrono::milliseconds(100));
-    dtmf->sendSequence(seq);
-
-    kage1.join();
+    f.sendFrame(BIND, data);
 
     return 0;
-
-    //VirtuelDTMF vdtmf;
-    //std::thread mediumReaderThread(&VirtuelDTMF::outputMedium, &vdtmf);
-
-    DataLink* dl1 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
-    std::thread dl1Thread(&DataLink::bind, dl1, 10);
-
-    this_thread::sleep_for(chrono::milliseconds(10000));
-    
-    DataLink* dl2 = new DataLink(std::bind(data, _1), std::bind(tokenpass), std::bind(closed));
-    cout << dl2->bind(10) << "-----------------------------------------" << endl;
-    
-    dl1Thread.join();
 
     //cout << "Passing " << dl2->passToken() << endl;
     //this_thread::sleep_for(chrono::milliseconds(1000));

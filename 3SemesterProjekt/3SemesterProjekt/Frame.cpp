@@ -111,7 +111,7 @@ bool Frame::wait(int timeout)
 				data.push_back(tone);
 			}
 			tonei++;
-			tone = nextTone(&timer, tonei);
+			//tone = nextTone(&timer, tonei);
 		}
 		if (headeri > preambleSize) {
 			lastActive->start();
@@ -126,11 +126,3 @@ Timer* Frame::getLastActive()
 	return lastActive;
 }
 
-char Frame::nextTone(Timer* timer, int toneNum) {
-	//cout << "Begin" << timer->elapsedMillis() << endl;
-	timer->sleepUntil(toneNum * TONE_DURATION + LISTEN_MARGIN);
-	//cout << "Listen" <<timer->elapsedMillis() << endl;
-	return 0; //dtmf->listenTone(TONE_DURATION - 2 * LISTEN_MARGIN);
-	//timer->sleepUntil(toneNum * TONE_DURATION + TONE_DURATION);
-	//cout << "End" << timer->elapsedMillis() << endl;
-}
