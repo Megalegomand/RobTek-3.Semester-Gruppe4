@@ -190,6 +190,8 @@ int TicTacToe::game()
         
         player++;
         passon++;
+
+        dl->passToken();
         
     } while (i == -1);
     board();
@@ -209,7 +211,6 @@ int TicTacToe::game()
         dl->sendData(out);
         if (passon == 1) {
             passon = 0;
-            dl->passToken();
         }
     }
     return 0;
