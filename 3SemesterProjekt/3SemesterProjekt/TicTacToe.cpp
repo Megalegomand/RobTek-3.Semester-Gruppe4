@@ -102,8 +102,10 @@ int TicTacToe::game()
             {
                 cout << "Invalid move ";
                 errorLift = 1;
-                cin.ignore();
-                cin.get();
+                if (dl->getState() == TransmissionState::Token) {
+                    cin.ignore();
+                    cin.get();
+                }
             }
              
 
@@ -165,8 +167,10 @@ int TicTacToe::game()
                 cout << "Invalid move ";
                 error = 1;
                 player--;
-                cin.ignore();
-                cin.get();
+                if (dl->getState() == TransmissionState::Token) {
+                    cin.ignore();
+                    cin.get();
+                }
             }
 
             if (player == 1 && error == 0) { // this function will lower the amount of free pieces, if you had free pieces when your turn started
