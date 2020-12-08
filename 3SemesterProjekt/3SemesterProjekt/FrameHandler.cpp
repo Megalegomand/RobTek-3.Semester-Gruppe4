@@ -46,9 +46,7 @@ bool FrameHandler::sendData(vector<char> &data)
 {	
 	bool ret = false;
 	if (state == TransmissionState::Token) {
-		frame_mutex.lock();
 		ret = sendWaitACK(DATA, data);
-		frame_mutex.unlock();
 	}
 	return ret;
 }
@@ -81,7 +79,7 @@ TransmissionState FrameHandler::getState()
 	return state;
 }
 
-bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> data)
+bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> &data)
 {
 	if (state != TransmissionState::Token) {
 		return false;
@@ -90,7 +88,6 @@ bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> data)
 	frame_mutex.lock();
 	for (int i = 0; i < ATTEMPTS; i++) {
 		frame->sendFrame(type, data);
-
 		if (frame->wait(LISTEN_TIME)) {
 			if (frame->getType() == ACK) {
 				frame_mutex.unlock();
@@ -104,7 +101,8 @@ bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> data)
 
 bool FrameHandler::sendWaitACK(TransmissionType type)
 {
-	return sendWaitACK(type, vector<char>());
+	vector<char> data = vector<char>();
+	return sendWaitACK(type, data);
 }
 
 void FrameHandler::connectedRun()
