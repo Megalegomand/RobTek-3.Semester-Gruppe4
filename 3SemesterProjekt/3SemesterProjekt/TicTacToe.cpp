@@ -64,15 +64,15 @@ int TicTacToe::game()
             cout << "Player " << player << ", remove a number:  ";
             if (player == local) {
                 cin >> choice;
+
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
             }
             else {
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
-
-                vector<char> data = vector<char>();
-                data.push_back(choice);
-                dl->sendData(data);
             }
 
             if (choice == 1 && square[1] == mark)
@@ -127,15 +127,15 @@ int TicTacToe::game()
             cout << "Player " << player << ", enter a number:  ";
             if (player == local) {
                 cin >> choice;
+
+                vector<char> data = vector<char>();
+                data.push_back(choice);
+                dl->sendData(data);
             }
             else {
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
-
-                vector<char> data = vector<char>();
-                data.push_back(choice);
-                dl->sendData(data);
             }
 
             if (choice == 1 && square[1] == '1')
