@@ -9,8 +9,8 @@ TicTacToe::TicTacToe() {
 
 
 void TicTacToe::data(vector<char> data) {
-    for (char c : data) {
-        choicef = int(c);
+    if (data.size() == 1) {
+        choicef = data[0];
     }
 }
 
