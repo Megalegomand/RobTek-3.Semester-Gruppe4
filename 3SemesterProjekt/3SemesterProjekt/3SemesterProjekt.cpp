@@ -39,6 +39,7 @@ int main()
             if (f->getState() == TransmissionState::Token) {
                 f->passToken();
             }
+            this_thread::sleep_for(chrono::milliseconds(10000));
         }
     }
     this_thread::sleep_for(chrono::milliseconds(100000));

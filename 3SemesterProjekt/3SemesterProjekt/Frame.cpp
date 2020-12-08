@@ -48,6 +48,7 @@ void Frame::send()
 	if (transmissionType == NONE) {
 		return;
 	}
+	cout << "STT" << transmissionType << endl;
 
 	vector<char> toneFrame;
 
@@ -114,6 +115,8 @@ bool Frame::wait(int timeout)
 			for (char c : tones) {
 				dataTones.push_back(c);
 			}
+
+			cout << "TT" << transmissionType << endl;
 
 			lastActive->start();
 			return true;
