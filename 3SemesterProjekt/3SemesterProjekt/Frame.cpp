@@ -83,7 +83,7 @@ bool Frame::wait(int timeout)
 		if (tones.size() > 7) { // Preamble (5) + Type (1) + Length (2) = 8
 			// Check preamble
 			bool p = true;
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 7; i++) {
 				if (tones.front() != PREAMBLE[i]) {
 					p = false;
 				}
