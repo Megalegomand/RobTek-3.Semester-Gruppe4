@@ -39,12 +39,13 @@ int main()
         for (char i = 0; i < 15; i++) {
             data.push_back(i);
         }
-
-        f->sendData(data);
+        
+        cout << f->sendData(data) << endl;
     }
+    this_thread::sleep_for(chrono::milliseconds(100000));
 
-    TicTacToe ttt = TicTacToe();
-    ttt.game();
+    //TicTacToe ttt = TicTacToe();
+    //ttt.game();
 
     //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
