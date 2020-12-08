@@ -3,7 +3,7 @@
 #include<iostream>
 #include "Goertzel.h"
 #include"DTMF.h"
-#include"DataLink.h"
+#include"FrameHandler.h"
 #include<thread>
 #include<fstream>
 #include <functional>
@@ -28,18 +28,20 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    
+    DTMF* dtmf = new DTMF();
     Frame f = Frame();
 
     vector<char> data = vector<char>();
     for (char i = 0; i < 15; i++) {
-        data.push_back(i);
+        data.push_back(i*2);
     }
 
-    DTMF dtmf = DTMF();
-    thread t(DTMF::listenSequence, dtmf, )
+    
+    thread t(&DTMF::listenSequence, dtmf, 10000);
 
     f.sendFrame(BIND, data);
+
+    t.join();
 
     return 0;
 

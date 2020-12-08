@@ -26,7 +26,7 @@ void Tictactoe::end() {
 
 int Tictactoe::game()
 {
-    DataLink* dl = new DataLink(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); 
+    FrameHandler* dl = new FrameHandler(std::bind(&Tictactoe::data, this, _1), std::bind(&Tictactoe::tokenpass, this), std::bind(&Tictactoe::end, this)); 
     int player = 1;//which player have turn
     int i;//controls game state
     int choice;//the move the player have made
