@@ -28,18 +28,17 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    DTMF* dtmf = new DTMF();
-    Frame f = Frame();
+    Frame f1 = Frame();
+    Frame f2 = Frame();
 
     vector<char> data = vector<char>();
-    for (char i = 0; i < 15; i++) {
-        data.push_back(i*2);
+    for (char i = 0; i < 2; i++) {
+        data.push_back(i);
     }
 
-    
-    thread t(&DTMF::listenSequence, dtmf, 10000);
+    thread t(&Frame::wait, f2, 10000);
 
-    f.sendFrame(BIND, data);
+    f1.sendFrame(BIND, data);
 
     t.join();
 
