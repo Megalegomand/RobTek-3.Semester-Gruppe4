@@ -35,7 +35,7 @@ public:
 private:
 	
 	TransmissionType transmissionType = NONE;
-	vector<char> dataTones;
+	vector<char> dataTones = vector<char>();
 	DTMF* dtmf;
 	Timer* lastActive;
 

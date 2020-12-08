@@ -28,19 +28,21 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    Frame f1 = Frame();
-    Frame f2 = Frame();
+    FrameHandler* f1 = new FrameHandler();
+    FrameHandler* f2 = new FrameHandler();
 
     vector<char> data = vector<char>();
-    for (char i = 0; i < 2; i++) {
+    for (char i = 0; i < 15; i++) {
         data.push_back(i);
     }
 
-    thread t(&Frame::wait, f2, 10000);
+    thread t(&FrameHandler::bind, f2, 10);
+    this_thread::sleep_for(chrono::milliseconds(1000));
 
-    f1.sendFrame(BIND, data);
+    cout << "d" << int(f1->bind(10)) << endl;
 
     t.join();
+
 
     return 0;
 

@@ -14,7 +14,11 @@ TransmissionType Frame::getType()
 
 vector<char> Frame::getData()
 {
-	return dataTones;
+	vector<char> data = vector<char>();
+	for (int i = 0; i < dataTones.size(); i+=2) {
+		data.push_back((dataTones[i] << 4) | dataTones[i+1]);
+	}
+	return data;
 }
 
 void Frame::sendFrame(TransmissionType transmissionType)
@@ -69,11 +73,12 @@ bool Frame::wait(int timeout)
 	Timer startTime = Timer();
 	startTime.start();
 
-	this->dataTones.clear();
-	this->transmissionType = NONE;
+	dataTones.clear();
+	transmissionType = NONE;
 
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
+		cout << "S" << int(tones.size()) << endl;
 		if (tones.size() > 7) { // Preamble (5) + Type (1) + Length (2) = 8
 			// Check preamble
 			bool p = true;
@@ -93,7 +98,6 @@ bool Frame::wait(int timeout)
 
 			// Data length
 			unsigned char dataLength = (tones[0] << 4) | tones[1];
-			cout << "Length" << int(dataLength) << endl;
 			tones.erase(tones.begin(), tones.begin() + 2);
 
 			// Check length
@@ -110,14 +114,14 @@ bool Frame::wait(int timeout)
 			for (char c : tones) {
 				dataTones.push_back(c);
 			}
-		}
-		cout << "K" << endl;
 
-		cout << "TT" << int(transmissionType) << endl;
-		for (char c : dataTones) {
-			cout << int(c) << endl;
+			cout << "TT" << int(transmissionType) << endl;
+			for (char c : dataTones) {
+				cout << int(c) << endl;
+			}
+
+			return true;
 		}
-		return true;
 	}
 	return false;
 }

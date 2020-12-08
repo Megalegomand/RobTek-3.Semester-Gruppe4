@@ -91,7 +91,7 @@ vector<char> DTMF::listenSequence(int timeout)
 }
 
 DTMF::~DTMF() {
-	// Stop recording
+	// Stop recording, SFML Requirement
 	stop();
 }
 
