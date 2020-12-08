@@ -1,4 +1,6 @@
 #include "DTMF.h"
+bool DTMF::t = false;
+
 DTMF::DTMF() {
 	// For sendSequence
 	prepareTones();
@@ -6,13 +8,14 @@ DTMF::DTMF() {
 	// Set default microphone
 	this->setDevice(getDefaultDevice());
 	cout << getDefaultDevice() << endl;
+
 	// Make sure recording is mono
 	setChannelCount(1);
 
 	goertzel = new Goertzel(SAMPLE_RATE);
 
 	// Start recording, this will fill input samples
-	//this->start(SAMPLE_RATE); // TEMP Comment
+	this->start(SAMPLE_RATE);
 }
 
 void DTMF::sendSequence(vector<char>& sequence)
@@ -36,7 +39,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 
 vector<char> DTMF::listenSequence(int timeout)
 {
-	this->start(SAMPLE_RATE); // TEMP
+	//this->start(SAMPLE_RATE); // TEMP
 	// Timer to keep stop at timeout
 	Timer startTime = Timer();
 	startTime.start();
@@ -86,7 +89,7 @@ vector<char> DTMF::listenSequence(int timeout)
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 
-	this->stop(); // TEMP
+	//this->stop(); // TEMP
 	return tones;
 }
 

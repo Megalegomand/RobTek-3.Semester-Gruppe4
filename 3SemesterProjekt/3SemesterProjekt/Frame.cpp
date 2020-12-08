@@ -65,6 +65,7 @@ void Frame::send()
 		toneFrame.push_back(c);//DATA
 	}
 
+	lastActive->start();
 	dtmf->sendSequence(toneFrame);
 }
 
@@ -78,7 +79,10 @@ bool Frame::wait(int timeout)
 
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
-		cout << "S" << int(tones.size()) << endl;
+		cout << "s" << tones.size() << endl;
+		for (char c : tones) {
+			cout << int(c) << endl;
+		}
 		if (tones.size() > 7) { // Preamble (5) + Type (1) + Length (2) = 8
 			// Check preamble
 			bool p = true;
@@ -120,6 +124,7 @@ bool Frame::wait(int timeout)
 				cout << int(c) << endl;
 			}
 
+			lastActive->start();
 			return true;
 		}
 	}

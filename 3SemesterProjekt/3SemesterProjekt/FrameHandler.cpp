@@ -25,14 +25,17 @@ bool FrameHandler::bind(int attempts)
 		if (frame->wait(rand() % BIND_WAIT_DIFF + BIND_WAIT_DIFF)) {
 			switch (frame->getType()) {
 			case ACK:
+				cout << "K" << endl;
 				state = TransmissionState::Token;
 				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			case BIND:
+				cout << "ACK" << endl;
 				frame->sendFrame(ACK);
+				cout << "ACKf" << endl;
 				state = TransmissionState::Waiting;
-				connected_thread = new thread(&FrameHandler::connectedRun, this);
+				//connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			}

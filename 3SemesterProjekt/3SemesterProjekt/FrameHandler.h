@@ -24,18 +24,17 @@ class FrameHandler
 public:
 	const int BIND_WAIT_MIN = 10000;
 	const int BIND_WAIT_DIFF = 10000;
-	const int MAX_LOSS_CONNECTION = 5000; // Maximum loss of connection, sync will be send at half this time
+	const int MAX_LOSS_CONNECTION = 10000; // Maximum loss of connection, sync will be send at half this time
 	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 1000;
 
 	FrameHandler();
 	FrameHandler(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closed);
-	//DataLink(const DataLink&);
 
 	bool bind(int attempts);
 
 	bool sendData(vector<char> &data); // Returns true if succesfull
-	//vector<char> waitData(int timeout);
+
 	bool passToken(); // Pass token, return false if pass unsuccesful (Waiting or Conection failed)
 	void close();
 

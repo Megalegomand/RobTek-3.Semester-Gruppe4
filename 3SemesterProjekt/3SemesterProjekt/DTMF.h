@@ -19,6 +19,8 @@ using namespace sf;
 class DTMF : public SoundRecorder
 {
 public:
+	static bool t;
+
 	const int SAMPLE_RATE = 44100;
 
 	const int TONE_DURATION = 100; // Millisseconds
@@ -29,9 +31,8 @@ public:
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
 
-	// Keeps 1s samples ready at all times
-	// The samples are usually updated every 10ms, hence this should be plenty buffer
-	const unsigned int INPUT_SAMPLES_MAX_SIZE = SAMPLE_RATE; 
+	// This will keep a min transmission - 1, hence it wont be able to read itself
+	const unsigned int INPUT_SAMPLES_MAX_SIZE = TONE_SAMPLES * 7; 
 
 
 	const int TONES_L[4] = { 697,  770,  852,  941 };  // DTMF low tones
