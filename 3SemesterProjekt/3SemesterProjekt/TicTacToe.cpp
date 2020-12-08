@@ -21,7 +21,6 @@ void TicTacToe::tokenpass() {
 void TicTacToe::end() {
     exit(0);
 }
-//*******bind er player 1, listen er player 2********
 
 int TicTacToe::game()
 {
@@ -34,7 +33,6 @@ int TicTacToe::game()
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
     int errorLift = 0;//controls errors on lifting of pieces
-    int passon = 0; //used to determine if the token should be passed
     char mark;//determines what kind of piece a player puts down
     char a;//used to convert int to char array
     vector<char> out;
@@ -120,7 +118,6 @@ int TicTacToe::game()
                 errorLift = 0;
             }
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
-            passon--;
         } else {
             cout << "Player " << player << ", enter a number:  ";
             if (player == local) {
@@ -168,7 +165,6 @@ int TicTacToe::game()
                 cout << "Invalid move ";
                 error = 1;
                 player--;
-                passon--;
                 cin.ignore();
                 cin.get();
             }
@@ -254,6 +250,7 @@ void TicTacToe::board()
     cout << "\n\n\tTic Tac Toe\n\n";
 
     cout << "Player 1 (X)  -  Player 2 (O)" << endl << endl;
+    cout << "You are " << local << endl;
     cout << endl;
 
     cout << "     |     |     " << endl;

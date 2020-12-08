@@ -115,11 +115,6 @@ bool Frame::wait(int timeout)
 				dataTones.push_back(c);
 			}
 
-			cout << "TT" << int(transmissionType) << endl;
-			for (char c : dataTones) {
-				cout << int(c) << endl;
-			}
-
 			lastActive->start();
 			return true;
 		}
