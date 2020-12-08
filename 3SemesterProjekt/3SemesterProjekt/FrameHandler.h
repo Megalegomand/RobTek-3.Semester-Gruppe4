@@ -19,7 +19,7 @@ enum class TransmissionState {
 using namespace std;
 using namespace placeholders;
 using namespace concurrency;
-class DataLink
+class FrameHandler
 {
 public:
 	const int BIND_WAIT_MIN = 10000;
@@ -28,8 +28,8 @@ public:
 	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 1000;
 
-	DataLink();
-	DataLink(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closed);
+	FrameHandler();
+	FrameHandler(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closed);
 	//DataLink(const DataLink&);
 
 	bool bind(int attempts);

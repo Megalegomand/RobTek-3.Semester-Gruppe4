@@ -1,18 +1,18 @@
 #include "DataLink.h"
 
-DataLink::DataLink() {
+FrameHandler::FrameHandler() {
 	frame = new Frame();
 	srand(time(NULL)); // To make sure virtual DTMF works
 }
 
-DataLink::DataLink(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closeEvent) : DataLink()
+FrameHandler::FrameHandler(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closeEvent) : FrameHandler()
 {
 	this->dataReadyEvent = dataReadyEvent;
 	this->tokenPassEvent = tokenPassEvent;
 	this->closeEvent = closeEvent;
 }
 
-bool DataLink::bind(int attempts)
+bool FrameHandler::bind(int attempts)
 {
 	if (state != TransmissionState::NotConnected) {
 		return false;
@@ -26,13 +26,13 @@ bool DataLink::bind(int attempts)
 			switch (frame->getType()) {
 			case ACK:
 				state = TransmissionState::Token;
-				connected_thread = new thread(&DataLink::connectedRun, this);
+				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			case BIND:
 				frame->sendFrame(ACK);
 				state = TransmissionState::Waiting;
-				connected_thread = new thread(&DataLink::connectedRun, this);
+				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			}
@@ -42,7 +42,7 @@ bool DataLink::bind(int attempts)
 	return false;
 }
 
-bool DataLink::sendData(vector<char> &data)
+bool FrameHandler::sendData(vector<char> &data)
 {	
 	bool ret = false;
 	if (state == TransmissionState::Token) {
@@ -53,7 +53,7 @@ bool DataLink::sendData(vector<char> &data)
 	return ret;
 }
 
-bool DataLink::passToken()
+bool FrameHandler::passToken()
 {
 	if (state == TransmissionState::Token) {
 		if (sendWaitACK(TOKEN_PASS)) {
@@ -64,7 +64,7 @@ bool DataLink::passToken()
 	return false;
 }
 
-void DataLink::close()
+void FrameHandler::close()
 {
 	if (state == TransmissionState::Token) {
 		sendWaitACK(CLOSE);
@@ -76,12 +76,12 @@ void DataLink::close()
 	}
 }
 
-TransmissionState DataLink::getState()
+TransmissionState FrameHandler::getState()
 {
 	return state;
 }
 
-bool DataLink::sendWaitACK(TransmissionType type, vector<char> data)
+bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> data)
 {
 	if (state != TransmissionState::Token) {
 		return false;
@@ -102,12 +102,12 @@ bool DataLink::sendWaitACK(TransmissionType type, vector<char> data)
 	return false;
 }
 
-bool DataLink::sendWaitACK(TransmissionType type)
+bool FrameHandler::sendWaitACK(TransmissionType type)
 {
 	return sendWaitACK(type, vector<char>());
 }
 
-void DataLink::connectedRun()
+void FrameHandler::connectedRun()
 {
 	while (state != TransmissionState::NotConnected) {
 		if (state == TransmissionState::Waiting) {
@@ -149,7 +149,7 @@ void DataLink::connectedRun()
 	}
 }
 
-void DataLink::terminate()
+void FrameHandler::terminate()
 {
 	state = TransmissionState::NotConnected;
 	closeEvent();
