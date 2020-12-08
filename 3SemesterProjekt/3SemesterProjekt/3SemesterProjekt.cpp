@@ -33,6 +33,16 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
+    FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    if (f->bind(10)) {
+        vector<char> data = vector<char>();
+        for (char i = 0; i < 15; i++) {
+            data.push_back(i);
+        }
+
+        f->sendData(data);
+    }
+
     TicTacToe ttt = TicTacToe();
     ttt.game();
 
