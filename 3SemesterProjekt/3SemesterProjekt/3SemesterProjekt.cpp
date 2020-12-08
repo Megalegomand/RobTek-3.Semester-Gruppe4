@@ -33,7 +33,7 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    /*FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     if (f->bind(10)) {
         vector<char> data = vector<char>();
         for (char i = 0; i < 15; i++) {
@@ -42,10 +42,10 @@ int main()
         
         cout << f->sendData(data) << endl;
     }
-    this_thread::sleep_for(chrono::milliseconds(100000));
+    this_thread::sleep_for(chrono::milliseconds(100000));*/
 
-    //TicTacToe ttt = TicTacToe();
-    //ttt.game();
+    TicTacToe ttt = TicTacToe();
+    ttt.game();
 
     //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
