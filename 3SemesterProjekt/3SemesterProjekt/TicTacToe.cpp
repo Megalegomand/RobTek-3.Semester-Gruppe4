@@ -19,7 +19,7 @@ void TicTacToe::tokenpass() {
 }
 
 void TicTacToe::end() {
-
+    exit(0);
 }
 //*******bind er player 1, listen er player 2********
 
