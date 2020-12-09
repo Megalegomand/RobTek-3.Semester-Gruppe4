@@ -98,8 +98,8 @@ vector<char> DTMF::listenSequence(int timeout)
 
 		char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
 		char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
-
-		cout << "LF" << int(l) << ":" << int(f) << endl;
+		//cout << "Tone" << int(tone) << endl;
+		//cout << "LF" << int(l) << ":" << int(f) << endl;
 
 		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
 
@@ -109,17 +109,17 @@ vector<char> DTMF::listenSequence(int timeout)
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 
-	cout << "LT" << int(tone) << endl;
+	//cout << "LT" << int(tone) << endl;
 	char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
 	char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
 
-	cout << "LF" << int(l) << ":" << int(f) << endl;
+	//cout << "LF" << int(l) << ":" << int(f) << endl;
 
 
-	cout << "Tones" << endl;
-	for (char c : tones) {
-		cout << int(c) << endl;
-	}
+	//cout << "Tones" << endl;
+	//for (char c : tones) {
+	//	cout << int(c) << endl;
+	//}
 	this->stop();
 	return tones;
 }

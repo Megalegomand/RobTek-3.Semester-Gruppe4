@@ -79,18 +79,28 @@ bool Frame::wait(int timeout)
 
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
+		//cout << "S" << tones.size()<< endl;
 
-		if (tones.size() > 4) { // Preamble (min 1) + Type (1) + Length (2) = 4
+		if (tones.size() > 5) { // Preamble (min 2) + Type (1) + Length (2) = 5
 			// Check preamble
 			int firstPreamble = -1;
-			for (int i = 0; i < 7; i++) {
-				if (tones.front() == PREAMBLE[i]) {
-					firstPreamble = i;
+			while (tones.size() > 0) {
+				for (int p = 0; p < 6; p++) { // Min 2, hence last element in preamble can't be first in sequence
+					if (tones.front() == PREAMBLE[p]) {
+						firstPreamble = p;
+						break;
+					}
 				}
+				if (firstPreamble != -1) {
+					break;
+				}
+				tones.erase(tones.begin());
 			}
 			if (firstPreamble == -1) {
 				continue;
 			}
+
+			//cout << "KKDS" << int(tones.front()) << endl;
 
 			if (tones.size() < 10 - firstPreamble) { // Preamble (7) + Type (1) + Length (2) = 10
 				continue;
@@ -132,10 +142,10 @@ bool Frame::wait(int timeout)
 
 			lastActive->start();
 
-			cout << "TT" << transmissionType << endl;
-			for (char c : dataTones) {
-				cout << int(c) << endl;
-			}
+			//cout << "TT" << transmissionType << endl;
+			//for (char c : dataTones) {
+			//	cout << int(c) << endl;
+			//}
 			return true;
 		}
 	}
