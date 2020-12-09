@@ -22,9 +22,17 @@ void DTMF::sendSequence(vector<char>& sequence)
 {
 	// Calculate samples for entire sequence using preparedTones
 	vector<Int16> samples = vector<Int16>();
+	int margin = 200;
 	for (char tone : sequence) {
-		samples.insert(samples.end(), preparedTones[tone]->begin(), preparedTones[tone]->end());
+		for (int i = 0; i < margin; i++) {
+			samples.push_back(0);
+		}
+		samples.insert(samples.end(), preparedTones[tone]->begin() + margin, preparedTones[tone]->end() - margin);
+		for (int i = 0; i < margin; i++) {
+			samples.push_back(0);
+		}
 	}
+	
 
 	// Load sequence samples into buffer
 	SoundBuffer buffer = SoundBuffer();
