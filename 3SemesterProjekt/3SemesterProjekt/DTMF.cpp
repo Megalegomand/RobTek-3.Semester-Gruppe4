@@ -182,7 +182,7 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	
 	if (SNR > SNR_THRESHHOLD)
 	{
-		cout << SNR << posL * 4 + posH << endl;
+		cout << SNR << " : " << posL * 4 + posH << endl;
 		return  posL * 4 + posH;
 	}
 	else
