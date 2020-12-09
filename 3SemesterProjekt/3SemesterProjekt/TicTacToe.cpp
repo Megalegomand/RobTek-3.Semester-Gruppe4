@@ -132,7 +132,7 @@ int TicTacToe::game()
                 dl->sendData(data);
             }
             else {
-                cout << "Waiting for player " << player << ", remove a number.";
+                cout << "Waiting for player " << player << ", enter a number.";
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
