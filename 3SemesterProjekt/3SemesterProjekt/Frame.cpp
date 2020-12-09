@@ -87,14 +87,20 @@ bool Frame::wait(int timeout)
 
 		if (tones.size() > 10) { // Preamble (7) + Type (1) + Length (2) = 10
 			// Check preamble
-			bool p = true;
+			int p = 0; // 0, 2 skip package
 			for (int i = 0; i < 7; i++) {
-				if (tones.front() != PREAMBLE[i]) {
-					p = false;
+				if (tones.front() == PREAMBLE[i]) {
+					if (p == 0) {
+						p = 1;
+					}
+				} else {
+					if (p == 1) {
+						p == 2;
+					}
 				}
 				tones.erase(tones.begin());
 			}
-			if (!p) {
+			if (p == 0 || p == 2) {
 				continue;
 			}
 
