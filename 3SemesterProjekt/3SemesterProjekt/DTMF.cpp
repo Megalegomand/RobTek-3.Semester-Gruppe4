@@ -67,7 +67,6 @@ vector<char> DTMF::listenSequence(int timeout)
 	while (startTime.elapsedMillis() < timeout) {
 		// If last part of tone is received, then a tone is ready and synced
 		if (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
-			cout << "ST" << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << endl;
 			break;
 		}
 
@@ -81,33 +80,20 @@ vector<char> DTMF::listenSequence(int timeout)
 	// Get tones in transmission
 	vector<char> tones = vector<char>();
 	char tone = determineDTMF(&currentTone, 0, TONE_SAMPLES); // First tone
-	cout << "Start Tone" << int(tone) << endl;
 	while (tone != -1) {
-		
+
 		tones.push_back(tone);
 
-		
+
 		char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
 		char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
 
-		cout << "FL" << int(f) << " : " << int(l) << endl;
-
 		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
-
-		cout << "MOV" << mov << endl;
 
 		// Move samples a tone and correct for syncronisation
 		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
-		cout << "MS" << TONE_SAMPLES + mov * TONE_SAMPLES / 8 << endl;
-	
+
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
-		cout << "Netx tone" << int(tone) << endl;
-	}
-	cout << "LT" << endl;
-	
-	cout << "Tones" << endl;
-	for (char t : tones) {
-		cout << int(t) << endl;
 	}
 
 	return tones;
