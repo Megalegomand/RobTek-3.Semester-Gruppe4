@@ -88,7 +88,7 @@ vector<char> DTMF::listenSequence(int timeout)
 
 		// Move samples a tone and correct for syncronisation
 		moveSamples(&currentTone, TONE_SAMPLES + syncMove(&currentTone, tone) * TONE_SAMPLES / 8);
-		cout << "SM" << syncMove(&currentTone, tone) << endl;
+		cout << "SM" << int(syncMove(&currentTone, tone)) << endl;
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 	cout << "LT" << int(tone) << endl;
