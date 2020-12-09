@@ -80,11 +80,6 @@ bool Frame::wait(int timeout)
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
 
-		cout << "S" << tones.size() << endl; 
-		for (char t : tones) {
-			cout << int(t) << endl;
-		}
-
 		if (tones.size() > 4) { // Preamble (min 1) + Type (1) + Length (2) = 4
 			// Check preamble
 			int firstPreamble = -1;
@@ -109,7 +104,6 @@ bool Frame::wait(int timeout)
 				tones.erase(tones.begin());
 			}
 			if (!p) {
-				cout << "--------" << endl;
 				continue;
 			}
 
@@ -130,11 +124,6 @@ bool Frame::wait(int timeout)
 			dataTones.clear();
 			for (char c : tones) {
 				dataTones.push_back(c);
-			}
-
-			cout << "TT" << transmissionType << endl;
-			for (char t : dataTones) {
-				cout << int(t) << endl;
 			}
 
 			lastActive->start();
