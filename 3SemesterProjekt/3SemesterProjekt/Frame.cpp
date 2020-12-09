@@ -79,9 +79,7 @@ bool Frame::wait(int timeout)
 
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
-		for (char t : tones) {
-			cout << int(t) << endl;
-		}
+
 		if (tones.size() > 7) { // Preamble (5) + Type (1) + Length (2) = 8
 			// Check preamble
 			bool p = true;
@@ -106,10 +104,6 @@ bool Frame::wait(int timeout)
 			// Check length
 			if (tones.size() != dataLength * 2) {
 				continue;
-			}
-
-			for (char c : tones) {
-				cout << int(c) << endl;
 			}
 
 			// Add data to dataTones

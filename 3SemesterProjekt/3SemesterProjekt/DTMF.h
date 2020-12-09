@@ -34,7 +34,6 @@ public:
 	// This will keep a min transmission - 1, hence it wont be able to read itself
 	const unsigned int INPUT_SAMPLES_MAX_SIZE = TONE_SAMPLES * 7; 
 
-
 	const int TONES_L[4] = { 697,  770,  852,  941 };  // DTMF low tones
 	const int TONES_H[4] = { 1209, 1336, 1477, 1633 }; // DTMF high tones
 
