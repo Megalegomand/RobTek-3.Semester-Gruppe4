@@ -87,20 +87,28 @@ bool Frame::wait(int timeout)
 
 		if (tones.size() > 4) { // Preamble (min 1) + Type (1) + Length (2) = 4
 			// Check preamble
-			int p = 0; // 0, 2 skip package
+			int firstPreamble = -1;
 			for (int i = 0; i < 7; i++) {
 				if (tones.front() == PREAMBLE[i]) {
-					if (p == 0) {
-						p = 1;
-					}
-				} else {
-					if (p == 1) {
-						p == 2;
-					}
+					firstPreamble = i;
+				}
+			}
+			if (firstPreamble == -1) {
+				continue;
+			}
+
+			bool p = false;
+			for (int i = firstPreamble; i < 7; i++) {
+				if (tones.front() == PREAMBLE[i]) {
+					p = true;
+				}
+				else {
+					p = false;
+					break;
 				}
 				tones.erase(tones.begin());
 			}
-			if (p == 0 || p == 2) {
+			if (!p) {
 				cout << "--------" << endl;
 				continue;
 			}
