@@ -23,7 +23,7 @@ public:
 
 	const int SAMPLE_RATE = 44100;
 
-	const int TONE_DURATION = 100; // Millisseconds
+	const int TONE_DURATION = 500; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 
 	const int SNR_THRESHHOLD = 10;

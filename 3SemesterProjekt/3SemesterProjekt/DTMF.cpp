@@ -20,11 +20,6 @@ DTMF::DTMF() {
 
 void DTMF::sendSequence(vector<char>& sequence)
 {
-	cout << "SS" << endl;
-	for (char s : sequence) {
-		cout << int(s) << endl;
-	}
-
 	// Calculate samples for entire sequence using preparedTones
 	vector<sf::Int16> samples = vector<sf::Int16>();
 	for (char tone : sequence) {
