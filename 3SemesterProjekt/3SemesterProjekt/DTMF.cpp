@@ -22,13 +22,12 @@ void DTMF::sendSequence(vector<char>& sequence)
 {
 	// Calculate samples for entire sequence using preparedTones
 	vector<Int16> samples = vector<Int16>();
-	int margin = 200;
 	for (char tone : sequence) {
-		for (int i = 0; i < margin; i++) {
+		for (int i = 0; i < TONE_MARGIN; i++) {
 			samples.push_back(0);
 		}
-		samples.insert(samples.end(), preparedTones[tone]->begin() + margin, preparedTones[tone]->end() - margin);
-		for (int i = 0; i < margin; i++) {
+		samples.insert(samples.end(), preparedTones[tone]->begin() + TONE_MARGIN, preparedTones[tone]->end() - TONE_MARGIN);
+		for (int i = 0; i < TONE_MARGIN; i++) {
 			samples.push_back(0);
 		}
 	}
@@ -146,8 +145,8 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	float goertzelH[4];
 	float goertzelL[4];
 	for (int i = 0; i < 4; i++) {
-		goertzelH[i] = goertzel->processSamples(samples, start, end, TONES_H[i]);
-		goertzelL[i] = goertzel->processSamples(samples, start, end, TONES_L[i]);
+		goertzelH[i] = goertzel->processSamples(samples, start + TONE_MARGIN, end - TONE_MARGIN, TONES_H[i]);
+		goertzelL[i] = goertzel->processSamples(samples, start + TONE_MARGIN, end - TONE_MARGIN, TONES_L[i]);
 	}
 
 	// Position for calculating DTMF tone
