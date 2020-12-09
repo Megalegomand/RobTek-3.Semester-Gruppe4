@@ -87,10 +87,16 @@ vector<char> DTMF::listenSequence(int timeout)
 		tones.push_back(tone);
 
 		// Move samples a tone and correct for syncronisation
-		moveSamples(&currentTone, TONE_SAMPLES + syncMove(&currentTone, tone) * TONE_SAMPLES / 8);
-		cout << "SM" << int(syncMove(&currentTone, tone)) << endl;
 		cout << "M" << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << ":" << int(determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES));
 		cout << "SR" << this->getSampleRate() << endl;
+
+		char f = (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
+		char l = (determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
+
+		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
+
+		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
+	
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 	cout << "LT" << int(tone) << endl;
@@ -214,19 +220,6 @@ void DTMF::moveSamples(deque<Int16>* tone, int amount)
 	processCounter_mutex.lock();
 	processCounter++;
 	processCounter_mutex.unlock();
-}
-
-int DTMF::syncMove(deque<Int16>* toneSamples, char tone)
-{
-	// Use the first and last half of the tone to calculate whether the tone is about
-	// to get out of sync. This is done by comparing the half with the tone found in
-	// the complete sample. If one half is different to the actual tone, then 1 or
-	// -1 is returned, depending on which side of the tone is about to get of sync.
-	// If both halfs are different from the tone, 0 is returned, however the complete
-	// sample will most likely return -1 for the sample in this case, hence this wont
-	// be a problem.
-	int ret = (determineDTMF(toneSamples, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
-	return ret - (determineDTMF(toneSamples, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
 }
 
 bool DTMF::onProcessSamples(const Int16* samples, std::size_t sampleCount)

@@ -77,8 +77,6 @@ private:
 	// Move samples amount by inserting from input samples
 	// Tone size is maintained
 	void moveSamples(deque<Int16>* tone, int amount);
-	// Determine whether to move samples left or right, by returning 1 or -1
-	int syncMove(deque<Int16>* toneSamples, char tone);
 
 protected:
 	virtual bool onProcessSamples(const Int16* samples, std::size_t sampleCount); // From SoundRecorder
