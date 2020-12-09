@@ -35,6 +35,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 	sound.play();
 	// Wait for sound completion
 	this_thread::sleep_for(chrono::milliseconds(buffer.getDuration().asMilliseconds()));
+	sound.stop();
 }
 
 vector<char> DTMF::listenSequence(int timeout)
