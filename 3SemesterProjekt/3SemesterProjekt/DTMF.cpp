@@ -32,6 +32,8 @@ void DTMF::sendSequence(vector<char>& sequence)
 		}
 	}
 	
+	// Wait for receiver to start recording
+	this_thread::sleep_for(chrono::milliseconds(TONE_DURATION));
 
 	// Load sequence samples into buffer
 	SoundBuffer buffer = SoundBuffer();
@@ -102,6 +104,11 @@ vector<char> DTMF::listenSequence(int timeout)
 		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
 
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
+	}
+
+	cout << "TOnes" << endl;
+	for (char c : tones) {
+		cout << int(c) << endl;
 	}
 
 	return tones;
