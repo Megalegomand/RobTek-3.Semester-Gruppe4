@@ -86,15 +86,17 @@ vector<char> DTMF::listenSequence(int timeout)
 		cout << "Tone" << int(tone) << endl;
 		tones.push_back(tone);
 
-		// Move samples a tone and correct for syncronisation
-		cout << "M" << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << ":" << int(determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES));
-		cout << "SR" << this->getSampleRate() << endl;
-
+		
 		char f = (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
 		char l = (determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
 
+		cout << "FL" << int(f) << " : " << int(l) << endl;
+
 		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
 
+		cout << "MOV" << mov << endl;
+
+		// Move samples a tone and correct for syncronisation
 		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
 	
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
