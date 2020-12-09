@@ -137,7 +137,6 @@ void DTMF::prepareTones()
 			low += iLow;
 			high += iHigh;
 		};
-		cout << "PT" << preparedTones[tone]->size() << endl;
 	}
 }
 
@@ -196,10 +195,10 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	// Calculate SNR
 	float SNR = signal_avg / noise_avg;
 
+	cout << SNR << " : " << posL * 4 + posH << endl;
 	// Return DTMF tone or -1 if no tone was found
 	if (SNR > SNR_THRESHHOLD)
 	{
-		cout << SNR << " : " << posL * 4 + posH << endl;
 		return  posL * 4 + posH;
 	}
 	else
