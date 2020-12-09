@@ -179,6 +179,7 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	float SNR = signal_avg / noise_avg;
 
 	// Return DTMF tone or -1 if no tone was found
+	cout << SNR << endl;
 	if (SNR > SNR_THRESHHOLD)
 	{
 		return  posL * 4 + posH;
