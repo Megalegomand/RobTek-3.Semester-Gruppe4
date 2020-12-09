@@ -57,8 +57,9 @@ int TicTacToe::game()
         mark = (player == 1) ? 'X' : 'O';
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
             
-            cout << "Player " << player << ", remove a number:  ";
+            
             if (player == local) {
+                cout << "Player " << player << ", remove a number:  ";
                 cin >> choice;
 
                 vector<char> data = vector<char>();
@@ -66,6 +67,7 @@ int TicTacToe::game()
                 dl->sendData(data);
             }
             else {
+                cout << "Waiting for player " << player << ", remove a number.";
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
@@ -121,8 +123,8 @@ int TicTacToe::game()
             }
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
         } else {
-            cout << "Player " << player << ", enter a number:  ";
             if (player == local) {
+                cout << "Player " << player << ", enter a number:  ";
                 cin >> choice;
 
                 vector<char> data = vector<char>();
@@ -130,6 +132,7 @@ int TicTacToe::game()
                 dl->sendData(data);
             }
             else {
+                cout << "Waiting for player " << player << ", remove a number.";
                 choicef = -1;
                 while (choicef == -1);
                 choice = choicef;
