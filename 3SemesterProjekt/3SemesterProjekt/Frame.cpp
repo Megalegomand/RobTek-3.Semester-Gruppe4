@@ -92,6 +92,10 @@ bool Frame::wait(int timeout)
 				continue;
 			}
 
+			if (tones.size() < 10 - firstPreamble) { // Preamble (7) + Type (1) + Length (2) = 10
+				continue;
+			}
+
 			bool p = false;
 			for (int i = firstPreamble; i < 7; i++) {
 				if (tones.front() == PREAMBLE[i]) {
@@ -116,17 +120,22 @@ bool Frame::wait(int timeout)
 			tones.erase(tones.begin(), tones.begin() + 2);
 
 			// Check length
-			if (tones.size() != dataLength * 2) {
+			if (tones.size() < dataLength * 2) {
 				continue;
 			}
 
 			// Add data to dataTones
 			dataTones.clear();
-			for (char c : tones) {
-				dataTones.push_back(c);
+			for (int i = 0; i < dataLength * 2; i++) {
+				dataTones.push_back(tones[i]);
 			}
 
 			lastActive->start();
+
+			cout << "TT" << transmissionType << endl;
+			for (char c : dataTones) {
+				cout << int(c) << endl;
+			}
 			return true;
 		}
 	}

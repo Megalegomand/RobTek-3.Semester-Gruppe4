@@ -15,7 +15,7 @@ DTMF::DTMF() {
 	goertzel = new Goertzel(SAMPLE_RATE);
 
 	// Start recording, this will fill input samples
-	this->start(SAMPLE_RATE);
+	//this->start(SAMPLE_RATE);
 }
 
 void DTMF::sendSequence(vector<char>& sequence)
@@ -49,6 +49,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 
 vector<char> DTMF::listenSequence(int timeout)
 {
+	this->start(SAMPLE_RATE);
 	// Timer to keep stop at timeout
 	Timer startTime = Timer();
 	startTime.start();
@@ -76,7 +77,7 @@ vector<char> DTMF::listenSequence(int timeout)
 	// Search for tone
 	while (startTime.elapsedMillis() < timeout) {
 		// If last part of tone is received, then a tone is ready and synced
-		if (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
+		if (determineDTMF(&currentTone, 0, TONE_SAMPLES) != -1 && determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
 			break;
 		}
 
@@ -98,19 +99,28 @@ vector<char> DTMF::listenSequence(int timeout)
 		char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
 		char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
 
+		cout << "LF" << int(l) << ":" << int(f) << endl;
+
 		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
 
 		// Move samples a tone and correct for syncronisation
-		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
+		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 16);
 
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 
-	cout << "TOnes" << endl;
+	cout << "LT" << int(tone) << endl;
+	char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
+	char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
+
+	cout << "LF" << int(l) << ":" << int(f) << endl;
+
+
+	cout << "Tones" << endl;
 	for (char c : tones) {
 		cout << int(c) << endl;
 	}
-
+	this->stop();
 	return tones;
 }
 
@@ -152,8 +162,8 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	float goertzelH[4];
 	float goertzelL[4];
 	for (int i = 0; i < 4; i++) {
-		goertzelH[i] = goertzel->processSamples(samples, start + TONE_MARGIN, end - TONE_MARGIN, TONES_H[i]);
-		goertzelL[i] = goertzel->processSamples(samples, start + TONE_MARGIN, end - TONE_MARGIN, TONES_L[i]);
+		goertzelH[i] = goertzel->processSamples(samples, start + TONE_MARGIN * 2, end - TONE_MARGIN * 2, TONES_H[i]);
+		goertzelL[i] = goertzel->processSamples(samples, start + TONE_MARGIN * 2, end - TONE_MARGIN * 2, TONES_L[i]);
 	}
 
 	// Position for calculating DTMF tone

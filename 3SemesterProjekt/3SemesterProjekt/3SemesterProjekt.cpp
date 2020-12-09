@@ -44,28 +44,42 @@ int main()
     }
     this_thread::sleep_for(chrono::milliseconds(100000));*/
 
-    TicTacToe ttt = TicTacToe();
-    ttt.game();
+    //TicTacToe ttt = TicTacToe();
+    //ttt.game();
 
     /*DTMF* d1 = new DTMF();
     DTMF* d2 = new DTMF();
 
     d1->listenSequence(100);
 
-    thread t1(&DTMF::listenSequence, d1, 10000);
+    thread t1(&DTMF::listenSequence, d2, 10000);
 
-    this_thread::sleep_for(chrono::milliseconds(1500));
-    
+    this_thread::sleep_for(chrono::milliseconds(1000));
+
     vector<char> data = vector<char>();
     for (char i = 0; i < 15; i++) {
         data.push_back(i);
     }
     d1->sendSequence(data);
-    t1.join();*/
-    
+    t1.join();
 
-    //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
-    //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
+    thread t2(&DTMF::listenSequence, d1, 10000);
+    d2->sendSequence(data);
+    t2.join();*/
+
+    Frame* fr = new Frame();
+
+
+    FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    
+    thread t2(&Frame::wait, fr, 10000);
+    this_thread::sleep_for(chrono::milliseconds(10));
+    thread t1(&FrameHandler::bind, f1, 10);
+    //this_thread::sleep_for(chrono::milliseconds(1000));
+    //thread t2(&FrameHandler::bind, f2, 10);
+
+    t1.join();
+    t2.join();
 
     //vector<char> data = vector<char>();
     //for (char i = 0; i < 15; i++) {
