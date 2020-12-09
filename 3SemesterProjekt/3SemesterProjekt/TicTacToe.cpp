@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Tictactoe.h"
 
 using namespace std;
@@ -37,7 +36,11 @@ int TicTacToe::game()
     char a;//used to convert int to char array
     vector<char> out;
 
-    dl->bind(10);
+    cout << "Connecting..." << endl;
+    if (!dl->bind(10)) {
+        cout << "Connection failed" << endl;
+        return -1;
+    }
     
 
     if (local == 0 && dl->getState() == TransmissionState::Token) {//send help dosnt work like i thought it would
@@ -206,6 +209,8 @@ int TicTacToe::game()
 
     cin.ignore();
     cin.get();
+
+    dl->close();
     
     return 0;
 }
