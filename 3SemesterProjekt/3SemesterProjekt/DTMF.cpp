@@ -103,7 +103,12 @@ vector<char> DTMF::listenSequence(int timeout)
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 		cout << "Netx tone" << int(tone) << endl;
 	}
+	cout << "LT" << endl;
 	
+	cout << "Tones" << endl;
+	for (char t : tones) {
+		cout << int(t) << endl;
+	}
 
 	return tones;
 }
@@ -194,10 +199,11 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 
 	// Calculate SNR
 	float SNR = signal_avg / noise_avg;
+	float SNRdB = 10 * log10f(SNR);
 
-	cout << SNR << " : " << posL * 4 + posH << endl;
+	cout << SNR << " : " << SNRdB << " : " << posL * 4 + posH << endl;
 	// Return DTMF tone or -1 if no tone was found
-	if (SNR > SNR_THRESHHOLD)
+	if (SNRdB > SNR_THRESHHOLD)
 	{
 		return  posL * 4 + posH;
 	}
