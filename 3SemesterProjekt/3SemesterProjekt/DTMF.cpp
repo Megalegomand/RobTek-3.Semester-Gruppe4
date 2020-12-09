@@ -81,14 +81,14 @@ vector<char> DTMF::listenSequence(int timeout)
 	// Get tones in transmission
 	vector<char> tones = vector<char>();
 	char tone = determineDTMF(&currentTone, 0, TONE_SAMPLES); // First tone
-	
+	cout << "Start Tone" << int(tone) << endl;
 	while (tone != -1) {
-		cout << "Tone" << int(tone) << endl;
+		
 		tones.push_back(tone);
 
 		
-		char f = (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) == tone ? 0 : 1);
-		char l = (determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES) == tone ? 0 : 1);
+		char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
+		char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
 
 		cout << "FL" << int(f) << " : " << int(l) << endl;
 
@@ -100,8 +100,9 @@ vector<char> DTMF::listenSequence(int timeout)
 		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
 	
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
+		cout << "Netx tone" << int(tone) << endl;
 	}
-	cout << "LT" << int(tone) << endl;
+	
 
 	return tones;
 }
