@@ -33,8 +33,8 @@ float Goertzel::processSamples(deque<Int16>* samples, int start, int end, int ta
 	float k = round(float((end - start) * targetFrequency) / sampleFrequency);
 	float sumr = 0;
 	float sumi = 0;
-	for (int n = 0; n < end - start; n++) {
-		float angle = -2 * PI * n * k / (end - start);
+	for (int n = start; n < end; n++) {
+		float angle = ((-2 * PI * n) / (end - start)) * k;
 		sumr += (*samples)[n] * cos(angle);
 		sumi += (*samples)[n] * sin(angle);
 	}

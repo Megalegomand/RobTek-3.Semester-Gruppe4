@@ -50,18 +50,18 @@ int main()
     DTMF* d1 = new DTMF();
     DTMF* d2 = new DTMF();
 
-    d1->listenSequence(100);
+    /*d1->listenSequence(100);
 
     thread t1(&DTMF::listenSequence, d1, 10000);
 
     this_thread::sleep_for(chrono::milliseconds(1500));
-
+    */
     vector<char> data = vector<char>();
     for (char i = 0; i < 15; i++) {
         data.push_back(i);
     }
-    d2->sendSequence(data);
-    t1.join();
+    d1->sendSequence(data);
+    //t1.join();
     
 
     //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));

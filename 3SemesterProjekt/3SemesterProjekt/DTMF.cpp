@@ -21,13 +21,13 @@ DTMF::DTMF() {
 void DTMF::sendSequence(vector<char>& sequence)
 {
 	// Calculate samples for entire sequence using preparedTones
-	vector<sf::Int16> samples = vector<sf::Int16>();
+	vector<Int16> samples = vector<Int16>();
 	for (char tone : sequence) {
 		samples.insert(samples.end(), preparedTones[tone]->begin(), preparedTones[tone]->end());
 	}
 
 	// Load sequence samples into buffer
-	sf::SoundBuffer buffer;
+	SoundBuffer buffer = SoundBuffer();
 	buffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE);
 
 	// Play sound
@@ -126,8 +126,8 @@ void DTMF::prepareTones()
 		preparedTones[tone] = new vector<sf::Int16>();
 
 		// Increment value dependent on current tone
-		const double iHigh = ((double)TONES_H[tone % 4]) / SAMPLE_RATE;
-		const double iLow = ((double)TONES_L[tone / 4]) / SAMPLE_RATE;
+		double iHigh = ((double)TONES_H[tone % 4]) / SAMPLE_RATE;
+		double iLow = ((double)TONES_L[tone / 4]) / SAMPLE_RATE;
 
 		// Start low and high
 		double low = 0.0;
@@ -203,8 +203,14 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 
 	cout << SNR << " : " << SNRdB << " : " << posL * 4 + posH << endl;
 	// Return DTMF tone or -1 if no tone was found
-	if (SNRdB > SNR_THRESHHOLD)
+	if (SNR > SNR_THRESHHOLD)
 	{
+		cout << signal_avg << endl;
+		cout << noise_avg << endl;
+		//for (int i = 0; i < 4; i++) {
+		//	cout << goertzelH[i] << endl;
+		//	cout << goertzelL[i] << endl;
+		//}
 		return  posL * 4 + posH;
 	}
 	else
