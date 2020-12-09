@@ -36,9 +36,6 @@
     <ClCompile Include="TicTacToe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TicTacToe.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="FrameHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -59,6 +56,9 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+	<ClCompile Include="TicTacToe.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
     <ClInclude Include="FrameHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
