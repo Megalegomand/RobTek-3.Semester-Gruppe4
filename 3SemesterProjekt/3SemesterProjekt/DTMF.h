@@ -26,7 +26,7 @@ public:
 	const int TONE_DURATION = 100; // Millisseconds
 	const unsigned AMPLITUDE = 10000;
 
-	const int SNR_THRESHHOLD = 10;
+	const int SNR_THRESHHOLD = 5;
 
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
