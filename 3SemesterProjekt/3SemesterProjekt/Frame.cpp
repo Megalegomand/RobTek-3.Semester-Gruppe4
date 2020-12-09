@@ -101,6 +101,7 @@ bool Frame::wait(int timeout)
 				tones.erase(tones.begin());
 			}
 			if (p == 0 || p == 2) {
+				cout << "--------" << endl;
 				continue;
 			}
 
@@ -121,6 +122,11 @@ bool Frame::wait(int timeout)
 			dataTones.clear();
 			for (char c : tones) {
 				dataTones.push_back(c);
+			}
+
+			cout << "TT" << transmissionType << endl;
+			for (char t : dataTones) {
+				cout << int(t) << endl;
 			}
 
 			lastActive->start();
