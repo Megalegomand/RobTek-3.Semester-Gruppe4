@@ -115,6 +115,9 @@ void FrameHandler::connectedRun()
 			else {
 				if (frame->wait(MAX_LOSS_CONNECTION - frame->getLastActive()->elapsedMillis())) {
 					switch (frame->getType()) {
+					case BIND:
+						frame->sendFrame(ACK);
+						break;
 					case DATA:
 						dataReadyEvent(frame->getData());
 						frame->sendFrame(ACK);
