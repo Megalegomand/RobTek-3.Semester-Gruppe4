@@ -67,7 +67,7 @@ vector<char> DTMF::listenSequence(int timeout)
 	while (startTime.elapsedMillis() < timeout) {
 		// If last part of tone is received, then a tone is ready and synced
 		if (determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
-			cout << "ST" << determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) << endl;
+			cout << "ST" << int(determineDTMF(&currentTone, 0, TONE_SAMPLES / 2)) << endl;
 			break;
 		}
 
