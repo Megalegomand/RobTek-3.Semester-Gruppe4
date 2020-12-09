@@ -25,7 +25,7 @@ public:
 	const int BIND_WAIT_MIN = 10000;
 	const int BIND_WAIT_DIFF = 10000;
 	const int MAX_LOSS_CONNECTION = 20000; // Maximum loss of connection, sync will be send at half this time
-	const int ATTEMPTS = 5; // Attempts at sending before termination, does not account for bind
+	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 5000;
 
 	FrameHandler();
