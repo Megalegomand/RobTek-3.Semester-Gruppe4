@@ -85,7 +85,7 @@ bool Frame::wait(int timeout)
 			cout << int(t) << endl;
 		}
 
-		if (tones.size() > 10) { // Preamble (7) + Type (1) + Length (2) = 10
+		if (tones.size() > 4) { // Preamble (min 1) + Type (1) + Length (2) = 4
 			// Check preamble
 			int p = 0; // 0, 2 skip package
 			for (int i = 0; i < 7; i++) {
