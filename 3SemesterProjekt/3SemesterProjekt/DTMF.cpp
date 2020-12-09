@@ -98,6 +98,7 @@ vector<char> DTMF::listenSequence(int timeout)
 
 		// Move samples a tone and correct for syncronisation
 		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 8);
+		cout << "MS" << TONE_SAMPLES + mov * TONE_SAMPLES / 8 << endl;
 	
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 		cout << "Netx tone" << int(tone) << endl;
@@ -136,6 +137,7 @@ void DTMF::prepareTones()
 			low += iLow;
 			high += iHigh;
 		};
+		cout << "PT" << preparedTones[tone]->size() << endl;
 	}
 }
 
