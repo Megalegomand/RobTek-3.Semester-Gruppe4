@@ -31,15 +31,12 @@ float Goertzel::processSamples(const sf::Int16 *samples, int N)
 float Goertzel::processSamples(deque<Int16>* samples, int start, int end, int targetFrequency)
 {
 	float k = round(float((end - start) * targetFrequency) / sampleFrequency);
-	float c = 2 * cos((2 * PI / (end - start)) * k);
-
-	float q0 = 0.0;
-	float q1 = 0.0;
-	float q2 = 0.0;
-	for (int n = start; n < end; n++) {
-		q0 = c * q1 - q2 + (*samples)[n];
-		q2 = q1;
-		q1 = q0;
+	float sumr = 0;
+	float sumi = 0;
+	for (int n = 0; n < end - start; n++) {
+		float angle = -2 * PI * n * k / (end - start);
+		sumr += (*samples)[n] * cos(angle);
+		sumi += (*samples)[n] * sin(angle);
 	}
-	return sqrt(q1 * q1 + q2 * q2 - q1 * q2 * c);
+	return sqrt(pow(sumr, 2.0) + pow(sumi, 2.0));
 }
