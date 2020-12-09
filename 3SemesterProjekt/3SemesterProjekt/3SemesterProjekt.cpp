@@ -44,8 +44,8 @@ int main()
     }
     this_thread::sleep_for(chrono::milliseconds(100000));*/
 
-    //TicTacToe ttt = TicTacToe();
-    //ttt.game();
+    TicTacToe ttt = TicTacToe();
+    ttt.game();
 
     /*DTMF* d1 = new DTMF();
     DTMF* d2 = new DTMF();
