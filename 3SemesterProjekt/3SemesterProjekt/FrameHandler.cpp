@@ -91,6 +91,7 @@ bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> &data)
 		if (frame->wait(LISTEN_TIME)) {
 			if (frame->getType() == ACK) {
 				frame_mutex.unlock();
+				tempCount += i;
 				return true;
 			}
 		}

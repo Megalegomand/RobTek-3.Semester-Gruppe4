@@ -208,6 +208,8 @@ int TicTacToe::game()
     else
         cout << "==>\aGame draw";
 
+    cout << "Attempts " << dl->tempCount << endl;
+
     cin.ignore();
     cin.get();
 

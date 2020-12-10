@@ -28,6 +28,8 @@ public:
 	const int ATTEMPTS = 10; // Attempts at sending before termination, does not account for bind
 	const int LISTEN_TIME = 4000;
 
+	int tempCount = 0;
+
 	FrameHandler();
 	FrameHandler(function<void(vector<char>)> dataReadyEvent, function<void()> tokenPassEvent, function<void()> closed);
 
