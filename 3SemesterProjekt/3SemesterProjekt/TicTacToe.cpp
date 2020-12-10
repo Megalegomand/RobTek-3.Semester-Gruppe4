@@ -18,6 +18,7 @@ void TicTacToe::tokenpass() {
 }
 
 void TicTacToe::end() {
+    cout << "Connection closed" << endl;
     exit(0);
 }
 
