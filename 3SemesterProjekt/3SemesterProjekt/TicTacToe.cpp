@@ -208,7 +208,8 @@ int TicTacToe::game()
     else
         cout << "==>\aGame draw";
 
-    cout << "Attempts " << dl->tempCount << endl;
+    cout << "Send" << dl->send << endl;
+    cout << "Resend " << dl->resend << endl;
 
     cin.ignore();
     cin.get();

@@ -84,14 +84,14 @@ bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> &data)
 	if (state != TransmissionState::Token) {
 		return false;
 	}
-
+	send++;
 	frame_mutex.lock();
 	for (int i = 0; i < ATTEMPTS; i++) {
 		frame->sendFrame(type, data);
 		if (frame->wait(LISTEN_TIME)) {
 			if (frame->getType() == ACK) {
 				frame_mutex.unlock();
-				tempCount += i;
+				resend += i;
 				return true;
 			}
 		}
@@ -156,7 +156,7 @@ void FrameHandler::terminate()
 	state = TransmissionState::NotConnected;
 	closeEvent();
 
-	cout << "Antal afsendte beskeder" << frame->tempCount << endl;
+	cout << "Antal afsendte beskeder" << frame->resend << endl;
 }
 
 
