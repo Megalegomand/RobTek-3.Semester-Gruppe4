@@ -1,3 +1,5 @@
+// Store dele af koden kommer fra http://www.cppforschool.com/project/tic-tac-toe-project.html
+
 #include "Tictactoe.h"
 
 using namespace std;
