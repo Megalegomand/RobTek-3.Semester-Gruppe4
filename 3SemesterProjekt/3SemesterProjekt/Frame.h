@@ -21,6 +21,8 @@ class Frame
 public:
 	const char PREAMBLE[7] = { 0xF, 0xE, 0xD, 0xC, 0xA, 0x5, 0x0 };
 
+	int tempCount;
+
 	Frame();
 
 	TransmissionType getType();

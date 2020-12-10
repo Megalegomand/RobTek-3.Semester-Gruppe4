@@ -209,7 +209,6 @@ int TicTacToe::game()
         cout << "==>\aGame draw";
 
     cout << "Attempts " << dl->tempCount << endl;
-    cout << "Player x" << player << endl;
 
     cin.ignore();
     cin.get();

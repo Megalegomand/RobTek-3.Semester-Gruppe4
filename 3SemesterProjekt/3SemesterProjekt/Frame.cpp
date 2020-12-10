@@ -67,6 +67,8 @@ void Frame::send()
 
 	lastActive->start();
 	dtmf->sendSequence(toneFrame);
+
+	tempCount++;
 }
 
 bool Frame::wait(int timeout)
