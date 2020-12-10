@@ -155,8 +155,6 @@ void FrameHandler::terminate()
 {
 	state = TransmissionState::NotConnected;
 	closeEvent();
-
-	cout << "Antal afsendte beskeder" << frame->resend << endl;
 }
 
 
