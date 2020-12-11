@@ -101,17 +101,17 @@ vector<char> DTMF::listenSequence(int timeout)
 		//cout << "Tone" << int(tone) << endl;
 		//cout << "LF" << int(l) << ":" << int(f) << endl;
 
-		int mov = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
+		int dir = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
 
 		// Move samples a tone and correct for syncronisation
-		moveSamples(&currentTone, TONE_SAMPLES + mov * TONE_SAMPLES / 16);
+		moveSamples(&currentTone, TONE_SAMPLES + dir * TONE_SAMPLES / 16);
 
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
 
 	//cout << "LT" << int(tone) << endl;
-	char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
-	char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
+	//char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
+	//char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
 
 	//cout << "LF" << int(l) << ":" << int(f) << endl;
 
