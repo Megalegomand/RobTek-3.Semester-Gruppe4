@@ -54,8 +54,19 @@ void Frame::send()
 	for (char c : PREAMBLE) {
 		toneFrame.push_back(c);//PREAMBLE
 	}
-
-	toneFrame.push_back(transmissionType);//TYPE
+	
+	//TYPE
+	if (transmissionType == DATA) {
+		if (dataSeqSend) {
+			toneFrame.push_back(DATA1);
+		}
+		else {
+			toneFrame.push_back(DATA0);
+		}
+	}
+	else {
+		toneFrame.push_back(transmissionType);
+	}
 
 	unsigned char size = dataTones.size() / 2;
 	toneFrame.push_back(char(size & 0xF0) >> 4);
@@ -124,6 +135,17 @@ bool Frame::wait(int timeout)
 			// Transmission type
 			transmissionType = (TransmissionType) tones.front();
 			tones.erase(tones.begin());
+
+			// Check data sequence
+			if (transmissionType == DATA0 && dataSeqReceive || transmissionType == DATA1 && !dataSeqReceive) {
+				sendFrame(ACK);
+				transmissionType = NONE;
+				continue;
+			}
+
+			if (transmissionType == DATA0 || transmissionType == DATA1) {
+				transmissionType = DATA;
+			}
 
 			// Data length
 			unsigned char dataLength = (tones[0] << 4) | tones[1];

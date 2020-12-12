@@ -53,12 +53,26 @@ bool FrameHandler::sendData(vector<char> &data)
 
 bool FrameHandler::passToken()
 {
-	if (state == TransmissionState::Token) {
-		if (sendWaitACK(TOKEN_PASS)) {
-			state = TransmissionState::Waiting;
-			return true;
+	if (state != TransmissionState::Token) {
+		return false;
+	}
+
+	send++;
+	
+	frame_mutex.lock();
+	for (int i = 0; i < ATTEMPTS; i++) {
+		frame->sendFrame(TOKENPASS);
+		if (frame->wait(LISTEN_TIME)) {
+			if (frame->getType() == TOKENPASSACK) {
+				frame_mutex.unlock();
+				state = TransmissionState::Waiting;
+				frame->sendFrame(ACK);
+				resend += i;
+				return true;
+			}
 		}
 	}
+	frame_mutex.unlock();
 	return false;
 }
 
@@ -116,25 +130,25 @@ void FrameHandler::connectedRun()
 			else {
 				if (frame->wait(MAX_LOSS_CONNECTION - frame->getLastActive()->elapsedMillis())) {
 					switch (frame->getType()) {
-					case BIND:
-						frame->sendFrame(ACK);
-						break;
 					case DATA:
 						dataReadyEvent(frame->getData());
 						frame->sendFrame(ACK);
 						break;
-					case TOKEN_PASS:
-						tokenPassEvent();
+					case TOKENPASS:
 						state = TransmissionState::Token;
-						frame->sendFrame(ACK);
-						break;
-					case ALIVE:
-						frame->sendFrame(ACK);
+						sendWaitACK(TOKENPASSACK);
+						tokenPassEvent();
 						break;
 					case CLOSE:
 						frame->sendFrame(ACK);
 						terminate();
 						break;
+					case BIND:
+					case TOKENPASSACK:
+					case ALIVE:
+						frame->sendFrame(ACK);
+						break;
+
 					}
 				}
 			}

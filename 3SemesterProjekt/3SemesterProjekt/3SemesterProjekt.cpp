@@ -44,8 +44,8 @@ int main()
     }
     this_thread::sleep_for(chrono::milliseconds(100000));*/
 
-    TicTacToe ttt = TicTacToe();
-    ttt.game();
+    //TicTacToe ttt = TicTacToe();
+    //ttt.game();
 
     /*DTMF* d1 = new DTMF();
     DTMF* d2 = new DTMF();
@@ -66,25 +66,30 @@ int main()
     thread t2(&DTMF::listenSequence, d1, 10000);
     d2->sendSequence(data);
     t2.join();*/
-    /*
-    Frame* fr = new Frame();
-
-
-    FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
-    FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
-
     
-    //thread t2(&Frame::wait, fr, 10000);
-    thread t2(&FrameHandler::bind, f2, 10);
-    this_thread::sleep_for(chrono::milliseconds(1000));
-    //thread t1(&FrameHandler::bind, f1, 10);
-    fr->sendFrame(ACK);
-    fr->wait(10000);
+    Frame* fr = new Frame();
+    Frame* fs = new Frame();
+
+
+    //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
+
+    for (int i = 0; i < 10; i++) {
+        thread t2(&Frame::wait, fr, 10000);
+        //thread t2(&FrameHandler::bind, f2, 10);
+        //this_thread::sleep_for(chrono::milliseconds(1000));
+        //thread t1(&FrameHandler::bind, f1, 10);
+        //fr->sendFrame(ACK);
+        fs->sendFrame(DATA);
+
+        t2.join();
+        cout << fr->getType() << endl;
+    }
     //this_thread::sleep_for(chrono::milliseconds(1000));
     //thread t2(&FrameHandler::bind, f2, 10);
 
     //t1.join();
-    t2.join();*/
+    
 
     //vector<char> data = vector<char>();
     //for (char i = 0; i < 15; i++) {

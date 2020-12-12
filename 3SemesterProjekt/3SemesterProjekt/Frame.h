@@ -9,10 +9,13 @@ enum TransmissionType {
 	BIND = 0x0,
 	ACK = 0x2,
 	NACK = 0x3,
-	TOKEN_PASS = 0x4,
-	ALIVE = 0x5,
-	CLOSE = 0xE,
-	DATA = 0xF,
+	TOKENPASS = 0x4,
+	TOKENPASSACK = 0x5,
+	ALIVE = 0x6,
+	CLOSE = 0x7,
+	DATA = 0xEE,
+	DATA0 = 0xE,
+	DATA1 = 0xF,
 };
 
 using namespace std;
@@ -38,6 +41,8 @@ private:
 	vector<char> dataTones = vector<char>();
 	DTMF* dtmf;
 	Timer* lastActive;
+	bool dataSeqSend = 0;
+	bool dataSeqReceive = 0;
 
 	
 	void send(); // Send data stored in frame
