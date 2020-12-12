@@ -19,34 +19,34 @@ void TicTacToe::tokenpass() {
     
 }
 
-void TicTacToe::end() {
+void TicTacToe::end() {//end the game, tells the protokol 
     cout << "Connection closed" << endl;
     exit(0);
 }
 
 int TicTacToe::game()
-{
-    FrameHandler* dl = new FrameHandler(std::bind(&TicTacToe::data, this, _1), std::bind(&TicTacToe::tokenpass, this), std::bind(&TicTacToe::end, this)); 
+{// below, setup for the game follows
+    FrameHandler* dl = new FrameHandler(std::bind(&TicTacToe::data, this, _1), std::bind(&TicTacToe::tokenpass, this), std::bind(&TicTacToe::end, this));
     int player = 1;//which player have turn
     int i;//controls game state
-    int choice;//the move the player have made
+    int choice;//the move the local player have made
     int p1p = 3;//number of pieces not on the board for player one
     int p2p = 3;//number of pieces not on the board for player two
     int pp;//number of pieces not on the board for the current player
     int error = 0;//controls errors on placement of pieces
     int errorLift = 0;//controls errors on lifting of pieces
     char mark;//determines what kind of piece a player puts down
-    char a;//used to convert int to char array
+    char a;//used to convert int to char array, for sending data
     vector<char> out;
 
-    cout << "Connecting..." << endl;
+    cout << "Connecting..." << endl; //tries to connect. ends the game if it fails
     if (!dl->bind(10)) {
         cout << "Connection failed" << endl;
         return -1;
     }
     
 
-    if (local == 0 && dl->getState() == TransmissionState::Token) {//send help dosnt work like i thought it would
+    if (local == 0 && dl->getState() == TransmissionState::Token) {//determines if the local player is player 1 or 2
         local = 1;
     }
     else if(local == 0) {
@@ -55,16 +55,16 @@ int TicTacToe::game()
 
     do
     {
-        board();
-        player = (player % 2) ? 1 : 2;
-        pp = (player == 1) ? p1p : p2p;
-        cout << pp << endl;
+        board();//loads the board, in its newest configuration
+        player = (player % 2) ? 1 : 2;//determines whos turn it is
+        pp = (player == 1) ? p1p : p2p;//ensures that pieces are taken from the right pool of pieces
+        cout << "Pieces left:" << pp << endl;//displays the number of pieces
 
         mark = (player == 1) ? 'X' : 'O';
         if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
             
             
-            if (player == local) {
+            if (player == local) {//gets the piece that needs to be moved
                 cout << "Player " << player << ", remove a number:  ";
                 cin >> choice;
 
@@ -78,7 +78,7 @@ int TicTacToe::game()
                 while (choicef == -1);
                 choice = choicef;
             }
-
+            // picks up a piece
             if (choice == 1 && square[1] == mark)
 
                 square[1] = '1';
@@ -106,7 +106,7 @@ int TicTacToe::game()
             else if (choice == 9 && square[9] == mark)
 
                 square[9] = '9';
-            else
+            else//gives error for illegal move, and lets the player try again 
             {
                 cout << "Invalid move ";
                 errorLift = 1;
@@ -129,7 +129,7 @@ int TicTacToe::game()
             }
             player--;//ensures the player gets a turn to lay down a piece after lifting a piece
         } else {
-            if (player == local) {
+            if (player == local) {// if the player have a piece, lets them put it down
                 cout << "Player " << player << ", enter a number:  ";
                 cin >> choice;
 
@@ -144,7 +144,7 @@ int TicTacToe::game()
                 choice = choicef;
             }
 
-            if (choice == 1 && square[1] == '1')
+            if (choice == 1 && square[1] == '1')// puts the piece down if the move is legal
 
                 square[1] = mark;
             else if (choice == 2 && square[2] == '2')
@@ -171,7 +171,7 @@ int TicTacToe::game()
             else if (choice == 9 && square[9] == '9')
 
                 square[9] = mark;
-            else
+            else//tells the player the move was illigal, and let them try again
             {
                 cout << "Invalid move ";
                 error = 1;
@@ -182,7 +182,7 @@ int TicTacToe::game()
                 }
             }
 
-            if (player == 1 && error == 0) { // this function will lower the amount of free pieces, if you had free pieces when your turn started
+            if (player == 1 && error == 0) { // this function will lower the amount of free pieces
                 p1p--;
             }
             else if (player == 2 && error == 0) {
@@ -192,9 +192,9 @@ int TicTacToe::game()
                 error = 0;
             }
         }
-        i = checkwin();
+        i = checkwin();//checks if the game have been won
 
-        player++;
+        player++;//changes the player
 
         if (player != local && dl->getState() == TransmissionState::Token) {
             dl->passToken();
@@ -204,7 +204,7 @@ int TicTacToe::game()
     } while (i == -1);
     board();
 
-    if (i == 1)
+    if (i == 1)// if the game have ended, determine if the player won, and annouce winner or tie
 
         cout << "==>\aPlayer " << --player << " win ";
     else
@@ -216,7 +216,7 @@ int TicTacToe::game()
     cin.ignore();
     cin.get();
 
-    dl->close();
+    dl->close();//ends the connection
     
     return 0;
 }
@@ -227,7 +227,7 @@ int TicTacToe::game()
 O GAME IS OVER AND NO RESULT*/
 
 int TicTacToe::checkwin()
-{
+{//checks if theres a winner, or if the game is tied
     if (square[1] == square[2] && square[2] == square[3])
 
         return 1;
@@ -261,10 +261,10 @@ int TicTacToe::checkwin()
 }
 
 
-//FUNCTION TO DRAW BOARD OF TIC TAC TOE WITH PLAYERS MARK
+
 
 void TicTacToe::board()
-{
+{//draws the board, and displays constant information
     system("cls");
     cout << "\n\n\tTic Tac Toe\n\n";
 
