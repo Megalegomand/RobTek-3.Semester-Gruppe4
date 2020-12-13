@@ -15,7 +15,7 @@ DTMF::DTMF() {
 	goertzel = new Goertzel(SAMPLE_RATE);
 
 	// Start recording, this will fill input samples
-	this->start(SAMPLE_RATE);
+	//this->start(SAMPLE_RATE);
 }
 
 void DTMF::sendSequence(vector<char>& sequence)
@@ -49,7 +49,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 
 vector<char> DTMF::listenSequence(int timeout)
 {
-	//this->start(SAMPLE_RATE);
+	this->start(SAMPLE_RATE);
 	// Timer to keep stop at timeout
 	Timer startTime = Timer();
 	startTime.start();
@@ -120,7 +120,7 @@ vector<char> DTMF::listenSequence(int timeout)
 	//for (char c : tones) {
 	//	cout << int(c) << endl;
 	//}
-	//this->stop();
+	this->stop();
 	return tones;
 }
 
