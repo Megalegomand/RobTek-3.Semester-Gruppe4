@@ -33,16 +33,16 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    /*FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     if (f->bind(10)) {
-        while (true) {
-            if (f->getState() == TransmissionState::Token) {
-                f->passToken();
-            }
-            this_thread::sleep_for(chrono::milliseconds(10000));
+        vector<char> data = vector<char>();
+        for (int i = 0; i < 4; i++) {
+            data.push_back(i);
+            f->sendData(data);
         }
     }
-    this_thread::sleep_for(chrono::milliseconds(100000));*/
+    f->close();
+    return 0;
 
     //TicTacToe ttt = TicTacToe();
     //ttt.game();
@@ -67,34 +67,34 @@ int main()
     d2->sendSequence(data);
     t2.join();*/
     
-    Frame* fr = new Frame();
-    Frame* fs = new Frame();
+    //Frame* fr = new Frame();
+    //Frame* fs = new Frame();
 
 
-    //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
-    //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
+    ////FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    ////FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
 
-    vector<char> d = vector<char>();
-    d.push_back(1);
+    //vector<char> d = vector<char>();
+    //d.push_back(1);
 
-    for (int i = 0; i < 10; i++) {
-        thread t2(&Frame::wait, fr, 10000);
-        //thread t2(&FrameHandler::bind, f2, 10);
-        //this_thread::sleep_for(chrono::milliseconds(1000));
-        //thread t1(&FrameHandler::bind, f1, 10);
-        //fr->sendFrame(ACK);
-        this_thread::sleep_for(chrono::milliseconds(500));
-        fs->sendFrame(DATA0, d);
-        this_thread::sleep_for(chrono::milliseconds(500));
-        fs->sendFrame(DATA0, d);
+    //for (int i = 0; i < 10; i++) {
+    //    thread t2(&Frame::wait, fr, 10000);
+    //    //thread t2(&FrameHandler::bind, f2, 10);
+    //    //this_thread::sleep_for(chrono::milliseconds(1000));
+    //    //thread t1(&FrameHandler::bind, f1, 10);
+    //    //fr->sendFrame(ACK);
+    //    this_thread::sleep_for(chrono::milliseconds(500));
+    //    fs->sendFrame(DATA0, d);
+    //    this_thread::sleep_for(chrono::milliseconds(500));
+    //    fs->sendFrame(DATA0, d);
 
 
-        t2.join();
-        cout << "TT" << fr->getType() << endl;
-        for (char c : fr->getData()) {
-            cout << "D" << int(c) << endl;
-        }
-    }
+    //    t2.join();
+    //    cout << "TT" << fr->getType() << endl;
+    //    for (char c : fr->getData()) {
+    //        cout << "D" << int(c) << endl;
+    //    }
+    //}
     //this_thread::sleep_for(chrono::milliseconds(1000));
     //thread t2(&FrameHandler::bind, f2, 10);
 

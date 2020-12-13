@@ -17,6 +17,10 @@ bool FrameHandler::bind(int attempts)
 	if (state != TransmissionState::NotConnected) {
 		return false;
 	}
+
+	dataSeqReceive = 0;
+	dataSeqSend = 0;
+
 	frame_mutex.lock(); // Locked throughout, since other threads are disabled during bind
 	for (int i = 0; i < attempts; i++) {
 		frame->sendFrame(BIND);
@@ -46,7 +50,13 @@ bool FrameHandler::sendData(vector<char> &data)
 {	
 	bool ret = false;
 	if (state == TransmissionState::Token) {
-		ret = sendWaitACK(DATA0, data); // Temp
+		if (dataSeqSend) {
+			ret = sendWaitACK(DATA1, data); // Temp
+		}
+		else 
+		{
+			ret = sendWaitACK(DATA1, data); // Temp
+		}
 	}
 	return ret;
 }
@@ -130,8 +140,18 @@ void FrameHandler::connectedRun()
 			else {
 				if (frame->wait(MAX_LOSS_CONNECTION - frame->getLastActive()->elapsedMillis())) {
 					switch (frame->getType()) {
-					case DATA0: // Fix
-						dataReadyEvent(frame->getData());
+					case DATA0:
+						if (!dataSeqReceive) {
+							dataReadyEvent(frame->getData());
+							dataSeqReceive = !dataSeqReceive;
+						}
+						frame->sendFrame(ACK);
+						break;
+					case DATA1:
+						if (dataSeqReceive) {
+							dataReadyEvent(frame->getData());
+							dataSeqReceive = !dataSeqReceive;
+						}
 						frame->sendFrame(ACK);
 						break;
 					case TOKENPASS:
