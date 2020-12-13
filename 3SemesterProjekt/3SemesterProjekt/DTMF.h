@@ -24,11 +24,11 @@ public:
 	const int SAMPLE_RATE = 44100;
 
 	const int TONE_DURATION = 100; // Millisseconds
-	const unsigned AMPLITUDE = 2000;
+	const unsigned AMPLITUDE = 5000;
 
 	const int TONE_MARGIN = 200;
 
-	const int SNR_THRESHHOLD = 10;
+	const int SNR_THRESHHOLD = 6;
 
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
