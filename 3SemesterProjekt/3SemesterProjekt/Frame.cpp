@@ -99,8 +99,11 @@ bool Frame::wait(int timeout)
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
 		//cout << "S" << tones.size()<< endl;
-		
-		while (tones.size() >= 8) { // Preamble (min 1) + Type (1) + Length (2) + CRC (4) = 8
+		cout << "------------" << endl;
+		for (char c : tones) {
+			cout << int(c) << endl;
+		}
+		while (tones.size() >= 7) { // Preamble (min 1) + Type (1) + Length (1) + CRC (4) = 7
 			// Check preamble
 			if (tones.front() != PREAMBLE[3]) {
 				tones.erase(tones.begin());
