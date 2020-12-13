@@ -13,7 +13,6 @@ enum TransmissionType {
 	TOKENPASSACK = 0x5,
 	ALIVE = 0x6,
 	CLOSE = 0x7,
-	DATA = 0xEE,
 	DATA0 = 0xE,
 	DATA1 = 0xF,
 };
@@ -41,10 +40,9 @@ private:
 	vector<char> dataTones = vector<char>();
 	DTMF* dtmf;
 	Timer* lastActive;
-	bool dataSeqSend = 0;
-	bool dataSeqReceive = 0;
 
-	
 	void send(); // Send data stored in frame
+	
+	unsigned short crc16(vector<char> data);
 };
 

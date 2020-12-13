@@ -58,24 +58,42 @@ void Frame::send()
 	//TYPE
 	if (transmissionType == DATA) {
 		if (dataSeqSend) {
-			toneFrame.push_back(DATA1);
+			transmissionType = DATA1;
 		}
 		else {
-			toneFrame.push_back(DATA0);
+			transmissionType = DATA0;
 		}
-	}
-	else {
-		toneFrame.push_back(transmissionType);
+		dataSeqSend = !dataSeqSend;
 	}
 
+	toneFrame.push_back(transmissionType);
+
 	unsigned char size = dataTones.size() / 2;
-	toneFrame.push_back(char(size & 0xF0) >> 4);
+	if (size > 15) {
+		return;
+	}
 	toneFrame.push_back(char(size & 0x0F) >> 0);
 
 	for (char c : dataTones) {
 		toneFrame.push_back(c);//DATA
 	}
 
+	//for (char c : toneFrame) {
+	//	cout << int(c) << endl;
+	//}
+
+	vector<char> crcData = vector<char>();
+	crcData.push_back(transmissionType);
+	for (int i = 0; i < dataTones.size(); i+=2) {
+		crcData.push_back((dataTones[i] << 4) | dataTones[i+1]);
+	}
+	unsigned short crc = crc16(crcData);
+
+	toneFrame.push_back((crc & 0xF000) >> 12); // & for readability
+	toneFrame.push_back((crc & 0x0F00) >> 8);
+	toneFrame.push_back((crc & 0x00F0) >> 4);
+	toneFrame.push_back(crc & 0x000F);
+	
 	lastActive->start();
 	dtmf->sendSequence(toneFrame);
 }
@@ -90,9 +108,13 @@ bool Frame::wait(int timeout)
 
 	while (startTime.elapsedMillis() < timeout) {
 		vector<char> tones = dtmf->listenSequence(timeout - startTime.elapsedMillis());
-		//cout << "S" << tones.size()<< endl;
+		cout << "S" << tones.size()<< endl;
 
-		if (tones.size() > 5) { // Preamble (min 2) + Type (1) + Length (2) = 5
+		for (char c : tones) {
+			cout << int(c) << endl;
+		}
+		
+		if (tones.size() >= 9) { // Preamble (min 2) + Type (1) + Length (2) + CRC (4) = 9
 			// Check preamble
 			int firstPreamble = -1;
 			while (tones.size() > 0) {
@@ -145,14 +167,15 @@ bool Frame::wait(int timeout)
 
 			if (transmissionType == DATA0 || transmissionType == DATA1) {
 				transmissionType = DATA;
+				dataSeqReceive = !dataSeqReceive;
 			}
 
 			// Data length
-			unsigned char dataLength = (tones[0] << 4) | tones[1];
-			tones.erase(tones.begin(), tones.begin() + 2);
+			char dataLength = tones[0];
+			tones.erase(tones.begin());
 
 			// Check length
-			if (tones.size() < dataLength * 2) {
+			if (tones.size() < dataLength * 2 + 4) { // Data (dataLength * 2) + CRC (4)
 				continue;
 			}
 
@@ -160,6 +183,22 @@ bool Frame::wait(int timeout)
 			dataTones.clear();
 			for (int i = 0; i < dataLength * 2; i++) {
 				dataTones.push_back(tones[i]);
+			}
+			
+			// Check CRC
+			vector<char> crcData = vector<char>();
+			crcData.push_back(transmissionType);
+			for (int i = 0; i < dataTones.size(); i += 2) {
+				crcData.push_back((dataTones[i] << 4) | dataTones[i + 1]);
+			}
+			crcData.push_back(tones[dataLength] | tones[dataLength + 1] << 8);
+			crcData.push_back(tones[dataLength + 2] | tones[dataLength + 3] << 8);
+
+			unsigned short crc = crc16(crcData);
+			
+			cout << crc << endl;
+			for (char c : crcData) {
+				cout << int(c) << endl;
 			}
 
 			lastActive->start();
@@ -179,3 +218,15 @@ Timer* Frame::getLastActive()
 	return lastActive;
 }
 
+unsigned short Frame::crc16(vector<char> data) {
+	unsigned char x;
+	unsigned short crc = 0xFFFF;
+
+	for (char c : data) {
+		x = crc >> 8 ^ c;
+		x ^= x >> 4;
+		crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x << 5)) ^ ((unsigned short)x);
+	}
+
+	return crc;
+}

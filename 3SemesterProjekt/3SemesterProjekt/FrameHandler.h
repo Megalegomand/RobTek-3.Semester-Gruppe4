@@ -53,6 +53,9 @@ private:
 	function<void()> tokenPassEvent;
 	function<void()> closeEvent;
 
+	bool dataSeqSend = 0;
+	bool dataSeqReceive = 0;
+
 	bool sendWaitACK(TransmissionType type, vector<char> &data); // Sends data and waits for ACK, tries ATTEMPTS times
 	bool sendWaitACK(TransmissionType type);					// Returns false if connection is lost
 	void connectedRun();

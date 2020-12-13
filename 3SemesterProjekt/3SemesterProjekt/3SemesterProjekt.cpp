@@ -74,16 +74,23 @@ int main()
     //FrameHandler* f1 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     //FrameHandler* f2 = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed2));
 
+    vector<char> d = vector<char>();
+    d.push_back(1);
+
     for (int i = 0; i < 10; i++) {
         thread t2(&Frame::wait, fr, 10000);
         //thread t2(&FrameHandler::bind, f2, 10);
         //this_thread::sleep_for(chrono::milliseconds(1000));
         //thread t1(&FrameHandler::bind, f1, 10);
         //fr->sendFrame(ACK);
-        fs->sendFrame(DATA);
+        this_thread::sleep_for(chrono::milliseconds(500));
+        fs->sendFrame(DATA, d);
 
         t2.join();
         cout << fr->getType() << endl;
+        for (char c : fr->getData()) {
+            cout << int(c) << endl;
+        }
     }
     //this_thread::sleep_for(chrono::milliseconds(1000));
     //thread t2(&FrameHandler::bind, f2, 10);
