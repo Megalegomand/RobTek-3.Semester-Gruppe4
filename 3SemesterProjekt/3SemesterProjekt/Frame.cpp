@@ -102,8 +102,9 @@ bool Frame::wait(int timeout)
 		
 		while (tones.size() >= 8) { // Preamble (min 1) + Type (1) + Length (2) + CRC (4) = 8
 			// Check preamble
-			while (tones.front() != PREAMBLE[3]) {
+			if (tones.front() != PREAMBLE[3]) {
 				tones.erase(tones.begin());
+				continue;
 			}
 			tones.erase(tones.begin());
 			cout << "------------" << endl;
