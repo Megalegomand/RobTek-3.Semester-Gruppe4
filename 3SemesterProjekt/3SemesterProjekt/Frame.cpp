@@ -126,6 +126,7 @@ bool Frame::wait(int timeout)
 				tones.erase(tones.begin());
 			}
 			if (firstPreamble == -1) {
+				tones.erase(tones.begin());
 				continue;
 			}
 			cout << "Kage" << endl;
