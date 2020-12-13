@@ -21,7 +21,7 @@ using namespace std;
 class Frame
 {
 public:
-	const char PREAMBLE[7] = { 0xF, 0xE, 0xD, 0xC };
+	const char PREAMBLE[4] = { 0xF, 0xE, 0xD, 0xC };
 
 	Frame();
 
