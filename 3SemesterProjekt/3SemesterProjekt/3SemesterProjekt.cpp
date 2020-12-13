@@ -33,7 +33,7 @@ using namespace std;
 using namespace std::placeholders;
 int main()
 {
-    FrameHandler* f = new FrameHandler(std::bind(data1, _1), std::bind(tokenpass), std::bind(closed1));
+    //FrameHandler* f = new FrameHandler(std::bind(data1, _1), std::bind(tokenpass), std::bind(closed1));
     //Frame* fr = new Frame();
 
     //fr->wait(100);
