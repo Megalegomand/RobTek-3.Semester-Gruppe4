@@ -60,7 +60,7 @@ int main()
 
     
 
-    if (f->bind(10)) {
+ /*   if (f->bind(10)) {
         cout << "Connection" << endl;
         vector<char> data = vector<char>();
         for (int i = 0; i < 4; i++) {
@@ -71,10 +71,11 @@ int main()
         while (f->getState() == TransmissionState::Waiting) {};
     }
     f->close();
-    return 0;
+    return 0;*/
 
-    //TicTacToe ttt = TicTacToe();
-    //ttt.game();
+    TicTacToe ttt = TicTacToe();
+    ttt.game();
+    return 0;
 
     /*DTMF* d1 = new DTMF();
     DTMF* d2 = new DTMF();
