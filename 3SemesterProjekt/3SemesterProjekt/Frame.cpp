@@ -107,10 +107,10 @@ bool Frame::wait(int timeout)
 			}
 			tones.erase(tones.begin());
 
-			cout << "-------------------" << endl;
-			for (char c : tones) {
-				cout << int(c) << endl;
-			}
+			//cout << "-------------------" << endl;
+			//for (char c : tones) {
+			//	cout << int(c) << endl;
+			//}
 
 			// Transmission type
 			transmissionType = (TransmissionType) tones.front();
@@ -152,7 +152,7 @@ bool Frame::wait(int timeout)
 			}
 			lastActive->start();
 
-			cout << "TT" << transmissionType << endl;
+			//cout << "TT" << transmissionType << endl;
 			//for (char c : dataTones) {
 			//	cout << int(c) << endl;
 			//}
