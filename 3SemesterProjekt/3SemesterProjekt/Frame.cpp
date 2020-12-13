@@ -106,32 +106,15 @@ bool Frame::wait(int timeout)
 				cout << int(c) << endl;
 			}
 			// Check preamble
-			int firstPreamble = -1;
-			while (tones.size() > 0) {
-				for (int p = 0; p < 4; p++) {
-					if (tones.front() == PREAMBLE[p]) {
-						firstPreamble = p;
-						break;
-					}
-				}
-				if (firstPreamble != -1) {
-					break;
-				}
+			while (tones.front() != PREAMBLE[3]) {
 				tones.erase(tones.begin());
 			}
-			if (firstPreamble == -1) {
-				tones.erase(tones.begin());
-				continue;
-			}
-			
-			//cout << "KKDS" << int(tones.front()) << endl;
-
-			if (tones.size() < 10 - firstPreamble) { // Preamble (7) + Type (1) + Length (2) = 10
-				tones.erase(tones.begin());
-				continue;
+			cout << "------------" << endl;
+			for (char c : tones) {
+				cout << int(c) << endl;
 			}
 
-			bool p = false;
+			/*bool p = false;
 			for (int i = firstPreamble; i < 7; i++) {
 				if (tones.front() == PREAMBLE[i]) {
 					p = true;
@@ -145,7 +128,7 @@ bool Frame::wait(int timeout)
 			if (!p) {
 				tones.erase(tones.begin());
 				continue;
-			}
+			}*/
 
 			// Transmission type
 			transmissionType = (TransmissionType) tones.front();
