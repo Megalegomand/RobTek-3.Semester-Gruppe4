@@ -34,6 +34,32 @@ using namespace std::placeholders;
 int main()
 {
     FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
+    //Frame* fr = new Frame();
+
+    //fr->wait(100);
+
+    //thread t1(&FrameHandler::bind, f, 10);
+    //while (f->getState() != TransmissionState::Token) {
+    //    this_thread::sleep_for(chrono::milliseconds(1500));
+    //    fr->sendFrame(ACK);
+    //}
+
+    //t1.join();
+    //cout << "Connected" << endl;
+
+    //vector<char> data = vector<char>();
+    //data.push_back(1);
+    //thread t2(&Frame::wait, fr, 10000);
+    //this_thread::sleep_for(chrono::milliseconds(200));
+    ////thread t3(&FrameHandler::sendData, f, &data);
+    ////f->sendData(data);
+    //this_thread::sleep_for(chrono::milliseconds(2000));
+    //fr->sendFrame(ACK);
+    //t2.join();
+    ////t3.join();
+
+    
+
     if (f->bind(10)) {
         cout << "Connection" << endl;
         vector<char> data = vector<char>();

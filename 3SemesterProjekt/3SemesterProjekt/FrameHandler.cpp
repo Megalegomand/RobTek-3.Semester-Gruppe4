@@ -51,11 +51,11 @@ bool FrameHandler::sendData(vector<char> &data)
 	bool ret = false;
 	if (state == TransmissionState::Token) {
 		if (dataSeqSend) {
-			ret = sendWaitACK(DATA1, data); // Temp
+			ret = sendWaitACK(DATA1, data);
 		}
 		else 
 		{
-			ret = sendWaitACK(DATA1, data); // Temp
+			ret = sendWaitACK(DATA0, data);
 		}
 	}
 	return ret;
