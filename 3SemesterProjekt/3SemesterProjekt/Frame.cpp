@@ -101,14 +101,11 @@ bool Frame::wait(int timeout)
 		//cout << "S" << tones.size()<< endl;
 		
 		while (tones.size() >= 8) { // Preamble (min 1) + Type (1) + Length (2) + CRC (4) = 8
-			cout << "------------" << endl;
-			for (char c : tones) {
-				cout << int(c) << endl;
-			}
 			// Check preamble
 			while (tones.front() != PREAMBLE[3]) {
 				tones.erase(tones.begin());
 			}
+			tones.erase(tones.begin());
 			cout << "------------" << endl;
 			for (char c : tones) {
 				cout << int(c) << endl;
