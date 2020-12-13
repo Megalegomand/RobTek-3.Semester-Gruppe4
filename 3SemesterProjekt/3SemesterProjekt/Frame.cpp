@@ -108,6 +108,7 @@ bool Frame::wait(int timeout)
 			// Check preamble
 			int firstPreamble = -1;
 			while (tones.size() > 0) {
+				cout << "S" << tones.size() << endl; 
 				for (int p = 0; p < 6; p++) { // Min 2, hence last element in preamble can't be first in sequence
 					if (tones.front() == PREAMBLE[p]) {
 						firstPreamble = p;
