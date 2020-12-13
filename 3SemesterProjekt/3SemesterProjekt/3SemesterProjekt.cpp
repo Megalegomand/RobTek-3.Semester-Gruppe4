@@ -41,6 +41,7 @@ int main()
             data.push_back(i);
             f->sendData(data);
         }
+        while (f->getState == TransmissionState::Waiting) {};
     }
     f->close();
     return 0;
