@@ -61,6 +61,9 @@ bool FrameHandler::sendData(vector<char> &data)
 		if (ret) {
 			dataSeqSend = !dataSeqSend;
 		}
+		else {
+			terminate();
+		}
 	}
 	return ret;
 }
