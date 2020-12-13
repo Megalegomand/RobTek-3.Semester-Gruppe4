@@ -57,6 +57,10 @@ bool FrameHandler::sendData(vector<char> &data)
 		{
 			ret = sendWaitACK(DATA0, data);
 		}
+
+		if (ret) {
+			dataSeqSend = !dataSeqSend;
+		}
 	}
 	return ret;
 }
