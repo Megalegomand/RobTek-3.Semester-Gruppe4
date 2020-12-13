@@ -123,6 +123,7 @@ bool Frame::wait(int timeout)
 			if (firstPreamble == -1) {
 				continue;
 			}
+			cout << "Kage" << endl;
 
 			//cout << "KKDS" << int(tones.front()) << endl;
 
@@ -152,11 +153,12 @@ bool Frame::wait(int timeout)
 			// Data length
 			char dataLength = tones[0];
 			tones.erase(tones.begin());
-
+			cout << "Kage2" << endl;
 			// Check length
 			if (tones.size() < dataLength * 2 + 4) { // Data (dataLength * 2) + CRC (4)
 				continue;
 			}
+			cout << "Kage3" << endl;
 
 			// Add data to dataTones
 			dataTones.clear();
@@ -182,7 +184,7 @@ bool Frame::wait(int timeout)
 				dataTones.clear();
 				continue;
 			}
-
+			cout << "Kage4" << endl;
 			lastActive->start();
 
 			cout << "TT" << transmissionType << endl;
