@@ -24,7 +24,7 @@ public:
 	const int SAMPLE_RATE = 44100;
 
 	const int TONE_DURATION = 100; // Millisseconds
-	const unsigned AMPLITUDE = 8000;
+	const unsigned AMPLITUDE = 1000;
 
 	const int TONE_MARGIN = 200;
 
