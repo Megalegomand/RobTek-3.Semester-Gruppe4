@@ -104,12 +104,12 @@ bool Frame::wait(int timeout)
 		//	cout << int(c) << endl;
 		//}
 		
-		if (tones.size() >= 9) { // Preamble (min 2) + Type (1) + Length (2) + CRC (4) = 9
+		if (tones.size() >= 8) { // Preamble (min 1) + Type (1) + Length (2) + CRC (4) = 8
 			// Check preamble
 			int firstPreamble = -1;
 			while (tones.size() > 0) {
 				cout << "S" << tones.size() << endl; 
-				for (int p = 0; p < 6; p++) { // Min 2, hence last element in preamble can't be first in sequence
+				for (int p = 0; p < 4; p++) { // Min 2, hence last element in preamble can't be first in sequence
 					if (tones.front() == PREAMBLE[p]) {
 						firstPreamble = p;
 						break;
