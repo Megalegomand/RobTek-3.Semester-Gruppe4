@@ -84,12 +84,15 @@ int main()
         //thread t1(&FrameHandler::bind, f1, 10);
         //fr->sendFrame(ACK);
         this_thread::sleep_for(chrono::milliseconds(500));
-        fs->sendFrame(DATA, d);
+        fs->sendFrame(DATA0, d);
+        this_thread::sleep_for(chrono::milliseconds(500));
+        fs->sendFrame(DATA0, d);
+
 
         t2.join();
-        cout << fr->getType() << endl;
+        cout << "TT" << fr->getType() << endl;
         for (char c : fr->getData()) {
-            cout << int(c) << endl;
+            cout << "D" << int(c) << endl;
         }
     }
     //this_thread::sleep_for(chrono::milliseconds(1000));

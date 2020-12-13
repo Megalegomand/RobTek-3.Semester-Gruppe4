@@ -46,7 +46,7 @@ bool FrameHandler::sendData(vector<char> &data)
 {	
 	bool ret = false;
 	if (state == TransmissionState::Token) {
-		ret = sendWaitACK(DATA, data);
+		ret = sendWaitACK(DATA0, data); // Temp
 	}
 	return ret;
 }
@@ -130,7 +130,7 @@ void FrameHandler::connectedRun()
 			else {
 				if (frame->wait(MAX_LOSS_CONNECTION - frame->getLastActive()->elapsedMillis())) {
 					switch (frame->getType()) {
-					case DATA:
+					case DATA0: // Fix
 						dataReadyEvent(frame->getData());
 						frame->sendFrame(ACK);
 						break;

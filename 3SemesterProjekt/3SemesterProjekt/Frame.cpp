@@ -56,16 +56,6 @@ void Frame::send()
 	}
 	
 	//TYPE
-	if (transmissionType == DATA) {
-		if (dataSeqSend) {
-			transmissionType = DATA1;
-		}
-		else {
-			transmissionType = DATA0;
-		}
-		dataSeqSend = !dataSeqSend;
-	}
-
 	toneFrame.push_back(transmissionType);
 
 	unsigned char size = dataTones.size() / 2;
@@ -158,18 +148,6 @@ bool Frame::wait(int timeout)
 			transmissionType = (TransmissionType) tones.front();
 			tones.erase(tones.begin());
 
-			// Check data sequence
-			if (transmissionType == DATA0 && dataSeqReceive || transmissionType == DATA1 && !dataSeqReceive) {
-				sendFrame(ACK);
-				transmissionType = NONE;
-				continue;
-			}
-
-			if (transmissionType == DATA0 || transmissionType == DATA1) {
-				transmissionType = DATA;
-				dataSeqReceive = !dataSeqReceive;
-			}
-
 			// Data length
 			char dataLength = tones[0];
 			tones.erase(tones.begin());
@@ -184,6 +162,7 @@ bool Frame::wait(int timeout)
 			for (int i = 0; i < dataLength * 2; i++) {
 				dataTones.push_back(tones[i]);
 			}
+			tones.erase(tones.begin(), tones.begin() + dataLength * 2);
 			
 			// Check CRC
 			vector<char> crcData = vector<char>();
@@ -191,14 +170,16 @@ bool Frame::wait(int timeout)
 			for (int i = 0; i < dataTones.size(); i += 2) {
 				crcData.push_back((dataTones[i] << 4) | dataTones[i + 1]);
 			}
-			crcData.push_back(tones[dataLength] | tones[dataLength + 1] << 8);
-			crcData.push_back(tones[dataLength + 2] | tones[dataLength + 3] << 8);
+			
+			crcData.push_back((tones[0] << 4) | tones[1]);
+			crcData.push_back((tones[2] << 4) | tones[3]);
 
 			unsigned short crc = crc16(crcData);
 			
-			cout << crc << endl;
-			for (char c : crcData) {
-				cout << int(c) << endl;
+			if (crc) { // CRC wrong
+				transmissionType = NONE;
+				dataTones.clear();
+				continue;
 			}
 
 			lastActive->start();
