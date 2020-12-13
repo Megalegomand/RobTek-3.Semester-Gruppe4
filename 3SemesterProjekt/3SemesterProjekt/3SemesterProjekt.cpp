@@ -35,6 +35,7 @@ int main()
 {
     FrameHandler* f = new FrameHandler(std::bind(data, _1), std::bind(tokenpass), std::bind(closed1));
     if (f->bind(10)) {
+        cout << "Connection" << endl;
         vector<char> data = vector<char>();
         for (int i = 0; i < 4; i++) {
             data.push_back(i);
