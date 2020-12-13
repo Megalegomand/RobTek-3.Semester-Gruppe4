@@ -65,6 +65,7 @@ int main()
         vector<char> data = vector<char>();
         for (int i = 0; i < 4; i++) {
             data.push_back(i);
+            this_thread::sleep_for(chrono::milliseconds(500));
             f->sendData(data);
         }
         while (f->getState() == TransmissionState::Waiting) {};
