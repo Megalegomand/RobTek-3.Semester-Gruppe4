@@ -107,21 +107,10 @@ bool Frame::wait(int timeout)
 			}
 			tones.erase(tones.begin());
 
-			/*bool p = false;
-			for (int i = firstPreamble; i < 7; i++) {
-				if (tones.front() == PREAMBLE[i]) {
-					p = true;
-				}
-				else {
-					p = false;
-					break;
-				}
-				tones.erase(tones.begin());
+			cout << "-------------------" << endl;
+			for (char c : tones) {
+				cout << int(c) << endl;
 			}
-			if (!p) {
-				tones.erase(tones.begin());
-				continue;
-			}*/
 
 			// Transmission type
 			transmissionType = (TransmissionType) tones.front();
