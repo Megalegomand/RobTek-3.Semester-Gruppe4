@@ -1,7 +1,6 @@
 #pragma once
 #include<vector>
 #include"DTMF.h"
-#include"VirtuelDTMF.h"
 #include"Timer.h"
 
 // All diferent types of transmission with tone value
