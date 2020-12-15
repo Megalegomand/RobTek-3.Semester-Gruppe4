@@ -10,12 +10,15 @@ using namespace sf;
 class Goertzel
 {
 public:
+	const double PI = 3.14159265359;
+
 	Goertzel();
 	Goertzel(int sampleFrequency);
+
+	// Process samples from samples start to to sample end
 	float processSamples(deque<Int16>* samples, int start, int end, int targetFrequency);
 
 private:
-	const double PI = 3.14159265359;
 	int sampleFrequency = 0;
 };
 
