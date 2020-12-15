@@ -160,7 +160,6 @@
     <ClCompile Include="Goertzel.cpp" />
     <ClCompile Include="TicTacToe.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="VirtuelDTMF.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameHandler.h" />
@@ -169,7 +168,6 @@
     <ClInclude Include="Goertzel.h" />
     <ClCompile Include="TicTacToe.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="VirtuelDTMF.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
