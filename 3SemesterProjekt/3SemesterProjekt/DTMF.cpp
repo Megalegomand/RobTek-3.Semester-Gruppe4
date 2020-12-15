@@ -10,10 +10,11 @@ DTMF::DTMF() {
 	// Make sure recording is mono
 	setChannelCount(1);
 
+	// Setup Görtzel filter
 	goertzel = new Goertzel(SAMPLE_RATE);
 
 	// Start recording, this will fill input samples
-	//this->start(SAMPLE_RATE);
+	this->start(SAMPLE_RATE);
 }
 
 void DTMF::sendSequence(vector<char>& sequence)
@@ -21,10 +22,15 @@ void DTMF::sendSequence(vector<char>& sequence)
 	// Calculate samples for entire sequence using preparedTones
 	vector<Int16> samples = vector<Int16>();
 	for (char tone : sequence) {
+		// Add margin
 		for (int i = 0; i < TONE_MARGIN; i++) {
 			samples.push_back(0);
 		}
+
+		// Insert tones from prepared tones
 		samples.insert(samples.end(), preparedTones[tone]->begin() + TONE_MARGIN, preparedTones[tone]->end() - TONE_MARGIN);
+		
+		// Add margin
 		for (int i = 0; i < TONE_MARGIN; i++) {
 			samples.push_back(0);
 		}
@@ -40,6 +46,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 	// Play sound
 	sound.setBuffer(buffer);
 	sound.play();
+
 	// Wait for sound completion
 	this_thread::sleep_for(chrono::milliseconds(buffer.getDuration().asMilliseconds()));
 	sound.stop();
@@ -47,8 +54,7 @@ void DTMF::sendSequence(vector<char>& sequence)
 
 vector<char> DTMF::listenSequence(int timeout)
 {
-	this->start(SAMPLE_RATE);
-	// Timer to keep stop at timeout
+	// Timer to keep track of timeout
 	Timer startTime = Timer();
 	startTime.start();
 
@@ -57,9 +63,9 @@ vector<char> DTMF::listenSequence(int timeout)
 	inputSamples = queue<Int16>();
 	inputSamples_mutex.unlock();
 
-	// Current tone samples
+	// Samples currently being analysed
+	// Has constant length of TONE_SAMPLES
 	deque<Int16> currentTone = deque<Int16>();
-
 
 	// Wait for input samples
 	while (inputSamples.size() < TONE_SAMPLES) {};
@@ -74,51 +80,39 @@ vector<char> DTMF::listenSequence(int timeout)
 
 	// Search for tone
 	while (startTime.elapsedMillis() < timeout) {
-		// If last part of tone is received, then a tone is ready and synced
+		// If the whole tone at the last part is detectable, then a tone is ready and synced
 		if (determineDTMF(&currentTone, 0, TONE_SAMPLES) != -1 && determineDTMF(&currentTone, 0, TONE_SAMPLES / 2) != -1) {
 			break;
 		}
 
 		// Move samples by searchSampleMove
 		searchSampleMove_mutex.lock();
-		int searchSampleMoveC = searchSampleMove;
+		int searchSampleMoveC = searchSampleMove; // Copy to keep mutex unlocked
 		searchSampleMove_mutex.unlock();
 		moveSamples(&currentTone, searchSampleMoveC);
 	}
 
-	// Get tones in transmission
+	// Get tones from transmission while syncing
 	vector<char> tones = vector<char>();
 	char tone = determineDTMF(&currentTone, 0, TONE_SAMPLES); // First tone
 	while (tone != -1) {
-
+		// Save tone
 		tones.push_back(tone);
 
-
+		// Determine first and last part of tone
 		char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
 		char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
-		//cout << "Tone" << int(tone) << endl;
-		//cout << "LF" << int(l) << ":" << int(f) << endl;
-
+		
+		// Calculate direction that needs to be moved
 		int dir = (f == tone ? 0 : 1) - (l == tone ? 0 : 1);
 
 		// Move samples a tone and correct for syncronisation
 		moveSamples(&currentTone, TONE_SAMPLES + dir * TONE_SAMPLES / 16);
 
+		// Determine the next tone
 		tone = determineDTMF(&currentTone, 0, TONE_SAMPLES);
 	}
-
-	//cout << "LT" << int(tone) << endl;
-	//char f = determineDTMF(&currentTone, 0, TONE_SAMPLES / 2);
-	//char l = determineDTMF(&currentTone, TONE_SAMPLES / 2, TONE_SAMPLES);
-
-	//cout << "LF" << int(l) << ":" << int(f) << endl;
-
-
-	//cout << "Tones" << endl;
-	//for (char c : tones) {
-	//	cout << int(c) << endl;
-	//}
-	this->stop();
+	
 	return tones;
 }
 
@@ -175,7 +169,8 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	// Sum of every other tone
 	float noise_sum = 0.0;
 
-	// Go through each tone
+	// Go through each tone and find the two largest tones
+	// and the sum of the rest, used as noise
 	for (int i = 0; i < 4; i++)
 	{
 		// Get largest tone and define it as signal
@@ -209,7 +204,7 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 	// Calculate SNR
 	float SNR = signal_avg / noise_avg;
 	
-	// Return DTMF tone or -1 if no tone was found
+	// Return DTMF tone or -1 if threshold is not reached
 	if (SNR > SNR_THRESHHOLD)
 	{
 		return  posL * 4 + posH;
@@ -222,10 +217,11 @@ char DTMF::determineDTMF(deque<Int16>* samples, int start, int end)
 
 void DTMF::moveSamples(deque<Int16>* tone, int amount)
 {
-	while (amount > inputSamples.size()) {} // Wait samples
+	// Wait samples until enough samples is recorded
+	while (amount > inputSamples.size()) {}
 
-	inputSamples_mutex.lock();
 	// Move samples from inputSamples into tone
+	inputSamples_mutex.lock();
 	for (int i = 0; i < amount; i++) {
 		tone->push_back(inputSamples.front());
 		inputSamples.pop();
