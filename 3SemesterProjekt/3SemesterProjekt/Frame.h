@@ -29,7 +29,7 @@ public:
 	TransmissionType getType(); // Get transmission type
 	vector<char> getData(); // Gets data as bytes, not tones
 
-	// Sends a frame witht type and data
+	// Sends a frame with type and data
 	void sendFrame(TransmissionType transmissionType); // Clears data
 	void sendFrame(TransmissionType transmissionType, vector<char> dataTones);
 

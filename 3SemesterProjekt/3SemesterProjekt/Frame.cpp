@@ -166,7 +166,7 @@ bool Frame::wait(int timeout)
 			crcData.push_back((tones[0] << 4) | tones[1]);
 			crcData.push_back((tones[2] << 4) | tones[3]);
 
-			// Calculate crc, 0 if no errors
+			// Calculate CRC, 0 if no errors
 			unsigned short crc = crc16(crcData);
 			
 			// CRC wrong

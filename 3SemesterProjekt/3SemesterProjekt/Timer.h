@@ -10,7 +10,7 @@ class Timer
 public:
     Timer();
 
-    // Start og restart timer
+    // Start and restart timer
     void start();
 
     // Get milliseconds since start()
