@@ -25,7 +25,7 @@ public:
 	const unsigned AMPLITUDE = 5000; // Amplitude of tones, can't be too high since tones will be distorted
 
 	const int TONE_MARGIN = 200; // Margin between tones, this value is double for listening
-	const int SNR_THRESHHOLD = 6;
+	const int SNR_THRESHHOLD = 10;
 
 	const int TONE_SAMPLES = ((SAMPLE_RATE * TONE_DURATION) / 1000);
 	const double PI = 3.14159265359;
