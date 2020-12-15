@@ -1,6 +1,4 @@
 #include "DTMF.h"
-bool DTMF::t = false;
-
 DTMF::DTMF() {
 	// For sendSequence
 	prepareTones();

@@ -2,7 +2,7 @@
 
 Frame::Frame()
 {
-	transmissionType = BIND;
+	transmissionType = NONE;
 	dtmf = new DTMF();
 	lastActive = new Timer();
 }
@@ -36,7 +36,7 @@ void Frame::sendFrame(TransmissionType transmissionType, vector<char> data)
 	if (data.size() < 256) {
 		for (char c : data) {
 			dataTones.push_back(char(c & 0xF0) >> 4);
-			dataTones.push_back(char(c & 0x0F) >> 0);
+			dataTones.push_back(char(c & 0x0F));
 		}
 	}
 	this->dataTones = dataTones;
@@ -62,7 +62,7 @@ void Frame::send()
 	if (size > 15) {
 		return;
 	}
-	toneFrame.push_back(char(size & 0x0F) >> 0);
+	toneFrame.push_back(char(size & 0x0F));
 
 	for (char c : dataTones) {
 		toneFrame.push_back(c);//DATA
@@ -167,6 +167,7 @@ Timer* Frame::getLastActive()
 	return lastActive;
 }
 
+// From https://stackoverflow.com/questions/10564491/function-to-calculate-a-crc16-checksum/23726131#23726131
 unsigned short Frame::crc16(vector<char> data) {
 	unsigned char x;
 	unsigned short crc = 0xFFFF;

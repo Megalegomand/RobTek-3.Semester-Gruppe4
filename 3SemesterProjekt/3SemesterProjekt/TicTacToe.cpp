@@ -46,7 +46,7 @@ int TicTacToe::game()
     }
     
 
-    if (local == 0 && dl->getState() == TransmissionState::Token) {//determines if the local player is player 1 or 2
+    if (local == 0 && dl->getState() == TransmissionState::Primary) {//determines if the local player is player 1 or 2
         local = 1;
     }
     else if(local == 0) {
@@ -110,7 +110,7 @@ int TicTacToe::game()
             {
                 cout << "Invalid move ";
                 errorLift = 1;
-                if (dl->getState() == TransmissionState::Token) {
+                if (dl->getState() == TransmissionState::Primary) {
                     cin.ignore();
                     cin.get();
                 }
@@ -176,7 +176,7 @@ int TicTacToe::game()
                 cout << "Invalid move ";
                 error = 1;
                 player--;
-                if (dl->getState() == TransmissionState::Token) {
+                if (dl->getState() == TransmissionState::Primary) {
                     cin.ignore();
                     cin.get();
                 }
@@ -196,7 +196,7 @@ int TicTacToe::game()
 
         player++;//changes the player
 
-        if (player != local && dl->getState() == TransmissionState::Token) {
+        if (player != local && dl->getState() == TransmissionState::Primary) {
             dl->passToken();
             this_thread::sleep_for(chrono::milliseconds(1000));
         }

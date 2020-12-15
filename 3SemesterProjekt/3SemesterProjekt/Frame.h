@@ -45,4 +45,3 @@ private:
 	
 	unsigned short crc16(vector<char> data);
 };
-

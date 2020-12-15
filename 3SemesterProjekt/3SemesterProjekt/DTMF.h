@@ -19,8 +19,6 @@ using namespace sf;
 class DTMF : public SoundRecorder
 {
 public:
-	static bool t;
-
 	const int SAMPLE_RATE = 44100;
 
 	const int TONE_DURATION = 100; // Millisseconds

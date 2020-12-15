@@ -12,8 +12,8 @@
 
 enum class TransmissionState {
 	NotConnected, 
-	Token, // Has token, is able to send data along
-	Waiting, // Waiting for data and token
+	Primary, // Has token, is able to send data along
+	Secondary, // Waiting for data and token
 };
 
 using namespace std;

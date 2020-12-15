@@ -29,13 +29,13 @@ bool FrameHandler::bind(int attempts)
 		if (frame->wait(rand() % BIND_WAIT_DIFF + BIND_WAIT_DIFF)) {
 			switch (frame->getType()) {
 			case ACK:
-				state = TransmissionState::Token;
+				state = TransmissionState::Primary;
 				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
 			case BIND:
 				frame->sendFrame(ACK);
-				state = TransmissionState::Waiting;
+				state = TransmissionState::Secondary;
 				connected_thread = new thread(&FrameHandler::connectedRun, this);
 				frame_mutex.unlock();
 				return true;
@@ -49,7 +49,7 @@ bool FrameHandler::bind(int attempts)
 bool FrameHandler::sendData(vector<char> &data)
 {	
 	bool ret = false;
-	if (state == TransmissionState::Token) {
+	if (state == TransmissionState::Primary) {
 		if (dataSeqSend) {
 			ret = sendWaitACK(DATA1, data);
 		}
@@ -70,7 +70,7 @@ bool FrameHandler::sendData(vector<char> &data)
 
 bool FrameHandler::passToken()
 {
-	if (state != TransmissionState::Token) {
+	if (state != TransmissionState::Primary) {
 		return false;
 	}
 
@@ -82,7 +82,7 @@ bool FrameHandler::passToken()
 		if (frame->wait(LISTEN_TIME)) {
 			if (frame->getType() == TOKENPASSACK) {
 				frame_mutex.unlock();
-				state = TransmissionState::Waiting;
+				state = TransmissionState::Secondary;
 				frame->sendFrame(ACK);
 				resend += i;
 				return true;
@@ -95,7 +95,7 @@ bool FrameHandler::passToken()
 
 void FrameHandler::close()
 {
-	if (state == TransmissionState::Token) {
+	if (state == TransmissionState::Primary) {
 		sendWaitACK(CLOSE);
 		terminate();
 	}
@@ -112,7 +112,7 @@ TransmissionState FrameHandler::getState()
 
 bool FrameHandler::sendWaitACK(TransmissionType type, vector<char> &data)
 {
-	if (state != TransmissionState::Token) {
+	if (state != TransmissionState::Primary) {
 		return false;
 	}
 	send++;
@@ -140,7 +140,7 @@ bool FrameHandler::sendWaitACK(TransmissionType type)
 void FrameHandler::connectedRun()
 {
 	while (state != TransmissionState::NotConnected) {
-		if (state == TransmissionState::Waiting) {
+		if (state == TransmissionState::Secondary) {
 			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION) {
 				terminate();
 			}
@@ -162,7 +162,7 @@ void FrameHandler::connectedRun()
 						frame->sendFrame(ACK);
 						break;
 					case TOKENPASS:
-						state = TransmissionState::Token;
+						state = TransmissionState::Primary;
 						sendWaitACK(TOKENPASSACK);
 						tokenPassEvent();
 						break;
@@ -179,7 +179,7 @@ void FrameHandler::connectedRun()
 					}
 				}
 			}
-		} else if (state == TransmissionState::Token) {
+		} else if (state == TransmissionState::Primary) {
 			if (frame->getLastActive()->elapsedMillis() > MAX_LOSS_CONNECTION / 2) {
 				if (!sendWaitACK(ALIVE)) {
 					terminate();
