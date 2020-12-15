@@ -1,76 +1,73 @@
-// Store dele af koden kommer fra http://www.cppforschool.com/project/tic-tac-toe-project.html
-
+// Code from http://www.cppforschool.com/project/tic-tac-toe-project.html
+// But modified for use with this project
 #include "Tictactoe.h"
 
-using namespace std;
-using namespace std::placeholders;
-
-TicTacToe::TicTacToe() {
-}
-
+TicTacToe::TicTacToe() {}
 
 void TicTacToe::data(vector<char> data) {
+    // Get choice
     if (data.size() == 1) {
+        // Choice from 1-9, so char can manage
         choicef = data[0];
     }
 }
 
-void TicTacToe::tokenpass() {
-    
-}
+void TicTacToe::tokenpass() {}
 
-void TicTacToe::end() {//end the game, tells the protokol 
+void TicTacToe::end() {
     cout << "Connection closed" << endl;
     exit(0);
 }
 
 int TicTacToe::game()
-{// below, setup for the game follows
+{
+    // Setup data for new game
     FrameHandler* dl = new FrameHandler(std::bind(&TicTacToe::data, this, _1), std::bind(&TicTacToe::tokenpass, this), std::bind(&TicTacToe::end, this));
-    int player = 1;//which player have turn
-    int i;//controls game state
-    int choice;//the move the local player have made
-    int p1p = 3;//number of pieces not on the board for player one
-    int p2p = 3;//number of pieces not on the board for player two
-    int pp;//number of pieces not on the board for the current player
-    int error = 0;//controls errors on placement of pieces
-    int errorLift = 0;//controls errors on lifting of pieces
-    char mark;//determines what kind of piece a player puts down
-    char a;//used to convert int to char array, for sending data
+    int player = 1; // Which player have turn
+    int i; // Controls game state
+    int choice; // Move the local player have made
+    int p1p = 3; // Number of pieces not on the board for player one
+    int p2p = 3; // Number of pieces not on the board for player two
+    int pp; // Number of pieces not on the board for the current player
+    int error = 0; // Controls errors on placement of pieces
+    int errorLift = 0; // Controls errors on lifting of pieces
+    char mark; // Determines what kind of piece a player puts down
+    char a; // Used to convert int to char array, for sending data
     vector<char> out;
 
-    cout << "Connecting..." << endl; //tries to connect. ends the game if it fails
+    // Tries to connect. ends the game if it fails
+    cout << "Connecting..." << endl; 
     if (!dl->bind(10)) {
         cout << "Connection failed" << endl;
         return -1;
     }
     
-
-    if (local == 0 && dl->getState() == TransmissionState::Primary) {//determines if the local player is player 1 or 2
+    // Determines if the local player is player 1 or 2
+    if (local == 0 && dl->getState() == TransmissionState::Primary) { 
         local = 1;
     }
     else if(local == 0) {
         local = 2;
     }
 
+    // Run game
     do
     {
-        board();//loads the board, in its newest configuration
-        player = (player % 2) ? 1 : 2;//determines whos turn it is
-        pp = (player == 1) ? p1p : p2p;//ensures that pieces are taken from the right pool of pieces
-        cout << "Pieces left:" << pp << endl;//displays the number of pieces
+        board(); // Loads the board, in its newest configuration
+        player = (player % 2) ? 1 : 2; // Determines whos turn it is
+        pp = (player == 1) ? p1p : p2p; // Ensures that pieces are taken from the right pool of pieces
+        cout << "Pieces left:" << pp << endl; // Displays the number of pieces
 
         mark = (player == 1) ? 'X' : 'O';
-        if (pp == 0) { //this function will remove one of your pieces, so you have a new piece to put down
-            
-            
-            if (player == local) {//gets the piece that needs to be moved
+        if (pp == 0) { // Remove one of your pieces, so you have a new piece to put down
+            // Get the piece that needs to be moved
+            if (player == local) {
                 cout << "Player " << player << ", remove a number:  ";
                 cin >> choice;
 
                 vector<char> data = vector<char>();
                 data.push_back(choice);
-                dl->sendData(data);
+                dl->sendData(data); // Send data using protocol
             }
             else {
                 cout << "Waiting for player " << player << ", remove a number.";
@@ -78,7 +75,8 @@ int TicTacToe::game()
                 while (choicef == -1);
                 choice = choicef;
             }
-            // picks up a piece
+
+            // Pick up a piece
             if (choice == 1 && square[1] == mark)
 
                 square[1] = '1';
@@ -106,7 +104,7 @@ int TicTacToe::game()
             else if (choice == 9 && square[9] == mark)
 
                 square[9] = '9';
-            else//gives error for illegal move, and lets the player try again 
+            else // Invalid move, try again
             {
                 cout << "Invalid move ";
                 errorLift = 1;
@@ -117,8 +115,8 @@ int TicTacToe::game()
             }
              
 
-
-            if (player == 1 && errorLift == 0) {//gives back a piece, if there havent been an error
+            // Returns a piece, if no error
+            if (player == 1 && errorLift == 0) {
                 p1p++;
             }
             else if(errorLift == 0) {
@@ -127,15 +125,17 @@ int TicTacToe::game()
             else {
                 errorLift = 0;
             }
-            player--;//ensures the player gets a turn to lay down a piece after lifting a piece
+
+            //ensures the player gets a turn to lay down a piece after lifting a piece
+            player--;
         } else {
-            if (player == local) {// if the player have a piece, lets them put it down
+            if (player == local) { // If the player have a piece, lets them put it down
                 cout << "Player " << player << ", enter a number:  ";
                 cin >> choice;
 
                 vector<char> data = vector<char>();
                 data.push_back(choice);
-                dl->sendData(data);
+                dl->sendData(data); // Send move over protocol
             }
             else {
                 cout << "Waiting for player " << player << ", enter a number.";
@@ -144,7 +144,8 @@ int TicTacToe::game()
                 choice = choicef;
             }
 
-            if (choice == 1 && square[1] == '1')// puts the piece down if the move is legal
+            // Put the piece down if the move is legal
+            if (choice == 1 && square[1] == '1')
 
                 square[1] = mark;
             else if (choice == 2 && square[2] == '2')
@@ -171,7 +172,7 @@ int TicTacToe::game()
             else if (choice == 9 && square[9] == '9')
 
                 square[9] = mark;
-            else//tells the player the move was illigal, and let them try again
+            else // Invalid move, try again
             {
                 cout << "Invalid move ";
                 error = 1;
@@ -182,7 +183,8 @@ int TicTacToe::game()
                 }
             }
 
-            if (player == 1 && error == 0) { // this function will lower the amount of free pieces
+            // This function will lower the amount of free pieces
+            if (player == 1 && error == 0) { 
                 p1p--;
             }
             else if (player == 2 && error == 0) {
@@ -192,31 +194,38 @@ int TicTacToe::game()
                 error = 0;
             }
         }
-        i = checkwin();//checks if the game have been won
 
-        player++;//changes the player
+        // Checks if the game have been won
+        i = checkwin();
+
+        // Next player
+        player++;
 
         if (player != local && dl->getState() == TransmissionState::Primary) {
-            dl->passToken();
+            dl->passToken(); // Pass token
             this_thread::sleep_for(chrono::milliseconds(1000));
         }
         
     } while (i == -1);
+
+    // Win board
     board();
 
-    if (i == 1)// if the game have ended, determine if the player won, and annouce winner or tie
-
+    // Announce winner or draw
+    if (i == 1) 
         cout << "==>\aPlayer " << --player << " win ";
     else
         cout << "==>\aGame draw";
 
+    // Test information
     cout << "Send" << dl->send << endl;
     cout << "Resend " << dl->resend << endl;
 
     cin.ignore();
     cin.get();
 
-    dl->close();//ends the connection
+    // Ends the connection
+    dl->close();
     
     return 0;
 }
@@ -225,9 +234,9 @@ int TicTacToe::game()
 1 FOR GAME IS OVER WITH RESULT
 -1 FOR GAME IS IN PROGRESS
 O GAME IS OVER AND NO RESULT*/
-
 int TicTacToe::checkwin()
-{//checks if theres a winner, or if the game is tied
+{
+    // Checks if theres a winner, or if the game is tied
     if (square[1] == square[2] && square[2] == square[3])
 
         return 1;
@@ -264,7 +273,8 @@ int TicTacToe::checkwin()
 
 
 void TicTacToe::board()
-{//draws the board, and displays constant information
+{
+    // Draws the board, and displays constant information
     system("cls");
     cout << "\n\n\tTic Tac Toe\n\n";
 
